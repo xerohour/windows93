@@ -1,0 +1,107 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Font Viewer — powered by opentype.js</title>
+<style>
+  body { font-family: Tahoma, Verdana, sans-serif; background: #c0c0c0; margin: 0; padding: 10px; color: #111; }
+  h1 { font-size: 15px; margin: 0 0 8px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 8px; }
+  .panel { background: #fff; border: 2px inset #eee; padding: 8px; margin-bottom: 8px; }
+  #meta { font-size: 12px; line-height: 1.5; }
+  canvas { background: #fff; display: block; }
+  input[type="text"] { flex: 1; min-width: 180px; padding: 3px; }
+  label { font-size: 12px; }
+  .dim { color: #555; font-size: 11px; }
+</style>
+<h1>🔤 Font Viewer</h1>
+<div class="bar">
+  <button id="open">Open font file…</button>
+  <input id="file" type="file" accept=".ttf,.otf,.woff" hidden />
+  <span class="dim">or drop a font anywhere — sample font: VT323 (OFL)</span>
+</div>
+<div class="panel" id="meta">Loading sample font…</div>
+<div class="bar">
+  <input id="text" type="text" value="The quick brown fox jumps over the lazy dog 0123456789" />
+  <label>Size <input id="size" type="range" min="16" max="120" value="56" /></label>
+</div>
+<div class="panel"><canvas id="preview" width="900" height="150"></canvas></div>
+<div class="panel">
+  <div class="dim" style="margin-bottom:4px">Glyphs (first 96)</div>
+  <canvas id="glyphs" width="900" height="360"></canvas>
+</div>
+<p class="dim">
+  Original viewer page written for xerohour/windows93. Rendering by
+  <b>opentype.js</b> (MIT, © Frederik De Bleser &amp; contributors) — the same
+  library the Windows93 “font” app credited. Sample font VT323 is under the
+  SIL Open Font License (see FONT-LICENSE.txt).
+</p>
+<script src="opentype.min.js"></script>
+<script>
+  const meta = document.getElementById("meta")
+  const preview = document.getElementById("preview")
+  const glyphCanvas = document.getElementById("glyphs")
+  let font = null
+
+  function render() {
+    if (!font) return
+    const names = font.names
+    const fullName =
+      (names.fullName && (names.fullName.en || Object.values(names.fullName)[0])) || "Unknown"
+    meta.innerHTML =
+      `<b>${fullName}</b><br>` +
+      `glyphs: ${font.numGlyphs} · unitsPerEm: ${font.unitsPerEm} · ` +
+      `ascender: ${font.ascender} · descender: ${font.descender}`
+
+    const size = Number(document.getElementById("size").value)
+    const text = document.getElementById("text").value
+    const pctx = preview.getContext("2d")
+    pctx.clearRect(0, 0, preview.width, preview.height)
+    pctx.fillStyle = "#000"
+    font.draw(pctx, text, 8, size + 24, size)
+
+    // glyph grid
+    const g = glyphCanvas.getContext("2d")
+    g.clearRect(0, 0, glyphCanvas.width, glyphCanvas.height)
+    const cell = 56, cols = 16, glyphSize = 40
+    g.fillStyle = "#000"
+    for (let i = 0; i < 96 && i < font.numGlyphs; i++) {
+      const glyph = font.glyphs.get(i)
+      const x = (i % cols) * cell + 8
+      const y = Math.floor(i / cols) * 60 + 44
+      const path = glyph.getPath(x, y, glyphSize)
+      path.fill = "#222"
+      path.draw(g)
+      g.fillStyle = "#888"
+      g.font = "9px monospace"
+      g.fillText(String(i), x, y + 14)
+      g.fillStyle = "#000"
+    }
+  }
+
+  function loadBuffer(buf, label) {
+    try {
+      font = opentype.parse(buf)
+      render()
+    } catch (e) {
+      meta.textContent = `Could not parse ${label}: ${e.message}`
+    }
+  }
+
+  document.getElementById("open").onclick = () => document.getElementById("file").click()
+  document.getElementById("file").onchange = (e) => {
+    const f = e.target.files[0]
+    if (f) f.arrayBuffer().then((b) => loadBuffer(b, f.name))
+  }
+  document.getElementById("text").oninput = render
+  document.getElementById("size").oninput = render
+  addEventListener("dragover", (e) => e.preventDefault())
+  addEventListener("drop", (e) => {
+    e.preventDefault()
+    const f = e.dataTransfer.files[0]
+    if (f) f.arrayBuffer().then((b) => loadBuffer(b, f.name))
+  })
+
+  fetch("VT323-Regular.ttf")
+    .then((r) => r.arrayBuffer())
+    .then((b) => loadBuffer(b, "VT323-Regular.ttf"))
+    .catch(() => (meta.textContent = "Sample font failed to load — open a font file instead."))
+</script>

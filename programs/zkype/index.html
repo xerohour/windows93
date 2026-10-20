@@ -1,0 +1,85 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>zkype — totally a video call</title>
+<style>
+  body { font-family: Tahoma, Verdana, sans-serif; background: #0b5fa5; margin: 0; color: #fff; }
+  header { padding: 10px 14px; font-size: 18px; font-weight: bold; background: #084d87; }
+  header span { font-weight: normal; font-size: 12px; opacity: .8; }
+  main { padding: 12px; display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+  .stage { position: relative; background: #000; border: 3px solid #fff3; }
+  video, canvas.overlay { width: 480px; height: 360px; display: block; }
+  canvas.overlay { position: absolute; inset: 0; }
+  .bar { display: flex; gap: 8px; align-items: center; }
+  button { padding: 6px 14px; font-size: 13px; cursor: pointer; }
+  #status { font-size: 12px; opacity: .9; }
+  .dim { font-size: 11px; opacity: .75; max-width: 480px; }
+</style>
+<header>zkype <span>— the Windows93 video-call experience, faithfully re-created</span></header>
+<main>
+  <div class="stage">
+    <video id="video" width="480" height="360" autoplay muted playsinline></video>
+    <canvas id="overlay" class="overlay" width="480" height="360"></canvas>
+  </div>
+  <div class="bar">
+    <button id="start">📞 Start fake call</button>
+    <button id="stop" disabled>End call</button>
+    <span id="status">Idle. No actual call will happen. Your face stays on this device.</span>
+  </div>
+  <p class="dim">
+    Original parody page written for xerohour/windows93. Face tracking by
+    <b>clmtrackr</b> (MIT, © Audun Mathias Øygard &amp; contributors) — the same
+    library the Windows93 “zkype” app credited. The tracker runs entirely
+    locally; nothing is uploaded anywhere. Needs camera permission.
+  </p>
+</main>
+<script src="clmtrackr.min.js"></script>
+<script src="model_pca_20_svm.js"></script>
+<script>
+  const video = document.getElementById("video")
+  const overlay = document.getElementById("overlay")
+  const octx = overlay.getContext("2d")
+  const status = document.getElementById("status")
+  const startBtn = document.getElementById("start")
+  const stopBtn = document.getElementById("stop")
+  let tracker = null
+  let stream = null
+  let raf = 0
+
+  function draw() {
+    octx.clearRect(0, 0, overlay.width, overlay.height)
+    const positions = tracker.getCurrentPosition()
+    if (positions) {
+      tracker.draw(overlay)
+      status.textContent = "Tracking your face. Looking good, caller."
+    }
+    raf = requestAnimationFrame(draw)
+  }
+
+  startBtn.onclick = async () => {
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+    } catch (e) {
+      status.textContent = "No camera available (or permission denied) — the fake call cannot start."
+      return
+    }
+    video.srcObject = stream
+    await video.play().catch(() => {})
+    tracker = new clm.tracker()
+    tracker.init(pModel)
+    tracker.start(video)
+    startBtn.disabled = true
+    stopBtn.disabled = false
+    status.textContent = "Connecting… (tracking started)"
+    draw()
+  }
+
+  stopBtn.onclick = () => {
+    cancelAnimationFrame(raf)
+    if (tracker) tracker.stop()
+    if (stream) stream.getTracks().forEach((t) => t.stop())
+    octx.clearRect(0, 0, overlay.width, overlay.height)
+    startBtn.disabled = false
+    stopBtn.disabled = true
+    status.textContent = "Call ended. Thanks for zkyping."
+  }
+</script>
