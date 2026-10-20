@@ -11,6 +11,17 @@ let fileIndex
 
 const { ENOENT, EISDIR, EEXIST, ENOTDIR } = FileSystemError
 
+// STATIC SUBPATH PATCH (P7): fetch-backed files (inode 0) are stored in the
+// index by their deployment-root-relative FS path ("/42/..."). Upstream
+// fetches/returns that path as-is, which only works when the site is served
+// from the origin root — under a subpath (e.g. a GitHub Pages project site)
+// it 404s at the origin root. Resolve FS paths against the real deploy root,
+// derived from this module's URL (<root>/42/core/fs/ -> ../../../).
+const DEPLOY_ROOT = new URL("../../../", import.meta.url)
+export function fsPathToURL(path) {
+  return new URL(String(path).replace(/^\//, ""), DEPLOY_ROOT).href
+}
+
 export default class BrowserDriver extends Driver {
   static toFile = (bits, encoding) =>
     new Blob(bits, {
@@ -59,7 +70,7 @@ export default class BrowserDriver extends Driver {
     }
 
     const inode = fileIndex.get(filename)
-    if (inode === 0) return filename
+    if (inode === 0) return fsPathToURL(filename) // STATIC SUBPATH PATCH (P7)
     if (inode?.[0] === -1) return this.getURL(inode[1])
 
     const blob = await this.open(filename)
@@ -98,7 +109,7 @@ export default class BrowserDriver extends Driver {
     const inode = fileIndex.get(filename)
 
     if (inode === 0) {
-      const res = await http.get(filename)
+      const res = await http.get(fsPathToURL(filename)) // STATIC SUBPATH PATCH (P7)
       return res.blob()
     }
 

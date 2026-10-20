@@ -15,6 +15,14 @@ const _resetURL = Symbol("FileAgent._resetURL")
 
 const dummyBlob = Promise.resolve(new Blob())
 
+// STATIC SUBPATH PATCH (P7): same deploy-root resolution as in
+// 42/core/fs/BrowserDriver.js — this file lives at <root>/42/os/classes/App/,
+// so ../../../../ is the deployment root. Fetch-backed files (inode 0) must
+// not be exposed by their raw FS path ("/42/...") under a subpath.
+const DEPLOY_ROOT = new URL("../../../../", import.meta.url)
+const fsPathToURL = (path) =>
+  new URL(String(path).replace(/^\//, ""), DEPLOY_ROOT).href
+
 export default class FileAgent {
   [Symbol.for("observe")] = true;
 
@@ -153,7 +161,7 @@ export default class FileAgent {
       if (this.path) {
         const inode = await fileIndex.get(this.path)
         if (inode === 0) {
-          this[_url] = this.path
+          this[_url] = fsPathToURL(this.path) // STATIC SUBPATH PATCH (P7)
           return this[_url]
         }
       }

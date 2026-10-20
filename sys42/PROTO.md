@@ -224,3 +224,28 @@ the fallback if the sandbox realm misbehaves on Pages.
 ---
 
 *Prototype built 2026-10-20. Upstream: https://github.com/windows93dotnet/sys42 (MIT). Not pushed anywhere.*
+
+---
+
+## Addendum (2026-10-20, after first live deployment) — Patch P7
+
+The first live test at `https://xerohour.github.io/windows93/sys42/desktop/`
+rendered the desktop/taskbar but every app manifest fetched from the
+**origin root** (`/42/os/apps/TextEdit/app.json5` → 404), icons were broken
+images, and no app would launch. Root cause: fetch-backed files (file-index
+inode `0`) were fetched and exposed by their raw FS path (`/42/...`), which
+is only a valid URL when the deployment root is the origin root.
+
+**P7** adds a deploy-root resolver (`fsPathToURL`) computed from each
+module's own `import.meta.url`, applied at all three sites that turned FS
+paths into URLs:
+
+- `42/core/fs/BrowserDriver.js` — `open()` (fetch on read) and `getURL()`
+  (icon/image URLs)
+- `42/os/classes/App/FileAgent.js` — the `url` getter for app files
+
+At a domain root the resolution is identical to upstream behaviour, so the
+patch is safe for the creators' own deployment too. The service worker's
+virtual-file serving still matches raw pathnames (see §5 limitation); under
+a subpath those requests simply fall through to the network, where P7's
+URLs are correct.
