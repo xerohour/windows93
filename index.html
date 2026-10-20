@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>WINDOWS93 — a clean-room tribute</title>
+<meta name="description" content="A clean-room, Windows 93-inspired web desktop: boot it, drag the windows, play the apps. Original code, built as a tribute to windows93.net.">
+<style>
+:root{--teal:#008080;--face:#c3c7cb;--face2:#d4d0c8;--navy:#000080;--navy2:#1084d0;--ink:#111;--hilight:#fff;--shadow:#5a5e63;--dark:#000}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;overflow:hidden;background:#000;font-family:Tahoma,"Segoe UI",Verdana,sans-serif;font-size:13px;color:var(--ink)}
+button{font-family:inherit}
+.bevel-out{background:var(--face);border:2px solid;border-color:#f1f1f1 #404040 #404040 #f1f1f1;box-shadow:inset -1px -1px #868a8e,inset 1px 1px #fff}
+.bevel-in{background:#fff;border:2px solid;border-color:#404040 #f1f1f1 #f1f1f1 #404040;box-shadow:inset -1px -1px #fff,inset 1px 1px #868a8e}
+.btn{background:var(--face);border:2px solid;border-color:#f1f1f1 #404040 #404040 #f1f1f1;box-shadow:inset -1px -1px #868a8e,inset 1px 1px #fff;padding:3px 12px;cursor:pointer;font-size:13px}
+.btn:active{border-color:#404040 #f1f1f1 #f1f1f1 #404040;box-shadow:inset -1px -1px #fff,inset 1px 1px #868a8e}
+.btn:focus-visible,.icon:focus-visible{outline:1px dotted #000;outline-offset:-4px}
+/* ---------- BOOT ---------- */
+#boot{position:fixed;inset:0;background:#000;color:#c0c0c0;z-index:9999;padding:28px;font-family:"Courier New",monospace;font-size:15px;line-height:1.5;cursor:pointer;white-space:pre-wrap;overflow:hidden}
+#boot .dim{color:#666}
+#splash{position:fixed;inset:0;background:#000;z-index:9998;display:none;place-items:center;cursor:pointer}
+#splash .card{text-align:center;color:#fff}
+#splash .logo{font-family:Georgia,"Times New Roman",serif;font-size:min(13vw,92px);font-style:italic;font-weight:700;letter-spacing:-2px}
+#splash .logo b{color:#fff}.splash93{background:#f65314;color:#fff;padding:0 14px;font-style:normal}
+#splash .sub{margin-top:10px;color:#9adcff;letter-spacing:4px;font-size:13px}
+#splash .bar{width:min(420px,80vw);height:18px;border:2px solid #888;margin:26px auto 0;display:flex;gap:3px;padding:2px}
+#splash .bar i{flex:1;background:#000080;opacity:0}
+#splash .bar i.on{opacity:1}
+/* ---------- DESKTOP ---------- */
+#desktop{position:fixed;inset:0;background:var(--teal);display:none;padding:14px 10px 52px}
+#desktop.wall1{background:#3a6ea5}#desktop.wall2{background:#008080 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"><rect width="48" height="48" fill="%23008080"/><circle cx="10" cy="10" r="2" fill="%2300a0a0"/><circle cx="34" cy="34" r="2" fill="%23006060"/></svg>')}
+#desktop.wall3{background:#5b2a86}
+#icons{position:absolute;inset:10px 10px 50px 10px;display:flex;flex-direction:column;flex-wrap:wrap;align-content:flex-start;gap:6px}
+.icon{width:96px;padding:8px 4px 6px;text-align:center;color:#fff;background:transparent;border:1px dotted transparent;cursor:pointer;user-select:none}
+.icon .art{font-size:36px;line-height:1.1;filter:drop-shadow(2px 2px 0 rgba(0,0,0,.35))}
+.icon .lbl{display:block;margin-top:4px;font-size:12px;text-shadow:1px 1px 2px #000;padding:1px 2px}
+.icon.sel{border-color:#bbb}
+.icon.sel .lbl{background:var(--navy)}
+/* ---------- WINDOWS ---------- */
+.win{position:absolute;min-width:260px;min-height:150px;display:flex;flex-direction:column;padding:3px}
+.win.max{inset:0!important;width:auto!important;height:auto!important}
+.title{display:flex;align-items:center;gap:6px;background:linear-gradient(90deg,var(--navy),var(--navy2));color:#fff;font-weight:700;padding:4px 4px 4px 8px;cursor:grab;user-select:none;touch-action:none}
+.win:not(.active) .title{background:linear-gradient(90deg,#7b7b7b,#a5a5a5)}
+.title .t{flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:13px}
+.title button{width:22px;height:20px;line-height:1;padding:0;font-weight:700;cursor:pointer;background:var(--face);border:2px solid;border-color:#f1f1f1 #404040 #404040 #f1f1f1}
+.menubar{display:flex;gap:14px;padding:4px 6px;font-size:12px}
+.menubar span{cursor:default}.menubar span:hover{background:var(--navy);color:#fff}
+.body{flex:1;overflow:auto;margin:2px;padding:8px;background:#fff}
+.body.plain{background:var(--face)}
+.win .status{padding:3px 6px;font-size:12px;border-top:1px solid #868a8e}
+/* ---------- TASKBAR ---------- */
+#taskbar{position:fixed;left:0;right:0;bottom:0;height:42px;display:flex;align-items:center;gap:6px;padding:4px 6px;z-index:9000}
+#startBtn{display:flex;align-items:center;gap:6px;font-weight:800;padding:5px 12px}
+#startBtn .flag{font-size:16px}
+#tasks{flex:1;display:flex;gap:5px;overflow:hidden}
+.task{min-width:120px;max-width:190px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:5px 8px}
+.task.active{border-color:#404040 #f1f1f1 #f1f1f1 #404040;box-shadow:inset -1px -1px #fff,inset 1px 1px #868a8e;background:#d8d8d8}
+#clock{padding:5px 12px;font-size:12px;min-width:86px;text-align:center}
+/* ---------- START MENU ---------- */
+#startMenu{position:fixed;left:4px;bottom:46px;width:250px;z-index:9500;display:none;padding:3px}
+#startMenu .side{position:absolute;left:3px;top:3px;bottom:3px;width:34px;background:linear-gradient(180deg,var(--navy),var(--navy2));color:#fff;writing-mode:vertical-rl;transform:rotate(180deg);text-align:center;font-weight:800;letter-spacing:2px;padding:8px 0}
+#startMenu ul{list-style:none;margin:0 0 0 36px;padding:4px}
+#startMenu li{padding:8px 10px;cursor:pointer;display:flex;gap:10px;align-items:center}
+#startMenu li:hover{background:var(--navy);color:#fff}
+#startMenu hr{border:none;border-top:1px solid #868a8e;border-bottom:1px solid #fff;margin:4px 0}
+/* ---------- CONTEXT / MISC ---------- */
+#ctx{position:fixed;z-index:9600;width:210px;padding:3px;display:none}
+#ctx div{padding:7px 10px;cursor:pointer}#ctx div:hover{background:var(--navy);color:#fff}
+#bsod{position:fixed;inset:0;background:#0000aa;color:#fff;z-index:10000;display:none;padding:8vh 10vw;font-family:"Courier New",monospace;font-size:16px;line-height:1.6;cursor:pointer}
+#bsod .tag{background:#aaa;color:#0000aa;padding:0 10px;font-weight:700}
+textarea,input,select{font-family:inherit;font-size:13px}
+.notepad{width:100%;height:100%;border:none;resize:none;outline:none;font-family:"Courier New",monospace;font-size:14px}
+.calcDisp{width:100%;text-align:right;font-size:22px;padding:6px;margin-bottom:8px;background:#fff}
+.calcGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}
+.calcGrid button{padding:10px 0;font-size:15px}
+.paintTools{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+.swatch{width:22px;height:22px;border:2px solid #888;cursor:pointer}.swatch.sel{border-color:#000;outline:2px solid #fff}
+#paintCv{background:#fff;touch-action:none;cursor:crosshair;width:100%;height:300px}
+.term{background:#000!important;color:#0f0;font-family:"Courier New",monospace;font-size:13px}
+.term input{background:#000;color:#0f0;border:none;outline:none;width:78%;font-family:inherit}
+.mineGrid{display:grid;grid-template-columns:repeat(9,30px);gap:2px;justify-content:center}
+.mineGrid button{width:30px;height:30px;padding:0;font-weight:800}
+.track{padding:7px 8px;cursor:pointer;border-bottom:1px dotted #999}.track:hover,.track.playing{background:#000080;color:#fff}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:5px 10px}
+@media(max-width:640px){.icon{width:80px}.icon .art{font-size:30px}.win{min-width:0;width:calc(100vw - 16px)!important}.task{min-width:80px}}
+</style>
+</head>
+<body>
+<div id="boot" title="Click to skip"></div>
+<div id="splash"><div class="card">
+  <div class="logo">Windows<b class="splash93">93</b></div>
+  <div class="sub">A CLEAN-ROOM TRIBUTE &nbsp;•&nbsp; EST. 1993 (NOT REALLY)</div>
+  <div class="bar" id="loadBar"></div>
+  <p style="color:#ccc">Loading your totally stable desktop…</p>
+</div></div>
+
+<main id="desktop" aria-label="Desktop">
+  <div id="icons"></div>
+</main>
+
+<div id="startMenu" class="bevel-out">
+  <div class="side">Windows93</div>
+  <ul id="startList"></ul>
+</div>
+<div id="ctx" class="bevel-out"></div>
+
+<footer id="taskbar" class="bevel-out" style="display:none">
+  <button id="startBtn" class="btn" aria-label="Start menu"><span class="flag">🪟</span> Start</button>
+  <div id="tasks"></div>
+  <div id="clock" class="bevel-in" style="background:var(--face)">--:--</div>
+</footer>
+
+<div id="bsod" tabindex="0"><p><span class="tag">Windows93</span></p>
+<p>A fatal exception 0D has occurred at 0028:C00B93A5 in VxD WIN93(01). The current application will be terminated.</p>
+<p>* Press any key to reboot this beautiful disaster _</p>
+<p>* Press CTRL+ALT+DEL again to restart your computer. You will lose any unsaved information in all applications (there wasn't much).</p>
+<p>Error: TOO_MUCH_NOSTALGIA</p><p style="text-align:center;margin-top:40px">Press any key to continue _</p></div>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const desktop=$('#desktop'), iconsEl=$('#icons'), tasksEl=$('#tasks');
+let z=10, wins=new Map(), hydraCount=0, audioCtx=null, musicTimer=null;
+
+/* ================= APPS REGISTRY ================= */
+const APPS={
+ computer:{icon:'🖥️',title:'My Computer',w:430,h:300,render:b=>{b.innerHTML=`<div class="kv">
+   <span>System:</span><b>WINDOWS93 Tribute Edition</b><span>Processor:</span><b>Pentium-ish @ 93 MHz (emotional)</b>
+   <span>Memory:</span><b>640K — ought to be enough for anybody</b><span>Hard disk:</span><b>C:\\ 93 MB free of 93 MB</b>
+   <span>Display:</span><b>Teal #008080, 256 glorious colours</b><span>Stability:</span><b>See BSOD app for details</b></div>
+   <p><button class="btn" onclick="openApp('bsod')">Test stability</button> <button class="btn" onclick="openApp('about')">About this tribute</button></p>`}},
+ notepad:{icon:'📝',title:'Notepad',w:460,h:340,render:(b,id)=>{b.style.padding='0';b.innerHTML=`<textarea class="notepad" id="np-${id}" placeholder="Type something worth saving in 1993…">${localStorage.getItem('w93-notepad')||''}</textarea>`;
+   const t=b.querySelector('textarea');t.addEventListener('input',()=>{localStorage.setItem('w93-notepad',t.value);setStatus(id,`${t.value.length} characters — auto-saved`)});setStatus(id,'Auto-saves to this browser')}},
+ paint:{icon:'🎨',title:'Paint',w:560,h:440,render:(b,id)=>{b.classList.add('plain');b.innerHTML=`<div class="paintTools">
+   ${['#000000','#ffffff','#ff0000','#ff7f00','#ffff00','#00c000','#0000ff','#ff00ff','#00ffff','#808080'].map((c,i)=>`<button class="swatch${i===0?' sel':''}" data-c="${c}" style="background:${c}" aria-label="Colour ${c}"></button>`).join('')}
+   <label>Brush <input type="range" min="1" max="24" value="4" id="brush-${id}"></label>
+   <button class="btn" id="pclear-${id}">Clear</button><button class="btn" id="psave-${id}">Save PNG</button></div>
+   <canvas id="paintCv" width="900" height="520"></canvas>`;
+   const cv=b.querySelector('canvas'),ctx=cv.getContext&&cv.getContext('2d');if(!ctx){b.insertAdjacentHTML('beforeend','<p>Canvas is not supported in this browser.</p>');return}
+   ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height);let col='#000',down=false,lx=0,ly=0;
+   const pos=e=>{const r=cv.getBoundingClientRect();return[(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height]};
+   b.querySelectorAll('.swatch').forEach(s=>s.onclick=()=>{col=s.dataset.c;b.querySelectorAll('.swatch').forEach(x=>x.classList.remove('sel'));s.classList.add('sel')});
+   cv.onpointerdown=e=>{down=true;[lx,ly]=pos(e);cv.setPointerCapture(e.pointerId)};
+   cv.onpointermove=e=>{if(!down)return;const[x,y]=pos(e);ctx.strokeStyle=col;ctx.lineWidth=+b.querySelector('input[type=range]').value;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(lx,ly);ctx.lineTo(x,y);ctx.stroke();[lx,ly]=[x,y]};
+   cv.onpointerup=()=>down=false;
+   b.querySelector(`#pclear-${id}`).onclick=()=>{ctx.fillStyle='#fff';ctx.fillRect(0,0,cv.width,cv.height)};
+   b.querySelector(`#psave-${id}`).onclick=()=>{const a=document.createElement('a');a.download='windows93-paint.png';a.href=cv.toDataURL();a.click()};}},
+ calc:{icon:'🧮',title:'Calculator',w:280,h:360,render:b=>{b.classList.add('plain');b.innerHTML=`<input class="calcDisp bevel-in" value="0" readonly><div class="calcGrid">
+   ${['C','←','÷','×','7','8','9','-','4','5','6','+','1','2','3','=','0','.','%','√'].map(k=>`<button class="btn" data-k="${k}">${k}</button>`).join('')}</div>`;
+   const d=b.querySelector('.calcDisp');let cur='0',prev=null,op=null;
+   const calc=()=>{const a=parseFloat(prev),c=parseFloat(cur);if(isNaN(a)||isNaN(c))return cur;return String({'÷':a/c,'×':a*c,'-':a-c,'+':a+c}[op]??c)};
+   b.querySelectorAll('button').forEach(btn=>btn.onclick=()=>{const k=btn.dataset.k;
+     if(/\d|\./.test(k))cur=cur==='0'&&k!=='.'?k:cur+k;
+     else if(k==='C'){cur='0';prev=op=null}else if(k==='←')cur=cur.length>1?cur.slice(0,-1):'0';
+     else if(k==='='){if(op){cur=calc();prev=op=null}}
+     else if(k==='√')cur=String(Math.sqrt(parseFloat(cur)||0));
+     else if(k==='%')cur=String((parseFloat(cur)||0)/100);
+     else{if(op&&prev!==null)cur=calc();prev=cur;op=k;cur='0'} d.value=cur;});}},
+ terminal:{icon:'💻',title:'MS-DOS Prompt',w:520,h:340,render:(b,id)=>{b.classList.add('term');b.innerHTML=`<div>WINDOWS93(R) Tribute DOS<br>Type HELP and press Enter.<br><br></div><div class="tout"></div><div>C:\\WIN93&gt; <input aria-label="Terminal input" autocomplete="off"></div>`;
+   const out=b.querySelector('.tout'),inp=b.querySelector('input');setTimeout(()=>inp.focus(),50);b.onclick=()=>inp.focus();
+   inp.onkeydown=e=>{if(e.key!=='Enter')return;const cmd=inp.value.trim(),low=cmd.toLowerCase();inp.value='';
+     const print=t=>out.innerHTML+=t+'<br>';print(`C:\\WIN93&gt; ${escapeHtml(cmd)}`);
+     if(low==='help')print('Commands: HELP&nbsp; DIR&nbsp; VER&nbsp; ECHO &lt;text&gt;&nbsp; DATE&nbsp; CLS&nbsp; ABOUT&nbsp; HYDRA&nbsp; BSOD&nbsp; EXIT');
+     else if(low==='dir')print('NOTEPAD.EXE&nbsp;&nbsp;PAINT.EXE&nbsp;&nbsp;CALC.EXE&nbsp;&nbsp;MINES.EXE<br>MUSIC.EXE&nbsp;&nbsp;&nbsp;&nbsp;HYDRA.EXE&nbsp;&nbsp;SECRET.TXT<br>&nbsp;&nbsp;7 file(s)&nbsp;&nbsp;93,000,000 bytes free');
+     else if(low==='ver')print('WINDOWS93 Tribute [Version 93.0.2026 — clean-room build]');
+     else if(low.startsWith('echo '))print(escapeHtml(cmd.slice(5)));
+     else if(low==='date')print(new Date().toString());
+     else if(low==='cls')out.innerHTML='';
+     else if(low==='about')openApp('about');
+     else if(low==='hydra')openApp('hydra');
+     else if(low==='bsod')showBSOD();
+     else if(low==='exit')closeWin(id);
+     else if(low==='secret'||low==='type secret.txt')print('You found nothing. The real secret was the teal desktop all along.');
+     else if(low)print('Bad command or file name. Classic.');
+     b.scrollTop=b.scrollHeight;};}},
+ mines:{icon:'💣',title:'Minesweeper',w:340,h:400,render:(b,id)=>{b.classList.add('plain');b.innerHTML=`<p style="text-align:center"><button class="btn" id="mineReset-${id}">🙂 New game</button> <span id="mineMsg-${id}">Find the 10 mines. Right-click / long-press to flag.</span></p><div class="mineGrid"></div>`;
+   const grid=b.querySelector('.mineGrid'),msg=b.querySelector(`#mineMsg-${id}`);let mines,mineOpen,over;
+   const start=()=>{mines=new Set();while(mines.size<10)mines.add(Math.floor(Math.random()*81));mineOpen=0;over=false;msg.textContent='Find the 10 mines.';grid.innerHTML='';
+     for(let i=0;i<81;i++){const btn=document.createElement('button');btn.className='btn';btn.dataset.i=i;
+       btn.onclick=()=>{if(over||btn.textContent==='🚩')return;if(mines.has(i)){btn.textContent='💣';msg.textContent='BOOM. Very 1993 of you.';over=true;mines.forEach(m=>grid.children[m].textContent='💣')}
+         else{const n=neighbours(i).filter(x=>mines.has(x)).length;btn.textContent=n||'';btn.disabled=true;mineOpen++;if(mineOpen===71){msg.textContent='You win! No desktop was harmed.';over=true}}};
+       btn.oncontextmenu=e=>{e.preventDefault();if(!over&&!btn.disabled)btn.textContent=btn.textContent==='🚩'?'':'🚩'};
+       grid.appendChild(btn)}};
+   const neighbours=i=>{const x=i%9,y=Math.floor(i/9),r=[];for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){if(!dx&&!dy)continue;const nx=x+dx,ny=y+dy;if(nx>=0&&nx<9&&ny>=0&&ny<9)r.push(ny*9+nx)}return r};
+   b.querySelector(`#mineReset-${id}`).onclick=start;start();}},
+ music:{icon:'🎵',title:'Media Player 93',w:420,h:330,render:(b,id)=>{b.innerHTML=`<p><b>Now playing:</b> <span id="now-${id}">Nothing — pick a track</span></p>
+   ${[['Chip Dawn','C major arpeggio, 132 BPM'],['Dial-Up Dreams','Pentatonic noodle in A minor'],['Teal Sunset','Slow square-wave sunset']].map((t,i)=>`<div class="track" data-i="${i}">▶ ${t[0]} <small>— ${t[1]}</small></div>`).join('')}
+   <p><button class="btn" id="stop-${id}">■ Stop</button></p><p style="color:#555">Original WebAudio chiptunes, synthesised live. No samples, no files from the original site.</p>`;
+   b.querySelectorAll('.track').forEach(tr=>tr.onclick=()=>{b.querySelectorAll('.track').forEach(x=>x.classList.remove('playing'));tr.classList.add('playing');b.querySelector(`#now-${id}`).textContent=tr.textContent.trim();playTune(+tr.dataset.i)});
+   b.querySelector(`#stop-${id}`).onclick=()=>stopMusic();}},
+ internet:{icon:'🌐',title:'Internet Explorer 93',w:540,h:380,render:b=>{b.innerHTML=`<div style="display:flex;gap:6px"><input style="flex:1" class="bevel-in" value="http://tribute.local/93" id="addr"><button class="btn" id="go">Go</button></div>
+   <div class="bevel-in" style="margin-top:8px;padding:14px;min-height:230px"><h2 style="margin-top:0">📟 Welcome to the Information Superhighway</h2>
+   <p>Connection speed: <b>28.8 kbps of pure confidence</b>. This page loaded instantly because it was already here.</p>
+   <p>• Under construction 🚧 &nbsp; • Best viewed at 800×600 &nbsp; • Sign my guestbook</p>
+   <p><button class="btn" onclick="openApp('hydra')">Click here to win a free popup</button></p></div>`;
+   b.querySelector('#go').onclick=()=>{b.querySelector('h2').textContent='📟 Still the same page';b.querySelector('p').innerHTML='There is no other page. This <i>is</i> the web in 1993.'};}},
+ hydra:{icon:'🐲',title:'Hydra.exe',w:340,h:230,render:b=>{b.innerHTML=`<h3 style="margin-top:0">🐲 HYDRA</h3><p>Cut off one head, two more shall take its place.</p><p>Close this window and see what happens…</p><p style="color:#a00"><b>Warning:</b> it's exactly what you think.</p>`},onClose:()=>{if(hydraCount<6){hydraCount++;setTimeout(()=>{openApp('hydra');openApp('hydra')},120)}}},
+ recycle:{icon:'🗑️',title:'Recycle Bin',w:360,h:260,render:b=>{b.innerHTML=`<p style="font-size:40px;text-align:center">🗑️</p><p style="text-align:center">The Recycle Bin is empty.</p><p style="text-align:center;color:#555">Your regrets from 1993 have already been permanently deleted.</p>`}},
+ about:{icon:'ℹ️',title:'About WINDOWS93 Tribute',w:460,h:320,render:b=>{b.innerHTML=`<h3 style="margin-top:0">🪟 WINDOWS93 — clean-room tribute</h3>
+   <p>An original, from-scratch recreation of the <i>idea</i> of windows93.net: a surreal parody desktop that never existed, built by jankenpopp &amp; Zombectro in 2014.</p>
+   <p><b>Nothing here is copied</b> — no code, images, sounds or text from the original site. All icons are emoji/CSS, all tunes are synthesised live, all jokes are new (quality may vary, as tradition demands).</p>
+   <p>Go visit the real thing: <b>windows93.net</b></p>
+   <p><button class="btn" onclick="openApp('bsod')">Experience authenticity (BSOD)</button></p>`}},
+ bsod:{icon:'💙',title:'Definitely Not A Virus',w:380,h:260,render:b=>{b.innerHTML=`<p>This button does exactly one thing.</p><p><button class="btn" onclick="showBSOD()">💙 Blue Screen of Death</button></p><p style="color:#555">Reboot restores the desktop. Your Notepad text is auto-saved.</p>`}}
+};
+const DESKTOP_ICONS=['computer','recycle','notepad','paint','calc','terminal','mines','music','internet','hydra','about'];
+function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function setStatus(id,txt){const w=wins.get(id);if(w)w.querySelector('.status').textContent=txt}
+
+/* ================= WINDOW MANAGER ================= */
+let counter=0;
+function openApp(key){
+ const app=APPS[key];if(!app)return;
+ const id='w'+(++counter);
+ const el=document.createElement('section');el.className='win bevel-out active';el.dataset.id=id;
+ const off=(counter%7)*28;
+ el.style.cssText=`left:${Math.max(6,90+off)}px;top:${Math.max(6,50+off)}px;width:${app.w}px;height:${app.h}px;z-index:${++z}`;
+ el.innerHTML=`<div class="title"><span>${app.icon}</span><span class="t">${app.title}</span>
+   <button data-a="min" aria-label="Minimise">_</button><button data-a="max" aria-label="Maximise">▢</button><button data-a="close" aria-label="Close">×</button></div>
+   <div class="menubar"><span>File</span><span>Edit</span><span>Help</span></div><div class="body"></div><div class="status">Ready</div>`;
+ desktop.appendChild(el);wins.set(id,el);
+ const body=el.querySelector('.body');app.render(body,id);el._app=app;
+ const task=document.createElement('button');task.className='task btn active';task.textContent=`${app.icon} ${app.title}`;task.dataset.id=id;tasksEl.appendChild(task);
+ task.onclick=()=>{if(el.style.display==='none'){el.style.display='flex';focusWin(id)}else if(el.classList.contains('active')){el.style.display='none'}else focusWin(id)};
+ el.querySelector('[data-a="close"]').onclick=()=>closeWin(id);
+ el.querySelector('[data-a="min"]').onclick=()=>{el.style.display='none';syncTasks()};
+ el.querySelector('[data-a="max"]').onclick=()=>el.classList.toggle('max');
+ el.querySelector('.title').addEventListener('dblclick',e=>{if(e.target.tagName!=='BUTTON')el.classList.toggle('max')});
+ el.addEventListener('pointerdown',()=>focusWin(id));
+ makeDraggable(el,el.querySelector('.title'));focusWin(id);return id;
+}
+function focusWin(id){wins.forEach((w,k)=>w.classList.toggle('active',k===id));const w=wins.get(id);if(w)w.style.zIndex=++z;syncTasks()}
+function syncTasks(){$$('#tasks .task').forEach(t=>{const w=wins.get(t.dataset.id);t.classList.toggle('active',!!w&&w.style.display!=='none'&&w.classList.contains('active'))})}
+function closeWin(id){const w=wins.get(id);if(!w)return;const app=w._app;w.remove();wins.delete(id);const t=tasksEl.querySelector(`[data-id="${id}"]`);if(t)t.remove();if(app&&app.onClose)app.onClose()}
+function makeDraggable(el,handle){
+ handle.addEventListener('pointerdown',e=>{if(e.target.tagName==='BUTTON'||el.classList.contains('max'))return;
+  const sx=e.clientX-el.offsetLeft,sy=e.clientY-el.offsetTop;handle.setPointerCapture(e.pointerId);
+  const move=ev=>{el.style.left=Math.min(innerWidth-80,Math.max(-el.offsetWidth+120,ev.clientX-sx))+'px';el.style.top=Math.min(innerHeight-90,Math.max(0,ev.clientY-sy))+'px'};
+  const up=()=>{handle.removeEventListener('pointermove',move);handle.removeEventListener('pointerup',up)};
+  handle.addEventListener('pointermove',move);handle.addEventListener('pointerup',up);});
+}
+
+/* ================= MUSIC (WebAudio, original tunes) ================= */
+const TUNES=[[523,659,784,1047,784,659,523,392],[440,523,659,523,440,392,440,523],[392,494,587,784,587,494,440,392]];
+function playTune(n){stopMusic();audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();
+ const notes=TUNES[n],step=n===2?.34:.22;let i=0;
+ const tick=()=>{if(!audioCtx)return;const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='square';o.frequency.value=notes[i%notes.length];
+  g.gain.setValueAtTime(.07,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.001,audioCtx.currentTime+step*.92);
+  o.connect(g).connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+step);i++;musicTimer=setTimeout(tick,step*1000)};
+ tick();}
+function stopMusic(){if(musicTimer)clearTimeout(musicTimer);musicTimer=null;if(audioCtx){audioCtx.close();audioCtx=null}}
+
+/* ================= BSOD / BOOT ================= */
+function showBSOD(){$('#bsod').style.display='block';$('#bsod').focus()}
+function hideBSOD(){$('#bsod').style.display='none';boot()}
+$('#bsod').addEventListener('click',hideBSOD);
+document.addEventListener('keydown',e=>{if($('#bsod').style.display==='block')hideBSOD()});
+const BOOT_LINES=['WINDOWS93 BIOS v93.0 — clean-room tribute build','Memory test: 640K OK (ought to be enough)','Detecting IDE drives... TEAL.SYS found','Loading HIMEM.SYS .......... OK','Loading MOUSE.EXE ......... OK','Loading NOSTALGIA.DLL ..... OK','Starting WINDOWS93...',''];
+function boot(){
+ $('#bsod').style.display='none';desktop.style.display='none';$('#taskbar').style.display='none';$('#splash').style.display='none';
+ const b=$('#boot');b.style.display='block';b.textContent='';let li=0;
+ const type=()=>{if(li<BOOT_LINES.length){b.textContent+=BOOT_LINES[li++]+'\n';setTimeout(type,110)}else setTimeout(showSplash,350)};
+ type();
+}
+function showSplash(){$('#boot').style.display='none';const s=$('#splash');s.style.display='grid';
+ const bar=$('#loadBar');bar.innerHTML=Array.from({length:14},()=>'<i></i>').join('');const cells=bar.children;let i=0;
+ const iv=setInterval(()=>{if(i<cells.length)cells[i++].classList.add('on');else{clearInterval(iv);setTimeout(showDesktop,250)}},70);}
+function showDesktop(){$('#splash').style.display='none';desktop.style.display='block';$('#taskbar').style.display='flex';
+ if(!wins.size){openApp('about')}}
+$('#boot').onclick=()=>{if($('#boot').style.display!=='none')showSplash()};
+$('#splash').onclick=showDesktop;
+
+/* ================= DESKTOP UI ================= */
+DESKTOP_ICONS.forEach(key=>{const app=APPS[key];const d=document.createElement('button');d.className='icon';d.innerHTML=`<span class="art">${app.icon}</span><span class="lbl">${app.title}</span>`;
+ let lastTap=0;
+ d.onclick=()=>{$$('.icon').forEach(x=>x.classList.remove('sel'));d.classList.add('sel');
+  const now=Date.now();if(now-lastTap<400){openApp(key);lastTap=0}else lastTap=now};
+ iconsEl.appendChild(d);});
+const startList=$('#startList');
+[...DESKTOP_ICONS,'bsod'].forEach(key=>{const app=APPS[key];const li=document.createElement('li');li.innerHTML=`<span>${app.icon}</span> ${app.title}`;li.onclick=()=>{openApp(key);toggleStart(false)};startList.appendChild(li)});
+const hr=document.createElement('hr');startList.appendChild(hr);
+[['🔄 Restart',()=>boot()],['💙 Blue Screen',()=>showBSOD()],['⏻ Shut Down',()=>{wins.forEach((_,id)=>closeWin(id));desktop.style.display='none';$('#taskbar').style.display='none';$('#boot').style.display='block';$('#boot').textContent='It is now safe to turn off\nyour nostalgia.\n\n(Click anywhere to boot again)';$('#boot').onclick=()=>location.reload();}]].forEach(([label,fn])=>{const li=document.createElement('li');li.textContent=label;li.onclick=()=>{toggleStart(false);fn()};startList.appendChild(li)});
+function toggleStart(force){const m=$('#startMenu');m.style.display=force!==undefined?(force?'block':'none'):(m.style.display==='block'?'none':'block')}
+$('#startBtn').onclick=e=>{e.stopPropagation();toggleStart()};
+document.addEventListener('click',e=>{if(!e.target.closest('#startMenu')&&!e.target.closest('#startBtn'))toggleStart(false);
+ if(!e.target.closest('#ctx'))$('#ctx').style.display='none';if(!e.target.closest('.icon'))$$('.icon').forEach(x=>x.classList.remove('sel'))});
+desktop.addEventListener('contextmenu',e=>{e.preventDefault();const c=$('#ctx');c.innerHTML='';
+ [['🖥️ Open My Computer',()=>openApp('computer')],['🎨 Change wallpaper',()=>{const walls=['','wall1','wall2','wall3'];const next=walls[(walls.indexOf(desktop.dataset.wall||'')+1)%walls.length];desktop.dataset.wall=next;desktop.className=next}],
+  ['🐲 Unleash Hydra',()=>openApp('hydra')],['💙 Trigger BSOD',()=>showBSOD()]].forEach(([l,f])=>{const d=document.createElement('div');d.textContent=l;d.onclick=()=>{f();c.style.display='none'};c.appendChild(d)});
+ c.style.left=Math.min(innerWidth-220,e.clientX)+'px';c.style.top=Math.min(innerHeight-200,e.clientY)+'px';c.style.display='block';});
+function tickClock(){const d=new Date();$('#clock').textContent=d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'})}
+tickClock();setInterval(tickClock,10000);
+window.openApp=openApp;window.closeWin=closeWin;window.showBSOD=showBSOD;
+boot();
+</script>
+</body>
+</html>
