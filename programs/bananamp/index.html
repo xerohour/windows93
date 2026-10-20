@@ -20,6 +20,8 @@
   li.now { background: #ffe135; color: #111; font-weight: bold; }
   .dim { color: #999; font-size: 11px; font-family: Tahoma, sans-serif; margin-top: 8px; }
   #time { color: #16c60c; }
+  #prog { background: #000; border: 2px inset #444; height: 10px; cursor: pointer; }
+  #progfill { background: #ffe135; height: 100%; width: 0%; }
 </style>
 <div class="amp">
   <h3>🍌 BananaMP <small>— it really whips the banana's… peel</small></h3>
@@ -28,10 +30,11 @@
     <div id="eq"></div>
   </div>
   <div class="controls">
-    <button id="prev">⏮</button><button id="play">▶</button><button id="next">⏭</button>
+    <button id="prev">⏮</button><button id="play">▶</button><button id="stop">⏹</button><button id="next">⏭</button>
     <span id="time">0:00</span>
     <input id="vol" type="range" min="0" max="1" step="0.05" value="0.7" />
   </div>
+  <div id="prog" title="Loop progress — click to seek"><div id="progfill"></div></div>
   <ul id="list"></ul>
   <p class="dim">Original player written for xerohour/windows93 — Windows93 had a “bananamp” app; this is a from-scratch recreation. All tracks are synthesized live with WebAudio (no audio files, no samples).</p>
 </div>
@@ -81,6 +84,7 @@
       if (bass !== null && bass !== undefined) beep(semi(bass - 12), t, spb * 0.95, "triangle", 0.16 * vol)
       for (const bar of eqEl.children) bar.style.height = (2 + Math.random() * 24) + "px"
       document.getElementById("time").textContent = fmt(Math.floor((Date.now() - startedAt) / 1000))
+      document.getElementById("progfill").style.width = ((i + 1) / len * 100) + "%"
       step++
       stepTimer = setTimeout(tick, spb * 1000)
     }
@@ -104,6 +108,22 @@
     else clearTimeout(stepTimer)
   }
   document.getElementById("play").onclick = toggle
+  document.getElementById("stop").onclick = () => {
+    playing = false; clearTimeout(stepTimer); step = 0
+    document.getElementById("play").textContent = "▶"
+    document.getElementById("time").textContent = "0:00"
+    document.getElementById("progfill").style.width = "0%"
+    for (const bar of eqEl.children) bar.style.height = "2px"
+  }
   document.getElementById("next").onclick = () => playSong((songIdx + 1 + SONGS.length) % SONGS.length)
   document.getElementById("prev").onclick = () => playSong((songIdx - 1 + SONGS.length) % SONGS.length)
+  document.getElementById("prog").onclick = (e) => {
+    if (songIdx < 0) return
+    const song = SONGS[songIdx]
+    const len = Math.max(song.lead.length, song.bass.length)
+    const r = e.currentTarget.getBoundingClientRect()
+    step = Math.floor(((e.clientX - r.left) / r.width) * len)
+    startedAt = Date.now() - step * (60 / song.bpm / 2) * 1000
+    document.getElementById("progfill").style.width = (step / len * 100) + "%"
+  }
 </script>
