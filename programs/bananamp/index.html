@@ -1,0 +1,109 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>BananaMP — now with 100% more banana</title>
+<style>
+  body { font-family: "Courier New", monospace; background: #1b1b1b; color: #ffe135; margin: 0; padding: 12px; }
+  .amp { background: linear-gradient(#3a3a3a, #242424); border: 2px outset #555; padding: 12px; max-width: 470px; margin: 0 auto; }
+  h3 { margin: 0 0 4px; font-family: Tahoma, sans-serif; color: #fff; }
+  h3 small { color: #ffe135; }
+  #display { background: #000; border: 2px inset #444; padding: 8px; min-height: 44px; }
+  #title { font-size: 15px; white-space: nowrap; overflow: hidden; }
+  #eq { display: flex; gap: 2px; align-items: flex-end; height: 26px; margin-top: 6px; }
+  #eq div { flex: 1; background: #16c60c; min-height: 2px; }
+  .controls { display: flex; gap: 6px; margin: 10px 0; align-items: center; }
+  button { background: #c0c0c0; border: 2px outset #eee; font-size: 15px; padding: 4px 10px; cursor: pointer; }
+  button:active { border-style: inset; }
+  input[type="range"] { flex: 1; }
+  ul { list-style: none; margin: 8px 0 0; padding: 0; font-family: Tahoma, sans-serif; font-size: 13px; }
+  li { padding: 5px 8px; cursor: pointer; color: #ddd; border-bottom: 1px solid #333; }
+  li:hover { background: #333; }
+  li.now { background: #ffe135; color: #111; font-weight: bold; }
+  .dim { color: #999; font-size: 11px; font-family: Tahoma, sans-serif; margin-top: 8px; }
+  #time { color: #16c60c; }
+</style>
+<div class="amp">
+  <h3>🍌 BananaMP <small>— it really whips the banana's… peel</small></h3>
+  <div id="display">
+    <div id="title">No track selected</div>
+    <div id="eq"></div>
+  </div>
+  <div class="controls">
+    <button id="prev">⏮</button><button id="play">▶</button><button id="next">⏭</button>
+    <span id="time">0:00</span>
+    <input id="vol" type="range" min="0" max="1" step="0.05" value="0.7" />
+  </div>
+  <ul id="list"></ul>
+  <p class="dim">Original player written for xerohour/windows93 — Windows93 had a “bananamp” app; this is a from-scratch recreation. All tracks are synthesized live with WebAudio (no audio files, no samples).</p>
+</div>
+<script>
+  // tiny chiptune sequencer — notes are semitone offsets from A4, null = rest
+  const SONGS = [
+    { name: "🍌 Banana Boat (to nowhere)", bpm: 140, wave: "square",
+      lead: [7,7,9,7,4,2,0, 7,7,9,12,9,7,5, 9,9,12,9,7,5,4, 2,4,2,0,-1,0,null],
+      bass: [0,null,0,null,-4,null,0,null, -2,null,-2,null,0,null,-4,null] },
+    { name: "☕ Dial-Up Dreams", bpm: 112, wave: "triangle",
+      lead: [12,null,9,null,7,null,9,null, 5,null,7,null,9,null,null,null, 12,null,9,null,7,null,9,null, 16,null,12,null,9,null,null,null],
+      bass: [-12,null,null,null,-5,null,null,null, -8,null,null,null,-5,null,null,null] },
+    { name: "💾 Floppy Disk Waltz", bpm: 96, wave: "sawtooth",
+      lead: [0,4,7, 12,7,4, 9,5,2, 7,null,null, 0,4,7, 12,7,4, 5,9,5, 4,null,null],
+      bass: [-12,null,null, -12,null,null, -7,null,null, -7,null,null] },
+  ]
+  let ac = null, playing = false, songIdx = -1, stepTimer = null, step = 0, startedAt = 0
+  const eqEl = document.getElementById("eq")
+  for (let i = 0; i < 24; i++) eqEl.appendChild(document.createElement("div"))
+  const listEl = document.getElementById("list")
+  SONGS.forEach((s, i) => {
+    const li = document.createElement("li")
+    li.textContent = `${i + 1}. ${s.name}`
+    li.onclick = () => playSong(i)
+    listEl.appendChild(li)
+  })
+  function beep(freq, t, dur, wave, gain) {
+    const o = ac.createOscillator(), g = ac.createGain()
+    o.type = wave; o.frequency.value = freq
+    g.gain.setValueAtTime(gain, t)
+    g.gain.exponentialRampToValueAtTime(0.001, t + dur)
+    o.connect(g).connect(ac.destination)
+    o.start(t); o.stop(t + dur)
+  }
+  const semi = (n) => 440 * Math.pow(2, n / 12)
+  function schedule() {
+    const song = SONGS[songIdx]
+    const spb = 60 / song.bpm / 2 // eighth notes
+    const len = Math.max(song.lead.length, song.bass.length)
+    const tick = () => {
+      if (!playing) return
+      const i = step % len
+      const t = ac.currentTime + 0.02
+      const lead = song.lead[i % song.lead.length], bass = song.bass[i % song.bass.length]
+      const vol = Number(document.getElementById("vol").value)
+      if (lead !== null && lead !== undefined) beep(semi(lead), t, spb * 0.95, song.wave, 0.12 * vol)
+      if (bass !== null && bass !== undefined) beep(semi(bass - 12), t, spb * 0.95, "triangle", 0.16 * vol)
+      for (const bar of eqEl.children) bar.style.height = (2 + Math.random() * 24) + "px"
+      document.getElementById("time").textContent = fmt(Math.floor((Date.now() - startedAt) / 1000))
+      step++
+      stepTimer = setTimeout(tick, spb * 1000)
+    }
+    tick()
+  }
+  function fmt(s) { return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0") }
+  function playSong(i) {
+    ac ??= new AudioContext()
+    ac.resume()
+    songIdx = i; step = 0; startedAt = Date.now(); playing = true
+    document.getElementById("title").textContent = "♪ " + SONGS[i].name
+    document.getElementById("play").textContent = "⏸"
+    ;[...listEl.children].forEach((li, j) => li.classList.toggle("now", j === i))
+    clearTimeout(stepTimer); schedule()
+  }
+  function toggle() {
+    if (songIdx < 0) return playSong(0)
+    playing = !playing
+    document.getElementById("play").textContent = playing ? "⏸" : "▶"
+    if (playing) { startedAt = Date.now() - step * (60 / SONGS[songIdx].bpm / 2) * 1000; schedule() }
+    else clearTimeout(stepTimer)
+  }
+  document.getElementById("play").onclick = toggle
+  document.getElementById("next").onclick = () => playSong((songIdx + 1 + SONGS.length) % SONGS.length)
+  document.getElementById("prev").onclick = () => playSong((songIdx - 1 + SONGS.length) % SONGS.length)
+</script>

@@ -1,0 +1,55 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>whatif — there is no spoon</title>
+<style>
+  body { margin: 0; background: #000; overflow: hidden; font-family: "Courier New", monospace; }
+  canvas { display: block; }
+  #bar { position: fixed; left: 0; right: 0; bottom: 0; background: #000c; color: #0f0; padding: 6px 10px;
+         display: flex; gap: 14px; align-items: center; font-size: 12px; opacity: 0; transition: opacity .3s; }
+  body:hover #bar { opacity: 1; }
+  input[type="range"] { width: 110px; }
+  .dim { color: #0a0; }
+</style>
+<canvas id="cv"></canvas>
+<div id="bar">
+  <span>whatif — wake up…</span>
+  <label>Speed <input id="speed" type="range" min="1" max="30" value="12" /></label>
+  <label>Density <input id="density" type="range" min="5" max="100" value="55" /></label>
+  <label><input id="kata" type="checkbox" checked /> Katakana</label>
+  <span class="dim">Original implementation written for xerohour/windows93 — recreating the “whatif” matrix app from scratch.</span>
+</div>
+<script>
+  const cv = document.getElementById("cv"), ctx = cv.getContext("2d")
+  const KATA = "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890"
+  const LATIN = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$#@%&*+=<>?"
+  let cols = [], W, H
+  const FS = 16
+  function resize() {
+    W = cv.width = innerWidth; H = cv.height = innerHeight
+    const n = Math.floor(W / FS)
+    cols = Array.from({ length: n }, () => ({ y: Math.random() * -60, speed: 0.4 + Math.random() * 0.9 }))
+  }
+  addEventListener("resize", resize); resize()
+  let last = 0
+  function frame(ts) {
+    const fps = Number(document.getElementById("speed").value)
+    if (ts - last > 1000 / fps) {
+      last = ts
+      ctx.fillStyle = "rgba(0,0,0,0.08)"; ctx.fillRect(0, 0, W, H)
+      ctx.font = FS + "px monospace"
+      const chars = document.getElementById("kata").checked ? KATA : LATIN
+      const density = Number(document.getElementById("density").value) / 100
+      cols.forEach((c, i) => {
+        const ch = chars[Math.floor(Math.random() * chars.length)]
+        ctx.fillStyle = "#aef7ae"
+        ctx.fillText(ch, i * FS, c.y * FS)
+        ctx.fillStyle = "#0f0"
+        ctx.fillText(chars[Math.floor(Math.random() * chars.length)], i * FS, (c.y - 1) * FS)
+        c.y += c.speed
+        if (c.y * FS > H && Math.random() > density) { c.y = Math.random() * -30; c.speed = 0.4 + Math.random() * 0.9 }
+      })
+    }
+    requestAnimationFrame(frame)
+  }
+  requestAnimationFrame(frame)
+</script>

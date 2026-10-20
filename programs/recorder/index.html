@@ -1,0 +1,73 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Recorder — voice memos from 1993</title>
+<style>
+  body { font-family: Tahoma, Verdana, sans-serif; background: #c0c0c0; margin: 0; padding: 10px; text-align: center; }
+  #led { width: 16px; height: 16px; border-radius: 50%; background: #888; display: inline-block; vertical-align: -2px; }
+  #led.on { background: #e81123; box-shadow: 0 0 8px #e81123; }
+  #time { font-family: "Courier New", monospace; font-size: 28px; font-weight: bold; margin: 6px 0; }
+  button { padding: 8px 18px; font-size: 14px; cursor: pointer; margin: 0 4px; }
+  button:disabled { opacity: .5; cursor: default; }
+  #meter { width: 300px; height: 14px; background: #222; margin: 10px auto; }
+  #fill { height: 100%; width: 0%; background: #16c60c; transition: width .08s; }
+  .dim { color: #555; font-size: 11px; }
+  audio { margin-top: 10px; width: 320px; }
+</style>
+<h3>🎙️ Sound Recorder</h3>
+<div><span id="led"></span> <span id="status">Ready when you are.</span></div>
+<div id="time">00:00</div>
+<div id="meter"><div id="fill"></div></div>
+<div>
+  <button id="rec">⏺ Record</button>
+  <button id="stop" disabled>⏹ Stop</button>
+  <button id="save" disabled>💾 Save .webm</button>
+</div>
+<audio id="play" controls hidden></audio>
+<p class="dim">Original implementation written for xerohour/windows93 — Windows93 had a “recorder” app; this is a from-scratch recreation. Recordings are made locally in your browser and never uploaded.</p>
+<script>
+  const recBtn = document.getElementById("rec"), stopBtn = document.getElementById("stop"), saveBtn = document.getElementById("save")
+  const led = document.getElementById("led"), status = document.getElementById("status"), timeEl = document.getElementById("time")
+  const play = document.getElementById("play"), fill = document.getElementById("fill")
+  let mr = null, chunks = [], blob = null, timer = null, secs = 0, analyser = null, raf = 0
+  function fmt(s) { return String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0") }
+  function meter(stream) {
+    const ac = new AudioContext()
+    const src = ac.createMediaStreamSource(stream)
+    analyser = ac.createAnalyser(); analyser.fftSize = 256
+    src.connect(analyser)
+    const buf = new Uint8Array(analyser.frequencyBinCount)
+    const loop = () => {
+      analyser.getByteFrequencyData(buf)
+      fill.style.width = Math.min(100, (buf.reduce((a, b) => a + b, 0) / buf.length) * 2.2) + "%"
+      raf = requestAnimationFrame(loop)
+    }
+    loop()
+  }
+  recBtn.onclick = async () => {
+    let stream
+    try { stream = await navigator.mediaDevices.getUserMedia({ audio: true }) }
+    catch { status.textContent = "Microphone unavailable (or permission denied)."; return }
+    chunks = []; blob = null; play.hidden = true; saveBtn.disabled = true
+    mr = new MediaRecorder(stream)
+    mr.ondataavailable = (e) => chunks.push(e.data)
+    mr.onstop = () => {
+      stream.getTracks().forEach((t) => t.stop())
+      blob = new Blob(chunks, { type: mr.mimeType || "audio/webm" })
+      play.src = URL.createObjectURL(blob); play.hidden = false; saveBtn.disabled = false
+      status.textContent = "Recording ready — play it back or save it."
+      led.className = ""; led.id = "led"
+      cancelAnimationFrame(raf); fill.style.width = "0%"
+    }
+    mr.start(200); meter(stream)
+    secs = 0; timeEl.textContent = "00:00"
+    timer = setInterval(() => { secs++; timeEl.textContent = fmt(secs) }, 1000)
+    led.classList.add("on"); status.textContent = "Recording…"
+    recBtn.disabled = true; stopBtn.disabled = false
+  }
+  stopBtn.onclick = () => { clearInterval(timer); mr.stop(); recBtn.disabled = false; stopBtn.disabled = true }
+  saveBtn.onclick = () => {
+    if (!blob) return
+    const a = document.createElement("a")
+    a.href = URL.createObjectURL(blob); a.download = "recording.webm"; a.click(); URL.revokeObjectURL(a.href)
+  }
+</script>

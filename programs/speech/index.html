@@ -1,0 +1,56 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Speech — text to speech</title>
+<style>
+  body { font-family: Tahoma, Verdana, sans-serif; background: #c0c0c0; margin: 0; padding: 10px; }
+  textarea { width: 100%; height: 110px; box-sizing: border-box; font-size: 14px; padding: 6px; }
+  .row { display: flex; gap: 12px; align-items: center; margin: 8px 0; flex-wrap: wrap; }
+  label { font-size: 12px; display: flex; gap: 6px; align-items: center; }
+  button { padding: 6px 16px; font-size: 13px; cursor: pointer; }
+  .dim { color: #555; font-size: 11px; }
+  #face { font-size: 44px; text-align: center; margin: 6px 0; }
+</style>
+<div id="face">🗣️</div>
+<textarea id="text">Hello. I am the Windows ninety-three speech synthesizer. I have seen things you people would not believe. Anyway, nice desktop.</textarea>
+<div class="row">
+  <label>Voice <select id="voice"><option value="">(default)</option></select></label>
+  <label>Rate <input id="rate" type="range" min="0.5" max="2" step="0.1" value="1" /></label>
+  <label>Pitch <input id="pitch" type="range" min="0" max="2" step="0.1" value="1" /></label>
+</div>
+<div class="row">
+  <button id="speak">▶ Speak</button>
+  <button id="stop">⏹ Stop</button>
+  <button data-preset="robot">🤖 Robot preset</button>
+  <button data-preset="chipmunk">🐿️ Chipmunk preset</button>
+  <button data-preset="normal">😐 Normal preset</button>
+</div>
+<p class="dim">Original implementation written for xerohour/windows93 — Windows93 had a “speech” app; this is a from-scratch recreation using your browser's built-in speech synthesis. Voices depend on your device.</p>
+<script>
+  const voiceSel = document.getElementById("voice")
+  const face = document.getElementById("face")
+  function loadVoices() {
+    const voices = speechSynthesis.getVoices()
+    voiceSel.innerHTML = '<option value="">(default)</option>' +
+      voices.map((v, i) => `<option value="${i}">${v.name} — ${v.lang}</option>`).join("")
+  }
+  if ("speechSynthesis" in window) { loadVoices(); speechSynthesis.onvoiceschanged = loadVoices }
+  document.getElementById("speak").onclick = () => {
+    if (!("speechSynthesis" in window)) { alert("Speech synthesis is not supported in this browser."); return }
+    speechSynthesis.cancel()
+    const u = new SpeechSynthesisUtterance(document.getElementById("text").value)
+    const v = voiceSel.value
+    if (v !== "") u.voice = speechSynthesis.getVoices()[Number(v)]
+    u.rate = Number(document.getElementById("rate").value)
+    u.pitch = Number(document.getElementById("pitch").value)
+    u.onstart = () => (face.textContent = "😮")
+    u.onend = u.onerror = () => (face.textContent = "🗣️")
+    speechSynthesis.speak(u)
+  }
+  document.getElementById("stop").onclick = () => { speechSynthesis.cancel(); face.textContent = "🗣️" }
+  for (const b of document.querySelectorAll("[data-preset]")) b.onclick = () => {
+    const p = b.dataset.preset
+    document.getElementById("rate").value = p === "robot" ? 0.7 : p === "chipmunk" ? 1.5 : 1
+    document.getElementById("pitch").value = p === "robot" ? 0.2 : p === "chipmunk" ? 1.9 : 1
+    document.getElementById("speak").click()
+  }
+</script>
