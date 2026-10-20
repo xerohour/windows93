@@ -420,3 +420,47 @@ game starts in Freedoom E1M1 with working keyboard input, zero page errors.
 
 files.cbor regenerated and the kit rebuilt at 0.0.6 with the 42.sw.js version
 bumped to "0.0.6", per the P9 rule.
+
+## Addendum 10 — Patch P11: heal persisted pre-P8 theme configs, kit 0.0.7 (2026-10-20)
+
+Bug report (user's phone): sys42 desktop renders teal + taskbar, but every
+desktop icon is an empty box (no art, no label) under a cascade of TypeError
+dialogs — `The "path" argument must be a string: undefined`. Fresh-profile
+probes (including the 0.0.5 round's probe_p12) all passed, so this shipped.
+
+Root cause (reproduced locally, probe_poison.mjs): the poison is not in any
+kit — it is in the profile's persisted FS. A first boot writes the manager
+defaults to `$HOME/.theme.json` (ConfigFile `reset()` → `save()`), and later
+boots load the stored value verbatim. Profiles created by the pre-P8 build
+(the original 80ca0ff deployment) stored
+`icons: ["/windows93/sys42/42/themes/default/icons"]` — a URL pathname
+carrying the deploy prefix. P8 fixed the DEFAULTS only. With the stored
+value, `findIconPath` misses the FileIndex (keys are prefix-free FS paths),
+the octet-stream fallback misses too, `themesManager.getIconPath` returns
+undefined, and `Icon.getInfos` calls `fs.getURL(undefined)` →
+`assertPath` TypeError, once per icon, on every boot. Kit bumps could never
+fix it; only the framework's Format Disk / `?clear-site-data` wipe could,
+because that clears the persisted config. Seeding exactly that legacy value
+into a healthy profile reproduced the screenshot precisely (37 icons,
+0 images loaded, 10 TypeError dialogs); fresh profiles stay clean.
+
+Fix (Patch P11, `42/os/managers/themesManager.js`, marked in code):
+- `postload()` maps stored `icons` entries through the P8 `urlToFsPath`
+  (idempotent for correct entries, strips the deploy prefix from legacy
+  ones) and persists the healed config via `save()` when anything changed.
+- `getIconPath()` applies the same normalization defensively to each theme
+  path (and the fallback) before lookup.
+
+No other persisted config carries an FS path built from a URL pathname
+(appsManager/mimetypesManager checked; themesManager `style`/`module` are
+URL-space and correct as pathnames).
+
+Kit rule (P9) followed: files.cbor regenerated (1,018 leaves; only delta is
+the kit swap), kit rebuilt as 42-kits/0.0.7.tar.gz (968 files; content diff
+vs 0.0.6 is exactly the patched themesManager.js), 42.sw.js version bumped
+"0.0.6" → "0.0.7" so existing browsers purge the old cache, 0.0.6 tar
+deleted, everything synced to ~/workspace/windows93-sys42-proto/.
+
+Verification: see the fix report — poisoned-profile upgrade test (0.0.6
+profile with the legacy config, then 0.0.7 served) plus fresh-profile
+two-load test, local and live.
