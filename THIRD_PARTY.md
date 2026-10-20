@@ -45,3 +45,18 @@ Windows93 v3 runs on **sys42**, which the team *does* publish as open source:
 [windows93dotnet/sys42](https://github.com/windows93dotnet/sys42) — MIT.
 This tribute doesn't use it (our shell is original, single-file code), but if
 you want to build real Windows93-style apps, sys42 is the genuine article.
+
+## sys42-native app wrappers (2026-10-20)
+
+The three vendored programs above are also wired into the sys42 desktop
+(`sys42/`) as native apps, so they launch from its Start menu:
+`sys42/42/os/apps/{SkiFree,Bytebeat,NES}/` each contain an original
+wrapper (`app.json5` manifest + `index.html`, written for this repo) that
+hosts the corresponding `programs/` entry point in an isolated iframe
+inside a sys42 window, plus small original icons. No program code was
+modified; licenses stay as listed in the table above (SkiFree MIT,
+Bytebeat MIT, JSNES Apache-2.0, bundled ROMs homebrew with notices kept
+in `programs/nes/roms/`). The wrappers contain no Windows93-team code and
+no material from the AGPL-3.0 v3 community documentation — that was used
+as reference only. sys42 itself remains MIT (`sys42/LICENSE`), kept
+separate from the programs' licenses.
