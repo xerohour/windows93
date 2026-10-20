@@ -464,3 +464,66 @@ deleted, everything synced to ~/workspace/windows93-sys42-proto/.
 Verification: see the fix report — poisoned-profile upgrade test (0.0.6
 profile with the legacy config, then 0.0.7 served) plus fresh-profile
 two-load test, local and live.
+
+## Addendum 11 — Patch P12: merge-missing file index + app registry, kit 0.0.8 (2026-10-20)
+
+Bug report (user's phone, after P11): the TypeError cascade is gone, but
+"no apps show up" — the desktop shows only the original sample
+files/folders and the Start menu only the 5 framework apps, despite 37
+shortcuts and 23 registered apps in the current build. Fresh profiles
+test clean, so — like P11 — this is persisted profile state, one layer
+down.
+
+Mechanism (traced in code): the desktop is a `ui-folder` over
+`/tests/fixtures/formats/` whose items come from
+`fileIndex.readDir()` (folder.js `getItems`), and the Start menu is
+`appsManager.makeMenu()` over the registry in `$HOME/.apps.json`. Both
+sit on the FileIndex, and the FileIndex is a `Storable`
+(`42/core/fs/FileIndex.js`): its IndexedDB `Database` is version 1
+(the `version: Date.now()` line in Storable is commented out), so its
+`populate()` — the fetch + flatten of `files.cbor` — runs **only when
+the store is first created**. Later boots load the persisted snapshot
+verbatim. A profile created by the first deployment (80ca0ff) therefore
+holds an 876-leaf index with no `.desktop` shortcuts (they arrived in
+Addendum 5) and no app manifests beyond TextEdit/ImageViewer/
+MediaPlayer/Sandbox/Hydra — forever, immune to kit updates, because
+nothing ever re-read `files.cbor`. Second trap of the same class:
+AppsManager is a ConfigFile whose `populate()` (glob `**/*app.json5`
+→ register) only runs on `reset()`, i.e. when `$HOME/.apps.json` is
+absent; the stored registry's version stamp is `-Date.now()` at save
+time, so `load()`'s obsolete-version branch can never fire later. Even
+a healed index would have left the Start menu frozen at 5 apps.
+Audit of the other seeded-once state: themesManager (static defaults;
+path form healed by P11), mimetypesManager (static FILE_TYPES
+populate; app associations are re-added by `appsManager.add()`),
+the kit Cache Storage (version-keyed, handled by the bump rule) — no
+other index-derived content is persisted.
+
+Reproduced locally (probe_legacy.mjs): a profile seeded from a
+legacy `files.cbor` (876 leaves: fixture folder without the 23
+`.desktop` files, only the 5 original manifests) plus the pre-P8
+theme poison, booted against 0.0.7, shows exactly the report —
+14 fixture icons, 5 apps, zero errors — on every load.
+
+Fix (Patch P12, marked in code):
+- `42/core/fs/FileIndex.js` — in `init()`, after loading the persisted
+  index, fetch the current `files.cbor` (the existing `populate()`)
+  and add every leaf that is missing locally, with its hosted inode
+  (0). Existing entries are never touched, so user-created files
+  (array inodes) are preserved; idempotent; a failed fetch leaves the
+  persisted index as-is.
+- `42/os/managers/appsManager.js` — new `postload()`: register any
+  indexed `app.json5` whose path is not represented in the stored
+  registry (via the existing `add()`), persisting once if anything
+  was added. Per-manifest failures are settled, never fatal.
+
+Kit rule (P9) followed: kit rebuilt as 42-kits/0.0.8.tar.gz (968
+files; content diff vs 0.0.7 is exactly the two patched files),
+42.sw.js version bumped "0.0.7" → "0.0.8", 0.0.7 tar deleted,
+files.cbor regenerated (1,018 leaves; only delta is the kit swap),
+tree synced to ~/workspace/windows93-sys42-proto/.
+
+Verification: see the fix report — legacy-profile upgrade (transitional
+load unchanged, next load 37/37 icons + 23 apps, TextEdit and BananaMP
+launch, stable across reboots with no duplicates), fresh-profile
+two-load test, local and live.

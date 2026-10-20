@@ -108,6 +108,40 @@ if (ipc.inIframe) {
         }
       } else {
         await super.init()
+        // STATIC PATCH (P12): merge-missing hosted entries from the
+        // current files.cbor. The index is a Storable whose populate()
+        // (the files.cbor seed) only runs when its IndexedDB store is
+        // first created, and the Database version never changes — so a
+        // profile created by an older deployment kept that deployment's
+        // file list forever: files added by later kits (desktop
+        // shortcuts, new app manifests, theme icons) never appeared,
+        // no matter how many kit updates shipped. Here, after loading
+        // the persisted index, any leaf present in the freshly fetched
+        // files.cbor but missing locally is added with its hosted inode
+        // (0). Existing entries are never touched, so user-created
+        // files (array inodes written through the FS drivers) and their
+        // store records are preserved exactly; the merge is idempotent
+        // and a failed fetch simply leaves the persisted index as-is.
+        try {
+          const fresh = await populate()
+          const missing = []
+          const walk = (node, prefix) => {
+            for (const [key, val] of Object.entries(node)) {
+              const path = `${prefix}/${key}`
+              if (
+                val !== null &&
+                typeof val === "object" &&
+                !Array.isArray(val)
+              ) {
+                walk(val, path)
+              } else if (!this.has(path)) missing.push([path, val])
+            }
+          }
+
+          walk(fresh, "")
+          for (const [path, inode] of missing) await this.set(path, inode)
+        } catch {}
+
         this.synced = true
         if (ipc.inWorker) ipc.emit("42_FILE_INDEX_SYNC")
       }

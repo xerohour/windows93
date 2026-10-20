@@ -40,6 +40,38 @@ class AppsManager extends ConfigFile {
     return this.value
   }
 
+  async postload() {
+    // STATIC PATCH (P12): merge-missing apps into the persisted
+    // registry. populate() above only runs on reset() — i.e. when
+    // $HOME/.apps.json does not exist yet — and ConfigFile.load()
+    // afterwards trusts the stored registry verbatim (the version
+    // stamp is -Date.now() at save time, so the obsolete-version
+    // branch can never fire on a later boot). A profile created
+    // before new apps shipped therefore kept its original registry
+    // (5 framework apps) forever, even once the file index knows the
+    // new manifests (see the FileIndex half of P12). On every load,
+    // register any indexed manifest whose path is not represented in
+    // the stored registry, then persist once if anything was added.
+    // Existing entries are left untouched; failures to read a single
+    // manifest never block the rest or the boot.
+    try {
+      if (!this.value || typeof this.value !== "object") return
+      const known = new Set(
+        Object.values(this.value).map((app) => app?.manifestPath),
+      )
+      const missing = fileIndex
+        .glob(`**/*${MANIFEST_EXTENSION}`)
+        .filter((manifestPath) => !known.has(manifestPath))
+      if (missing.length === 0) return
+      const results = await Promise.allSettled(
+        missing.map((manifestPath) => this.add(manifestPath, { save: false })),
+      )
+      if (results.some(({ status }) => status === "fulfilled")) {
+        await this.save().catch(() => {})
+      }
+    } catch {}
+  }
+
   async add(manifestPath, options) {
     const fs = await import("../../core/fs.js") //
       .then((m) => m.default)
