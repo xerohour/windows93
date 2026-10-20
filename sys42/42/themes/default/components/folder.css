@@ -1,0 +1,21 @@
+ui-folder {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+ui-folder > ui-grid {
+  padding: var(--unit-md) 0;
+}
+
+ui-explorer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+ui-explorer > * {
+  min-height: 0;
+}

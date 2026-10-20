@@ -1,0 +1,172 @@
+:root {
+  --addon-bds: solid;
+  --addon-bdw: 0;
+  --addon-fg: var(--btn-fg);
+  --addon-back-opacity: 1;
+  --addon-front-opacity: 1;
+}
+
+:disabled {
+  --addon-fg: var(--btn-disabled-fg);
+}
+
+select,
+input[list],
+input[type="file" i],
+input[type="number" i],
+input[type="month" i],
+input[type="datetime-local" i],
+input[type="time" i],
+input[type="week" i],
+input[type="date" i] {
+  padding-right: calc(var(--addon-w) + calc(2 * var(--addon-right)));
+  position: relative;
+}
+
+::-webkit-datetime-edit-fields-wrapper {
+  padding: 0;
+}
+
+selectmenu::before {
+  content: "";
+}
+
+input[type="file" i]::after {
+  content: "";
+}
+
+selectmenu::before,
+input[type="file" i]::after,
+input[type="number" i]::-webkit-inner-spin-button,
+input::-webkit-calendar-picker-indicator {
+  margin: 0;
+  padding: 0;
+  display: block !important;
+  block-size: auto !important;
+  background-image: none;
+  color: inherit;
+  font-size: 0;
+  opacity: var(--addon-back-opacity);
+  /* visibility: visible; */
+  appearance: none;
+  box-sizing: border-box;
+  position: absolute;
+  top: var(--addon-top);
+  bottom: var(--addon-bottom);
+  right: var(--addon-right);
+  height: var(--addon-h);
+  width: var(--addon-w);
+  border-width: var(--addon-bdw);
+  border-style: var(--addon-bds);
+  border-color: var(--addon-bdc, currentColor);
+  border-image: var(--addon-bdi);
+  border-radius: var(--addon-bdr);
+  box-shadow: var(--addon-bsh);
+  background-color: var(--addon-bg, var(--EMPTY));
+  cursor: var(--cursor-default, default);
+}
+
+::file-selector-button,
+selectmenu::after,
+input[list]::after,
+input[type="time" i]::after,
+input[type="week" i]::after,
+input[type="month" i]::after,
+input[type="date" i]::after,
+input[type="datetime-local" i]::after {
+  content: "";
+  pointer-events: none;
+  z-index: 1;
+  color: inherit;
+  position: absolute;
+  opacity: var(--addon-front-opacity);
+  top: var(--addon-top);
+  bottom: var(--addon-bottom);
+  right: var(--addon-right);
+  height: var(--addon-h);
+  width: var(--addon-w);
+  background: var(--addon-fg, currentColor);
+  -webkit-mask: var(--picto--calendar) 50% 50% no-repeat;
+  cursor: var(--cursor-default, default);
+}
+
+::file-selector-button {
+  pointer-events: auto;
+  font-size: 0;
+  margin: 0;
+  -webkit-mask-image: var(--picto--upload);
+}
+
+:disabled ::file-selector-button {
+  cursor: var(--cursor-not-allowed, not-allowed);
+}
+
+selectmenu::after {
+  -webkit-mask-image: var(--picto--down);
+}
+
+input[list]::-webkit-calendar-picker-indicator {
+  color: inherit;
+  opacity: var(--addon-front-opacity);
+  background: var(--addon-fg, currentColor);
+  -webkit-mask: var(--input-datalist-picto) 50% 50% no-repeat;
+}
+
+input[type="number" i]::-webkit-inner-spin-button {
+  background-image: var(--input-number-up-picto), var(--input-number-down-picto);
+  background-position-x: center;
+  background-repeat: no-repeat;
+  --_y: calc(2px + 0.7 * var(--ctrl-pa-y));
+  background-position-y: calc(50% - var(--_y)), calc(50% + var(--_y));
+}
+
+input::-webkit-datetime-edit-ampm-field,
+input::-webkit-datetime-edit-day-field,
+input::-webkit-datetime-edit-hour-field,
+input::-webkit-datetime-edit-millisecond-field,
+input::-webkit-datetime-edit-minute-field,
+input::-webkit-datetime-edit-month-field,
+input::-webkit-datetime-edit-second-field,
+input::-webkit-datetime-edit-week-field,
+input::-webkit-datetime-edit-year-field {
+  padding: 0 1px;
+}
+
+input::-webkit-datetime-edit-ampm-field:focus,
+input::-webkit-datetime-edit-day-field:focus,
+input::-webkit-datetime-edit-hour-field:focus,
+input::-webkit-datetime-edit-millisecond-field:focus,
+input::-webkit-datetime-edit-minute-field:focus,
+input::-webkit-datetime-edit-month-field:focus,
+input::-webkit-datetime-edit-second-field:focus,
+input::-webkit-datetime-edit-week-field:focus,
+input::-webkit-datetime-edit-year-field:focus {
+  background: var(--highlight-bg);
+  color: var(--highlight-fg);
+  text-shadow: var(--highlight-tsh, none);
+}
+
+@-moz-document url-prefix() {
+  input:not(
+  [type="checkbox"],
+  [type="radio"],
+  [type="range"],
+  [type="button"],
+  [type="reset"],
+  [type="submit"]) {
+    height: var(--ctrl-h);
+  }
+
+  input[type="number" i],
+  input[type="month" i],
+  input[type="datetime-local" i],
+  input[type="time" i],
+  input[type="week" i],
+  input[type="date" i] {
+    padding-right: var(--addon-right);
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+}

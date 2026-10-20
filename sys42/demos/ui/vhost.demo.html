@@ -1,0 +1,97 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>vhost</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="/style.css" id="theme" />
+
+<script type="module">
+  import trap from "../../42/fabric/type/error/trap.js"
+  trap()
+</script>
+
+<script type="module">
+  import client from "../../42/os/network/client.js"
+  import clearSiteData from "../../42/os/network/client/clearSiteData.js"
+  import ui from "../../42/ui.js"
+  import fs from "../../42/core/fs.js"
+
+  import "../../42/ui/components/dialog.js"
+
+  localStorage.setItem("secret", "hello secret")
+
+  const html = `\
+  <link rel="stylesheet" href="/test.css">
+  <h1>
+  <img src="/42/themes/default/icons/32x32/emblems/info.png" style="vertical-align:text-bottom">
+  Sandboxed iframe</h1>
+  The HTML and CSS are served from browser storage.
+  <hr />
+  <script type="module">
+  import dialog from "/42/ui/components/dialog.js"
+
+  dialog({label: "Hello", content: "from virtual host sandbox"})
+
+  if (localStorage.getItem('secret') === "hello secret") {
+    document.body.append('❌ Sandboxing failed')
+    document.body.className = "fail"
+  } else {
+    try {
+      window.top.document.body.append("XSS")
+      document.body.append('❌ Sandboxing failed')
+      document.body.className = "fail"
+    } catch {
+      document.body.append('✔️ Sandboxing succeed')
+      document.body.className = "success"
+    }
+  }
+  </${"script"}>`
+  const css = `
+    body { font-family: sans-serif; }
+    hr { border: none; border-bottom: 1px solid }
+    .success { background: yellowgreen; }
+    .fail { background: pink; }
+  `
+
+  await Promise.all([
+    fs.write("/test.html", html), //
+    fs.write("/test.css", css),
+  ])
+
+  await client.connect()
+
+  await ui({
+    tag: "body.box-center",
+    content: [
+      {
+        tag: "h2.ma-b-0",
+        content: "Service Worker virtual host experiment",
+      },
+      {
+        tag: "div",
+        content: [
+          "This is a proof of concept to try to overcome the fact that Service Worker don't work in sandboxed iframes.",
+          "\n\n",
+          {
+            tag: "a",
+            href: "https://github.com/w3c/ServiceWorker/issues/1390",
+            content: "https://github.com/w3c/ServiceWorker/issues/1390",
+          },
+        ],
+      },
+      "\n\n",
+      {
+        tag: "button",
+        content: "Clear top and vhost site-data",
+        click() {
+          clearSiteData({ reload: true })
+        },
+      },
+      {
+        tag: "ui-sandbox.ma-t.inset",
+        style: { width: "512px", height: "160px" },
+        permissions: "app",
+        path: "/test.html",
+      },
+    ],
+  })
+</script>

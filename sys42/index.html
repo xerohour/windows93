@@ -1,0 +1,47 @@
+<!doctype html>
+<!-- STATIC PROTO PATCH: absolute paths (/style.css, /42/ui/head.js, /desktop/, /tests.html, /) made relative so the page works from a subpath. tests.html itself is not part of the prototype (unit tests excluded). -->
+<meta charset="utf-8" />
+<title>42</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="style.css" id="theme" />
+<script type="module" src="42/ui/head.js"></script>
+
+<script type="module">
+  import ui from "./42/ui.js"
+  import fileIndex from "./42/core/fileIndex.js"
+
+  const demos = [{ tag: "li > a", content: "desktop", href: "desktop/" }]
+  const CLEAN_REG = /^\/demos\/ui\/|(\.plugin)?\.demo\.html$/g
+
+  for (const href of fileIndex.glob("**/*.demo.html")) {
+    demos.push({ tag: "li > a", content: href.replaceAll(CLEAN_REG, ""), href })
+  }
+
+  ui({
+    tag: "body.pa-xxl",
+    content: [
+      {
+        tag: "a.unstyled",
+        href: "./",
+        content: {
+          tag: "pre.ma-0.d-inline-block",
+          content: `\
+╷ ┌───┐
+└─┤ ┌─┘
+  └─┴─╴
+ sys42\n\n`,
+        },
+      },
+      "\n\n",
+      {
+        tag: "a.button",
+        content: "Run automated tests (will clear site data)",
+        href: "tests.html",
+      },
+      "\n\n",
+      "\n\n",
+      { tag: "strong", content: "Demos / Manual tests" },
+      { tag: "ul", content: demos },
+    ],
+  })
+</script>

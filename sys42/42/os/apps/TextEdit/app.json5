@@ -1,0 +1,36 @@
+{
+  name: "TextEdit",
+  command: "textedit",
+  categories: ["utilities", "productivity", "development"],
+  description: "Simple text editor using textarea",
+
+  multiple: true,
+  empty: false,
+  width: 300,
+  height: 300,
+
+  decode: {
+    types: [
+      {
+        description: "Text",
+        accept: [
+          "text/*",
+          "application/json",
+          "application/json5",
+          "application/rss+xml",
+          "application/xml",
+        ],
+      },
+      // {
+      //   description: "Desktop Entry",
+      //   accept: {
+      //     "text/plain": [".directory", ".desktop"],
+      //   },
+      // },
+    ],
+  },
+
+  // preload: ["../../../ui/components/tabs.js"],
+
+  $ref: "./app.js",
+}

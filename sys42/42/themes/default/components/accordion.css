@@ -1,0 +1,97 @@
+:root {
+  --accordion__label-fg: var(--btn-fg);
+  --accordion__label-bg: var(--btn-bg);
+  --accordion__label-base-pa: var(--btn-pa);
+  --accordion__label-bdw: var(--btn-bdw);
+  --accordion__label-bds: var(--btn-bds);
+  --accordion__label-bdc: var(--btn-bdc);
+  --accordion__label-bdi: var(--btn-bdi);
+  --accordion__label-br: var(--btn-br);
+  --accordion__label-tsh: var(--btn-tsh);
+  --accordion__label-bsh: var(--btn-bsh);
+  --accordion__label-gap: var(--unit-sm);
+
+  --accordion__trigger-pa: 1px 3px;
+
+  --accordion__panel-pa: 0;
+  --accordion__panel--text-pa: var(--unit-md) var(--unit);
+}
+
+ui-accordion {
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+:where(ui-accordion) { flex-grow: 1; }
+
+.ui-accordion__label {
+  font: inherit;
+  margin: var(--ctrl-group-gap);
+  margin-bottom: 0;
+  flex: 0 1 0%;
+  display: flex;
+  align-items: center;
+
+  --fg: var(--accordion__label-fg);
+  --bg: var(--accordion__label-bg);
+  color: var(--fg);
+  background: var(--bg);
+  border-width: var(--accordion__label-bdw);
+  border-style: var(--accordion__label-bds, solid);
+  border-color: var(--accordion__label-bdc);
+  border-image: var(--accordion__label-bdi);
+  border-radius: var(--accordion__label-br);
+  text-shadow: var(--accordion__label-tsh, none);
+  box-shadow: var(--accordion__label-bsh);
+}
+
+.ui-accordion__label::after {
+  content: "";
+  height: var(--picto-size);
+}
+
+.ui-accordion__label:last-of-type {
+  margin-bottom: var(--ctrl-group-gap);
+}
+
+.ui-accordion__label button.ui-accordion__trigger,
+.ui-accordion__label button.ui-accordion__trigger:focus {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  text-align: start;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  gap: var(--unit-xs);
+  padding: var(--accordion__trigger-pa);
+}
+
+.ui-accordion__label:has(button.ui-accordion__trigger:focus) {
+  outline: var(--ctrl-o);
+  outline-offset: -3px;
+}
+
+.ui-accordion__trigger__text {
+  padding: calc(var(--accordion__label-pa) - var(--accordion__label-base-pa));
+}
+
+.ui-accordion__panel {
+  flex-basis: 100%;
+  max-height: 100%;
+  min-height: 0;
+  display: flex;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  will-change: flex-basis;
+  padding: var(--accordion__panel-pa);
+}
+
+.ui-accordion__panel--text {
+  padding: var(--accordion__panel--text-pa);
+}

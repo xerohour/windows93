@@ -1,0 +1,57 @@
+{
+  name: "ImageViewer",
+  command: "viewer",
+  categories: ["utilities", "entertainment"],
+
+  decode: {
+    types: [
+      { description: "Image", accept: "image/*" }, //
+    ],
+  },
+
+  menubar: [{ $ref: "FileMenu" }],
+
+  content: [
+    {
+      tag: ".flex-h.scroll-1.max-w-full.inset.checkboard",
+      content: {
+        tag: "img",
+        style: {
+          "object-fit": "{{display}}",
+          "image-rendering": "{{pixelated ? 'pixelated' : 'auto'}}",
+          "height": "{{display !== '100%' ? '100%' : 'auto'}}",
+          "width": "{{display !== '100%' ? '100%' : 'auto'}}",
+          "max-width": "none",
+          "margin": "auto",
+        },
+        src: "{{$files/0/url}}",
+        on: {
+          load: "{{width = target.naturalWidth; height = target.naturalHeight}}",
+        },
+      },
+    },
+    {
+      tag: "footer.d-flex.gap.ma-t-xs.pa-l-sm.inset-shallow",
+      content: [
+        { tag: "checkbox", bind: "pixelated" },
+        {
+          tag: ".solid.ma-l-auto",
+          content: "{{width}}x{{height}}",
+        },
+        {
+          tag: "select",
+          bind: "display",
+          compact: true,
+          content: ["100%", "contain", "cover"],
+        },
+      ],
+    },
+  ],
+
+  state: {
+    height: 0,
+    width: 0,
+    pixelated: true,
+    display: "100%",
+  },
+}

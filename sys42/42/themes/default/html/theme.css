@@ -1,0 +1,474 @@
+/* @read https://una.im/css-color-theming */
+/* @read https://developer.chrome.com/blog/css-relative-color-syntax */
+
+:root {
+  --bg: Canvas;
+  --fg: CanvasText;
+  /* color-scheme: dark; */
+
+  --bdw: 1px;
+  --bds: solid;
+
+  --prose-w: 80ch;
+
+  --breath: var(--unit-xl);
+
+  --separator-bdw: 1px 0 0 0;
+  --separator-bds: solid;
+  --separator-bdc: var(--fg);
+  --separator-bsh: none;
+
+  --separator-v-bdw: 0 1px 0 0;
+  --separator-v-bds: solid;
+  --separator-v-bdc: var(--fg);
+  --separator-v-bsh: none;
+
+  --link-td: underline;
+
+  --code-bg: var(--ansi-bg, var(--bg));
+  --code-fg: var(--ansi-fg, var(--bg));
+
+  --desktop-bg: var(--bg);
+  --desktop-fg: var(--fg);
+  --ground-bg: var(--bg);
+  --ground-fg: var(--fg);
+  --panel-bg: var(--bg);
+  --panel-fg: var(--fg);
+  --screen-bg: #000;
+  --screen-fg: #fff;
+
+  --highlight-bg: var(--fg);
+  --highlight-fg: var(--bg);
+  --highlight-tsh: none;
+
+  --selected-bsh: 0 0 0 2px var(--selected-bshc, var(--highlight-bg));
+
+  --inset-bdw: var(--fld-bdw);
+  --inset-bds: var(--fld-bds);
+  --inset-bdc: var(--fld-bdc);
+  --inset-bdi: var(--fld-bdi);
+  --inset-br: var(--fld-br);
+  --inset-tsh: var(--fld-tsh);
+  --inset-bsh: var(--fld-bsh);
+
+  --inset-shallow-bdw: var(--inset-bdw);
+  --inset-shallow-bds: var(--inset-bds);
+  --inset-shallow-bdc: var(--inset-bdc);
+  --inset-shallow-bdi: var(--inset-bdi);
+  --inset-shallow-br: var(--inset-br);
+  --inset-shallow-tsh: var(--inset-tsh);
+  --inset-shallow-bsh: var(--inset-bsh);
+
+  --outset-bdw: var(--btn-bdw);
+  --outset-bds: var(--btn-bds);
+  --outset-bdc: var(--btn-bdc);
+  --outset-bdi: var(--btn-bdi);
+  --outset-br: var(--btn-br);
+  --outset-tsh: var(--btn-tsh);
+  --outset-bsh: var(--btn-bsh);
+
+  --outset-shallow-bdw: var(--outset-bdw);
+  --outset-shallow-bds: var(--outset-bds);
+  --outset-shallow-bdc: var(--outset-bdc);
+  --outset-shallow-bdi: var(--outset-bdi);
+  --outset-shallow-br: var(--outset-br);
+  --outset-shallow-tsh: var(--outset-tsh);
+  --outset-shallow-bsh: var(--outset-bsh);
+
+  --paper-bg: var(--document-bg, var(--fld-bg));
+  --paper-fg: var(--document-fg, var(--fld-fg));
+  --paper-tsh: var(--document-tsh, var(--fld-tsh));
+
+  --error-bg: #fff6f6;
+  --error-fg: #9f3a38;
+
+  --warning-bg: #fffaf3;
+  --warning-fg: #573a08;
+
+  --success-bg: #fcfff5;
+  --success-fg: #2c662d;
+
+  --info-bg: #f8ffff;
+  --info-fg: #276f86;
+
+  font: var(--font);
+}
+
+* {
+  overflow-wrap: break-word;
+  /* overflow-wrap: anywhere; */
+}
+
+.breath {
+  padding: var(--breath);
+}
+
+.dim {
+  color: var(--dim-fg);
+}
+
+.message:empty {
+  display: none;
+}
+
+:where(.message) {
+  background: #f8f8f9;
+  padding: var(--unit-sm) var(--unit-md);
+  background-color: var(--bg);
+  color: var(--fg);
+  /* white-space: pre-wrap; */
+}
+
+.message {
+  border-style: solid;
+  border-width: 1px;
+}
+
+.message[role="alert"],
+.error {
+  --bg: var(--error-bg);
+  --fg: var(--error-fg);
+  text-shadow: var(--error-tsh, none);
+}
+
+.message[role="alert"][aria-live="polite"],
+.warning {
+  --bg: var(--warning-bg);
+  --fg: var(--warning-fg);
+  text-shadow: var(--warning-tsh, none);
+}
+
+.message[role="status"][aria-relevant],
+.success {
+  --bg: var(--success-bg);
+  --fg: var(--success-fg);
+  text-shadow: var(--success-tsh, none);
+}
+
+.message[role="status"]:not([aria-relevant]),
+.info {
+  --bg: var(--info-bg);
+  --fg: var(--info-fg);
+  text-shadow: var(--info-tsh, none);
+}
+
+::selection {
+  background: var(--highlight-bg);
+  color: var(--highlight-fg);
+  text-shadow: var(--highlight-tsh, none);
+}
+
+.selected {
+  box-shadow: var(--selected-bsh);
+}
+
+.selected::selection {
+  background: var(--highlight-sel-bg, var(--highlight-fg));
+  color: var(--highlight-sel-fg, var(--highlight-bg));
+  text-shadow: var(--highlight-sel-tsh, none);
+}
+
+:fullscreen {
+  border: 0 !important;
+}
+
+.desktop,
+.ground,
+.paper,
+.document,
+.panel,
+.screen,
+.code,
+code,
+samp,
+output,
+:where(body) {
+  background: var(--bg);
+  color: var(--fg);
+}
+
+:where(body.in-iframe) {
+  background: transparent;
+  overflow: hidden;
+}
+
+.inset {
+  border-width: var(--inset-bdw);
+  border-style: var(--inset-bds);
+  border-color: var(--inset-bdc);
+  border-image: var(--inset-bdi);
+  border-radius: var(--inset-br);
+  text-shadow: var(--inset-tsh, none);
+  box-shadow: var(--inset-bsh);
+}
+
+.inset-shallow {
+  border-width: var(--inset-shallow-bdw);
+  border-style: var(--inset-shallow-bds);
+  border-color: var(--inset-shallow-bdc);
+  border-image: var(--inset-shallow-bdi);
+  border-radius: var(--inset-shallow-br);
+  text-shadow: var(--inset-shallow-tsh, none);
+  box-shadow: var(--inset-shallow-bsh);
+}
+
+.outset {
+  border-width: var(--outset-bdw);
+  border-style: var(--outset-bds);
+  border-color: var(--outset-bdc);
+  border-image: var(--outset-bdi);
+  border-radius: var(--outset-br);
+  text-shadow: var(--outset-tsh, none);
+  box-shadow: var(--outset-bsh);
+}
+
+.outset-shallow {
+  border-width: var(--outset-shallow-bdw);
+  border-style: var(--outset-shallow-bds);
+  border-color: var(--outset-shallow-bdc);
+  border-image: var(--outset-shallow-bdi);
+  border-radius: var(--outset-shallow-br);
+  text-shadow: var(--outset-shallow-tsh, none);
+  box-shadow: var(--outset-shallow-bsh);
+}
+
+.screen {
+  --bg: var(--screen-bg);
+  --fg: var(--screen-fg);
+  text-shadow: var(--screen-tsh, none);
+}
+
+.desktop {
+  --bg: var(--desktop-bg);
+  --fg: var(--desktop-fg);
+  text-shadow: var(--desktop-tsh, none);
+}
+
+.ground {
+  --bg: var(--ground-bg);
+  --fg: var(--ground-fg);
+  text-shadow: var(--ground-tsh, none);
+}
+
+.paper {
+  --bg: var(--paper-bg);
+  --fg: var(--paper-fg);
+  text-shadow: var(--paper-tsh, none);
+}
+
+.document {
+  --bg: var(--document-bg);
+  --fg: var(--document-fg);
+  text-shadow: var(--document-tsh, none);
+}
+
+:not(.document) > :where(body,section,article,header,footer):is(.document) {
+  padding: var(--breath);
+}
+
+.panel, :where(body) {
+  --bg: var(--panel-bg);
+  --fg: var(--panel-fg);
+  text-shadow: var(--panel-tsh, none);
+}
+
+.code {
+  --bg: var(--code-bg);
+  --fg: var(--code-fg);
+  --fs: var(--fs-mono);
+  --lh: var(--lh-mono);
+  --ff: var(--_ff-mono);
+  font: var(--fs)/var(--lh) var(--ff);
+  padding: var(--unit-sm) var(--unit-md);
+  text-shadow: var(--code-tsh, none);
+  overflow-y: auto;
+  overflow-x: auto;
+  white-space: pre;
+  speak-as: literal-punctuation;
+  max-width: 100%;
+}
+
+.code::selection {
+  background: var(--code-sel-bg, var(--code-fg));
+  color: var(--code-sel-fg, var(--code-bg));
+  text-shadow: var(--code-sel-tsh, none);
+}
+
+pre.code {
+  padding: var(--unit) var(--unit-lg);
+}
+
+.pill {
+  padding: var(--unit-xs) var(--unit-md);
+  border: var(--bdw) var(--bds) var(--bdc, var(--fg, currentColor));
+  border-radius: 3px;
+}
+
+/* typography
+============= */
+
+/* @thanks https://www.w3.org/StyleSheets/TR/2016/base.css */
+
+:where(code, kbd, samp, pre) {
+  font: var(--font-mono);
+  widows: 3;
+  orphans: 3;
+  hyphens: none;
+  text-transform: none;
+  text-align: left;
+  text-align: start;
+  font-variant: normal;
+  page-break-before: avoid;
+}
+
+h1, h2, h3, h4, h5, h6, dt {
+  page-break-after: avoid;
+  page-break-inside: avoid;
+  hyphens: manual;
+}
+
+/* anchor links
+--------------- */
+
+/* @read https://amberwilson.co.uk/blog/are-your-anchor-links-accessible */
+
+:where(h1, h2, h3, h4, h5, h6) > a[href^="#"]:only-child:any-link {
+  color: inherit;
+  text-shadow: inherit;
+  text-decoration: none;
+  position: relative;
+}
+
+:where(h1, h2, h3, h4, h5, h6) > a[href^="#"]:only-child > ui-picto:first-of-type {
+  opacity: 0;
+  position: absolute;
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--link-fg);
+}
+
+:where(h1, h2, h3, h4, h5, h6) > a[href^="#"]:only-child:is(:focus,:hover) {
+  outline: none;
+}
+
+:where(h1, h2, h3, h4, h5, h6) > a[href^="#"]:only-child:is(:focus,:hover) > ui-picto:first-of-type {
+  opacity: 1;
+}
+
+/* checkboard
+============= */
+
+:root,
+.checkboard,
+.checkboard-dark {
+  --checkboard-dark: #cecece;
+  --checkboard-light: #fff;
+  --checkboard-size: 9;
+  --checkboard-bg:
+    repeating-conic-gradient(
+      var(--checkboard-dark) 0% 25%,
+      var(--checkboard-light) 0% 50%
+    ) top left / calc(var(--checkboard-size) * 2px) calc(var(--checkboard-size) * 2px);
+}
+
+.checkboard,
+.checkboard-dark {
+  background: var(--checkboard-bg);
+}
+
+.checkboard-dark {
+  --checkboard-dark: #666;
+  --checkboard-light: #555;
+}
+
+/* separators
+============= */
+
+hr {
+  width: 100%;
+  margin-block: var(--unit);
+  margin-inline: 0;
+  border-width: var(--separator-bdw);
+  border-style: var(--separator-bds);
+  border-color: var(--separator-bdc);
+  box-shadow: var(--separator-bsh);
+}
+
+.box-h > hr,
+hr[aria-orientation="vertical"] {
+  flex: 0 0 auto;
+  margin-block: 0;
+  margin-inline: var(--unit-sm);
+  display: inline-block;
+  height: auto;
+  width: 0;
+  border-width: var(--separator-v-bdw);
+  border-style: var(--separator-v-bds);
+  border-color: var(--separator-v-bdc);
+  box-shadow: var(--separator-v-bsh);
+}
+
+/* hyperlinks
+============= */
+
+:where(a) {
+  color: var(--link-fg, inherit);
+  text-decoration: var(--link-td);
+  text-shadow: var(--link-tsh, none);
+}
+
+:where(a:visited) {
+  color: var(--link-toggled-fg, var(--link-fg, inherit));
+  text-decoration: var(--link-toggled-td, var(--link-td));
+  text-shadow: var(--link-toggled-tsh, var(--link-tsh, none));
+}
+
+:where(a[aria-current="page"]),
+:where(a[aria-current="location"]) {
+  color: var(--link-current-fg, var(--link-active-fg, var(--link-fg, inherit)));
+  text-decoration: var(--link-current-td, var(--link-active-td, var(--link-td)));
+  text-shadow: var(--link-current-tsh, var(--link-active-tsh, var(--link-tsh, none)));
+}
+
+:where(a:active) {
+  color: var(--link-active-fg, var(--link-fg, inherit));
+  text-decoration: var(--link-active-td, var(--link-td));
+  text-shadow: var(--link-active-tsh, var(--link-tsh, none));
+}
+
+:where(a:focus),
+:where(a:hover) {
+  color: var(--link-focus-fg, var(--link-fg, inherit));
+  text-decoration: var(--link-focus-td, var(--link-td));
+  text-shadow: var(--link-focus-tsh, var(--link-tsh, none));
+}
+
+:where(a:focus) {
+  outline: var(--link-o, var(--ctrl-o));
+  outline-offset: var(--link-oo, 2px);
+}
+
+/* nav
+====== */
+
+nav:not(.unstyled) menu,
+nav:not(.unstyled) ol,
+nav:not(.unstyled) ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+:where(nav:not(.unstyled) li) > a {
+  color: inherit;
+  display: block;
+  text-decoration: none;
+  padding: var(--unit-xs) var(--unit-md);
+}
+
+:where(nav:not(.unstyled)) a:hover,
+:where(nav:not(.unstyled)) a[aria-current]:not([aria-current="false"]) {
+  background: var(--highlight-bg);
+  color: var(--highlight-fg);
+}

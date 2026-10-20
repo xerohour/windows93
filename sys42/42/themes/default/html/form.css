@@ -1,0 +1,1236 @@
+/* stylelint-disable no-duplicate-selectors */
+
+/*
+@read https://github.com/suitcss/suit/blob/master/doc/naming-conventions.md
+@read https://dev.to/visuellverstehen/common-mistakes-when-writing-css-with-bem-4921
+@read https://picocss.com
+*/
+
+:root {
+
+  /* all controls
+  =============== */
+
+  --ctrl-pa-x: var(--unit-sm);
+  --ctrl-pa-y: var(--unit-xs);
+  --ctrl-picto-pa-x: var(--unit-xs);
+  --ctrl-lh: var(--lh);
+  --ctrl-fs: var(--fs);
+
+  --ctrl-bdc: var(--fg);
+  --ctrl-bdw: 1px;
+  --ctrl-h:
+    calc(
+      calc(var(--ctrl-lh) * var(--ctrl-fs)) +
+      calc(2 * var(--ctrl-pa-y)) +
+      calc(2 * var(--ctrl-bdw))
+    );
+  --ctrl-w: 25ch;
+  --ctrl-group-gap: calc(-1 * var(--ctrl-bdlw));
+
+  --ctrl-o: 1px dotted currentColor;
+  --ctrl-oo: -3px;
+
+  --ctrl-disabled-alpha: 0.5;
+
+  /* field
+  ======== */
+
+  --fld-fg: var(--fg);
+  --fld-bdw: 1px;
+  --fld-bds: solid;
+  --fld-bdc: var(--ctrl-bdc);
+  --fld-br: 0px;
+  --fld-o: var(--ctrl-o);
+  --fld-oo: var(--ctrl-oo);
+
+  --fld-focus-fg: var(--ctrl-focus-fg, var(--fld-fg));
+  --fld-focus-bg: var(--ctrl-focus-bg, var(--fld-bg));
+  --fld-focus-bdw: var(--ctrl-focus-bdw, var(--fld-bdw));
+  --fld-focus-bds: var(--ctrl-focus-bds, var(--fld-bds));
+  --fld-focus-bdc: var(--ctrl-focus-bdc, var(--fld-bdc));
+  --fld-focus-bdi: var(--ctrl-focus-bdi, var(--fld-bdi));
+  --fld-focus-br: var(--ctrl-focus-br, var(--fld-br));
+  --fld-focus-tsh: var(--ctrl-focus-tsh, var(--fld-tsh));
+  --fld-focus-bsh: var(--ctrl-focus-bsh, var(--fld-bsh));
+
+  --fld-disabled-fg: var(--ctrl-disabled-fg, var(--fld-fg));
+  --fld-disabled-bg: var(--ctrl-disabled-bg, var(--fld-bg));
+  --fld-disabled-bdw: var(--ctrl-disabled-bdw, var(--fld-bdw));
+  --fld-disabled-bds: var(--ctrl-disabled-bds, var(--fld-bds));
+  --fld-disabled-bdc: var(--ctrl-disabled-bdc, var(--fld-bdc));
+  --fld-disabled-bdi: var(--ctrl-disabled-bdi, var(--fld-bdi));
+  --fld-disabled-br: var(--ctrl-disabled-br, var(--fld-br));
+  --fld-disabled-tsh: var(--ctrl-disabled-tsh, var(--fld-tsh));
+  --fld-disabled-bsh: var(--ctrl-disabled-bsh, var(--fld-bsh));
+
+  --fld-invalid-fg: var(--ctrl-invalid-fg, var(--fld-fg));
+  --fld-invalid-bg: var(--ctrl-invalid-bg, var(--fld-bg));
+  --fld-invalid-bdw: var(--ctrl-invalid-bdw, var(--fld-bdw));
+  --fld-invalid-bds: var(--ctrl-invalid-bds, var(--fld-bds));
+  --fld-invalid-bdc: var(--ctrl-invalid-bdc, var(--fld-bdc));
+  --fld-invalid-bdi: var(--ctrl-invalid-bdi, var(--fld-bdi));
+  --fld-invalid-br: var(--ctrl-invalid-br, var(--fld-br));
+  --fld-invalid-tsh: var(--ctrl-invalid-tsh, var(--fld-tsh));
+  --fld-invalid-bsh: var(--ctrl-invalid-bsh, var(--fld-bsh));
+
+  /* button
+  ========= */
+
+  --btn-bdw: var(--ctrl-bdw, 1px);
+  --btn-bds: var(--ctrl-bds, solid);
+  --btn-bdc: var(--ctrl-bdc);
+  --btn-br: 0px;
+  --btn-o: var(--ctrl-o);
+  --btn-oo: var(--ctrl-oo);
+  --btn-pa: var(--ctrl-pa-y) var(--ctrl-pa-x);
+
+  --btn-focus-fg: var(--ctrl-focus-fg, var(--btn-fg));
+  --btn-focus-bg: var(--ctrl-focus-bg, var(--btn-bg));
+  --btn-focus-pa: var(--ctrl-focus-pa, var(--btn-pa));
+  --btn-focus-bdw: var(--ctrl-focus-bdw, var(--btn-bdw));
+  --btn-focus-bds: var(--ctrl-focus-bds, var(--btn-bds));
+  --btn-focus-bdc: var(--ctrl-focus-bdc, var(--btn-bdc));
+  --btn-focus-bdi: var(--ctrl-focus-bdi, var(--btn-bdi));
+  --btn-focus-br: var(--ctrl-focus-br, var(--btn-br));
+  --btn-focus-tsh: var(--ctrl-focus-tsh, var(--btn-tsh));
+  --btn-focus-bsh: var(--ctrl-focus-bsh, var(--btn-bsh));
+
+  --btn-disabled-fg: var(--ctrl-disabled-fg, var(--btn-fg));
+  --btn-disabled-bg: var(--ctrl-disabled-bg, var(--btn-bg));
+  --btn-disabled-bdw: var(--ctrl-disabled-bdw, var(--btn-bdw));
+  --btn-disabled-bds: var(--ctrl-disabled-bds, var(--btn-bds));
+  --btn-disabled-bdc: var(--ctrl-disabled-bdc, var(--btn-bdc));
+  --btn-disabled-bdi: var(--ctrl-disabled-bdi, var(--btn-bdi));
+  --btn-disabled-br: var(--ctrl-disabled-br, var(--btn-br));
+  --btn-disabled-tsh: var(--ctrl-disabled-tsh, var(--btn-tsh));
+  --btn-disabled-bsh: var(--ctrl-disabled-bsh, var(--btn-bsh));
+
+  --btn-toggled-disabled-fg: var(--btn-disabled-fg);
+  --btn-toggled-disabled-bg: var(--btn-disabled-bg);
+  --btn-toggled-disabled-bdw: var(--btn-disabled-bdw);
+  --btn-toggled-disabled-bds: var(--btn-disabled-bds);
+  --btn-toggled-disabled-bdc: var(--btn-disabled-bdc);
+  --btn-toggled-disabled-bdi: var(--btn-disabled-bdi);
+  --btn-toggled-disabled-br: var(--btn-disabled-br);
+  --btn-toggled-disabled-tsh: var(--btn-disabled-tsh);
+  --btn-toggled-disabled-bsh: var(--btn-disabled-bsh);
+
+  --btn-active-fg: var(--highlight-fg);
+  --btn-active-bg: var(--highlight-bg);
+  --btn-active-pa: var(--btn-pa);
+  --btn-active-bdw: var(--btn-bdw);
+  --btn-active-bds: var(--btn-bds);
+  --btn-active-bdc: var(--btn-bdc);
+  --btn-active-bdi: var(--btn-bdi);
+  --btn-active-br: var(--btn-br);
+  --btn-active-tsh: var(--btn-tsh);
+  --btn-active-bsh: var(--btn-bsh);
+
+  --btn-toggled-fg: var(--highlight-fg);
+  --btn-toggled-bg: var(--highlight-bg);
+  --btn-toggled-pa: var(--btn-pa);
+  --btn-toggled-bdw: var(--btn-bdw);
+  --btn-toggled-bds: var(--btn-bds);
+  --btn-toggled-bdc: var(--btn-bdc);
+  --btn-toggled-bdi: var(--btn-bdi);
+  --btn-toggled-br: var(--btn-br);
+  --btn-toggled-tsh: var(--btn-tsh);
+  --btn-toggled-bsh: var(--btn-bsh);
+
+  --btn-toggled-active-fg: var(--btn-toggled-fg);
+  --btn-toggled-active-bg: var(--btn-toggled-bg);
+  --btn-toggled-active-pa: var(--btn-toggled-pa);
+  --btn-toggled-active-bdw: var(--btn-toggled-bdw);
+  --btn-toggled-active-bds: var(--btn-toggled-bds);
+  --btn-toggled-active-bdc: var(--btn-toggled-bdc);
+  --btn-toggled-active-bdi: var(--btn-toggled-bdi);
+  --btn-toggled-active-br: var(--btn-toggled-br);
+  --btn-toggled-active-tsh: var(--btn-toggled-tsh);
+  --btn-toggled-active-bsh: var(--btn-toggled-bsh);
+
+  /* checkable
+  ============ */
+
+  --check-fg: var(--fld-fg);
+  --check-bg: var(--fld-bg);
+  --check-bdw: var(--fld-bdw);
+  --check-bds: var(--fld-bds);
+  --check-bdc: var(--fld-bdc);
+  --check-bdi: var(--fld-bdi);
+  --check-tsh: var(--fld-tsh);
+  --check-bsh: var(--fld-bsh);
+
+  --check-focus-fg: var(--check-fg);
+  --check-focus-bg: var(--check-bg);
+  --check-focus-bdw: var(--check-bdw);
+  --check-focus-bds: var(--check-bds);
+  --check-focus-bdc: var(--check-bdc);
+  --check-focus-bdi: var(--check-bdi);
+  --check-focus-br: var(--check-br);
+  --check-focus-tsh: var(--check-tsh);
+  --check-focus-bsh: var(--check-bsh);
+
+  --check-disabled-fg: var(--ctrl-disabled-fg, var(--check-fg));
+  --check-disabled-bg: var(--ctrl-disabled-bg, var(--check-bg));
+  --check-disabled-bdw: var(--check-bdw);
+  --check-disabled-bds: var(--check-bds);
+  --check-disabled-bdc: var(--check-bdc);
+  --check-disabled-bdi: var(--check-bdi);
+  --check-disabled-br: var(--check-br);
+  --check-disabled-tsh: var(--ctrl-disabled-tsh, var(--check-tsh));
+  --check-disabled-bsh: var(--check-bsh);
+
+  --check-o: 1px solid var(--check-oc, var(--check-fg));
+  --check-oo: 2px;
+  --check-size: calc(7 * 2px);
+
+  /* others
+  ========= */
+
+  --addon-fg: var(--fld-fg);
+  --addon-bg: var(--fld-bg);
+  --addon-w: calc(1.5 * var(--unit));
+  --addon-h: auto;
+  --addon-top: 0px;
+  --addon-right: 0px;
+  --addon-bottom: 0px;
+
+  --label__required-fg: rgb(var(--red-400));
+
+  --fieldset-ma-x: var(--unit-md);
+  --fieldset-ma-y: var(--unit-md);
+  --fieldset-bdw: var(--separator-bdw);
+  --fieldset-bds: var(--separator-bds);
+  --fieldset-bdc: var(--separator-bdc);
+  --fieldset__legend-fg: var(--panel--fg);
+  --fieldset__legend-pa: 0.5ch;
+
+  --option-toggled-bg: var(--highlight-bg);
+  --option-toggled-fg: var(--highlight-fg);
+  --option-toggled-tsh: var(--highlight-fg);
+  --option-toggled-disabled-bg: var(--ctrl-disabled-bg);
+  --option-toggled-disabled-fg: var(--ctrl-disabled-fg);
+  --option-toggled-disabled-tsh: var(--ctrl-disabled-tsh);
+
+  /* pictos
+  ========= */
+
+  --picto-size: 16px;
+
+  --picto--up: url("../pictos/up.svg");
+  --picto--down: url("../pictos/down.svg");
+  --picto--upload: url("../pictos/import.svg");
+  --picto--calendar: url("../pictos/calendar.svg");
+
+  --input-number-up-picto: var(--picto--up);
+  --input-number-down-picto: var(--picto--down);
+
+  --radio-picto: url("../pictos/bullet.svg");
+  --checkbox-picto: url("../pictos/check.svg");
+  --checkbox-indeterminate-picto: url("../pictos/indeterminate.svg");
+  --input-datalist-picto: url("../pictos/bullet-list.svg");
+}
+
+/* reset
+======== */
+
+:where(form, fieldset) {
+  position: relative;
+  border: none;
+  padding: 0;
+  margin: 0;
+  max-width: 100%;
+  min-width: 0;
+}
+
+:where(button, input, select, textarea) {
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  letter-spacing: inherit;
+  border-radius: 0;
+}
+
+:where(:disabled:not(form, fieldset)) {
+  opacity: var(--ctrl-disabled-alpha);
+}
+
+:where(:focus, .focus) {
+  outline: var(--ctrl-o);
+  outline-offset: var(--ctrl-oo);
+}
+
+a:focus,
+a.focus {
+  outline: var(--ctrl-o);
+  outline-offset: 1px;
+}
+
+:where(:focus, .focus):where([tabindex="-1"]),
+:where(a, button, .button):focus:not(:focus-visible) {
+  outline: none;
+}
+
+:where(
+.field,
+.button,
+.label,
+.solid,
+label,
+legend,
+input,
+textarea,
+select,
+selectmenu,
+option,
+button
+) {
+  vertical-align: top;
+  display: inline-block;
+  line-height: var(--ctrl-lh);
+  min-width: 3ch;
+  max-width: 100%;
+  padding: var(--ctrl-pa-y) var(--ctrl-pa-x);
+}
+
+legend:not(.label) {
+  color: var(--fieldset__legend-fg);
+  margin-left: calc(-1 * var(--fieldset__legend-pa));
+  padding: 0;
+  padding-left: calc(1 * var(--fieldset__legend-pa));
+  padding-right: var(--fieldset__legend-pa);
+
+  display: flex;
+  align-items: center;
+  gap: var(--unit-sm);
+  min-width: 0;
+
+  /* increase fieldset top margin if legend is present */
+  position: relative;
+  border: 0 solid transparent;
+  --legend-ma-t: var(--unit-xs);
+  border-top-width: var(--legend-ma-t);
+  transform: translateY(calc(-0.5 * var(--legend-ma-t)));
+  margin-bottom: calc(-0.5 * var(--legend-ma-t));
+}
+
+fieldset + fieldset > legend:not(.label) {
+  --legend-ma-t: var(--unit-xl);
+}
+
+legend:not(.label)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+
+  /* use --legend-bg to mask fieldset border */
+  background: var(--legend-bg);
+}
+
+legend.label {
+  /* allow legend to be styled as normal flow element */
+  float: left;
+}
+
+:where(label, .label) {
+  font: var(--label-font, inherit);
+  border-width: var(--fld-bdw);
+  border-style: solid;
+  border-color: transparent;
+  padding-left: 0;
+  padding-right: 0;
+  border-left: 0;
+  border-right: 0;
+  justify-self: flex-start;
+}
+
+:where(:is(label, .label):not(.button)) {
+  margin-right: var(--unit-md);
+}
+
+:where(:is(label,.label) abbr[title]) {
+  color: var(--label__required-fg);
+  text-decoration: none;
+  position: relative;
+  top: -0.2em;
+  speak: none;
+}
+
+/* cursors
+========== */
+
+body { cursor: var(--cursor-default, default); }
+::-webkit-scrollbar { cursor: var(--cursor-default, default); }
+a { cursor: var(--cursor-pointer, pointer); }
+a.button { cursor: var(--cursor-default, default); }
+
+:where(input, textarea) {
+  cursor: var(--cursor-text, text);
+}
+
+:where(
+input:is(
+  [type="checkbox" i],
+  [type="radio" i],
+  [type="file" i],
+  [type="color" i],
+  [type="range" i],
+  [type="button" i],
+  [type="reset" i],
+  [type="submit" i]
+),
+label,
+button,
+.label,
+.button,
+select,
+selectmenu,
+form[disabled],
+fieldset[disabled]
+) {
+  cursor: var(--cursor-default, default);
+}
+
+:where(:disabled:not(form, fieldset)) {
+  cursor: var(--cursor-not-allowed, not-allowed);
+}
+
+[aria-busy="true" i],
+[aria-busy="true" i] * {
+  cursor: var(--cursor-progress, progress);
+}
+
+/* field
+======== */
+
+:where(
+.field,
+input:not(
+  [type="checkbox" i],
+  [type="radio" i],
+  [type="range" i],
+  [type="button" i],
+  [type="reset" i],
+  [type="submit" i]
+),
+select,
+selectmenu,
+textarea
+) {
+  --fg: var(--fld-fg);
+  --bg: var(--fld-bg);
+  color: var(--fg);
+  background: var(--bg);
+  border-width: var(--fld-bdw);
+  border-style: var(--fld-bds, solid);
+  border-color: var(--fld-bdc);
+  border-image: var(--fld-bdi);
+  border-radius: var(--fld-br);
+  text-shadow: var(--fld-tsh, none);
+  box-shadow: var(--fld-bsh);
+  transition: var(--fld-ti);
+  caret-color: var(--fld-caret, currentColor);
+  width: var(--ctrl-w);
+  overscroll-behavior: none;
+  overflow: hidden;
+}
+
+textarea {
+  overflow: auto;
+}
+
+:not(.field) > :where(
+input:not(
+  [type="checkbox"],
+  [type="radio"],
+  [type="range"],
+  [type="button"],
+  [type="reset"],
+  [type="submit"]),
+  select:not([multiple],[size]),
+  textarea
+):where(:focus,.focus),
+:where(selectmenu:focus-within),
+:where(.field:focus-within,.field.focus) {
+  --fg: var(--fld-focus-fg);
+  --bg: var(--fld-focus-bg);
+  --fld-bdw: var(--fld-focus-bdw);
+  --fld-bds: var(--fld-focus-bds);
+  --fld-bdc: var(--fld-focus-bdc);
+  --fld-bdi: var(--fld-focus-bdi);
+  --fld-br: var(--fld-focus-br);
+  --fld-tsh: var(--fld-focus-tsh);
+  --fld-bsh: var(--fld-focus-bsh);
+
+  outline: var(--fld-o);
+  outline-offset: var(--fld-oo);
+}
+
+:is(
+.field,
+input:not(
+  [type="checkbox"],
+  [type="radio"],
+  [type="range"],
+  [type="button"],
+  [type="reset"],
+  [type="submit"]
+),
+select,
+selectmenu,
+textarea
+):is(:invalid,.invalid) {
+  --fg: var(--fld-invalid-fg);
+  --bg: var(--fld-invalid-bg);
+  --fld-bdw: var(--fld-invalid-bdw);
+  --fld-bds: var(--fld-invalid-bds);
+  --fld-bdc: var(--fld-invalid-bdc);
+  --fld-bdi: var(--fld-invalid-bdi);
+  --fld-br: var(--fld-invalid-br);
+  --fld-tsh: var(--fld-invalid-tsh);
+  --fld-bsh: var(--fld-invalid-bsh);
+  --fld-caret: var(--fld-invalid-caret);
+}
+
+select:where([multiple],[size]):is(:focus,.focus) {
+  outline: var(--fld-o);
+  outline-offset: var(--fld-oo);
+}
+
+:where(
+.field,
+input:not(
+  [type="checkbox"],
+  [type="radio"],
+  [type="range"],
+  [type="button"],
+  [type="reset"],
+  [type="submit"]
+),
+textarea
+):is(:disabled, :not([type="file"]):read-only),
+:where(select:disabled),
+:where(selectmenu:disabled) {
+  --fg: var(--fld-disabled-fg);
+  --bg: var(--fld-disabled-bg);
+  --fld-bdw: var(--fld-disabled-bdw);
+  --fld-bds: var(--fld-disabled-bds);
+  --fld-bdc: var(--fld-disabled-bdc);
+  --fld-bdi: var(--fld-disabled-bdi);
+  --fld-br: var(--fld-disabled-br);
+  --fld-tsh: var(--fld-disabled-tsh);
+  --fld-bsh: var(--fld-disabled-bsh);
+}
+
+:disabled label,
+:disabled legend,
+:disabled + label {
+  opacity: var(--ctrl-disabled-alpha);
+  color: var(--ctrl-disabled-fg);
+  text-shadow: var(--ctrl-disabled-tsh, none);
+}
+
+/* field and button
+=================== */
+
+button,
+.button,
+.field,
+.solid {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-clip: padding-box;
+  --gap: var(--ctrl-pa-x);
+  gap: var(--gap);
+}
+
+:where(button,.button,.solid) > * {
+  flex: 1 1 0%;
+  min-width: 0;
+}
+
+/* .field
+--------- */
+
+.field > * {
+  flex: 0 0 auto;
+  border-radius: inherit;
+}
+
+.field :where(
+input:not(
+  [type="checkbox"],
+  [type="radio"],
+  [type="range"],
+  [type="button"],
+  [type="reset"],
+  [type="submit"]
+),
+select,
+selectmenu,
+textarea
+) {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: unset;
+  box-shadow: none;
+  max-width: unset;
+  appearance: none;
+}
+
+.field > :where(
+input:not(
+  [type="checkbox"],
+  [type="radio"],
+  [type="range"],
+  [type="button"],
+  [type="reset"],
+  [type="submit"]),
+  select,
+  selectmenu,
+  textarea
+) {
+  flex: 1 1 0%;
+}
+
+.field :where(
+input:not(
+  [type="checkbox"],
+  [type="radio"],
+  [type="range"],
+  [type="button"],
+  [type="reset"],
+  [type="submit"]
+),
+select,
+selectmenu,
+textarea
+):is(:focus,.focus) {
+  outline: none;
+}
+
+.field :where(.button,button) {
+  line-height: 0;
+  align-self: stretch;
+  margin-top: calc(-1 * var(--ctrl-pa-y));
+  margin-bottom: calc(-1 * var(--ctrl-pa-y));
+}
+
+.field :where(.button,button):last-child {
+  margin-right: calc(-1 * var(--ctrl-pa-x));
+}
+
+.field :where(.button,button):first-child {
+  margin-left: calc(-1 * var(--ctrl-pa-x));
+}
+
+/* button
+========= */
+
+a.button {
+  text-decoration: none;
+  display: inline-block;
+}
+
+:where(
+.button,
+.solid,
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"]
+) {
+  --fg: var(--btn-fg);
+  --bg: var(--btn-bg);
+  color: var(--fg);
+  background: var(--bg);
+  padding: var(--btn-pa);
+  border-width: var(--btn-bdw);
+  border-style: var(--btn-bds, solid);
+  border-color: var(--btn-bdc);
+  border-image: var(--btn-bdi);
+  border-radius: var(--btn-br);
+  text-shadow: var(--btn-tsh, none);
+  box-shadow: var(--btn-bsh);
+
+  text-align: center;
+  user-select: none;
+}
+
+:where(button,.button,.solid):empty::before,
+:where(button,.button,.solid) > :only-child:empty::before {
+  content: var(--ZERO_WIDTH_SPACE);
+}
+
+:where(
+.button,
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"]
+):where(:focus,:hover),
+:where(input:is([type="checkbox"],[type="radio"]):focus + label.button) {
+  --fg: var(--btn-focus-fg);
+  --bg: var(--btn-focus-bg);
+  padding: var(--btn-focus-pa);
+  border-width: var(--btn-focus-bdw);
+  border-style: var(--btn-focus-bds, solid);
+  border-color: var(--btn-focus-bdc);
+  border-image: var(--btn-focus-bdi);
+  border-radius: var(--btn-focus-br);
+  text-shadow: var(--btn-focus-tsh, none);
+  box-shadow: var(--btn-focus-bsh);
+}
+
+:where(
+.button,
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"]
+):focus,
+:where(input:is([type="checkbox"],[type="radio"]):focus + label.button) {
+  outline: var(--btn-o);
+  outline-offset: var(--btn-oo);
+}
+
+:where(
+.button,
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"]
+):where(:active:focus:not([aria-expanded])) {
+  --fg: var(--btn-active-fg);
+  --bg: var(--btn-active-bg);
+  padding: var(--btn-active-pa);
+  border-width: var(--btn-active-bdw);
+  border-style: var(--btn-active-bds, solid);
+  border-color: var(--btn-active-bdc);
+  border-image: var(--btn-active-bdi);
+  border-radius: var(--btn-active-br);
+  text-shadow: var(--btn-active-tsh, none);
+  box-shadow: var(--btn-active-bsh);
+}
+
+:where(
+.button,
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"]
+):where([aria-pressed="true"],[aria-selected="true"],[aria-expanded="true"]),
+:where(input:is([type="checkbox"],[type="radio"]):checked + label.button) {
+  --fg: var(--btn-toggled-fg);
+  --bg: var(--btn-toggled-bg);
+  padding: var(--btn-toggled-pa);
+  border-width: var(--btn-toggled-bdw);
+  border-style: var(--btn-toggled-bds, solid);
+  border-color: var(--btn-toggled-bdc);
+  border-image: var(--btn-toggled-bdi);
+  border-radius: var(--btn-toggled-br);
+  text-shadow: var(--btn-toggled-tsh, none);
+  box-shadow: var(--btn-toggled-bsh);
+}
+
+:where(
+.button,
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"]
+):where([aria-pressed]:active),
+:where(input:is([type="checkbox"],[type="radio"]) + label.button:active) {
+  --fg: var(--btn-toggled-active-fg);
+  --bg: var(--btn-toggled-active-bg);
+  padding: var(--btn-toggled-active-pa);
+  border-width: var(--btn-toggled-active-bdw);
+  border-style: var(--btn-toggled-active-bds, solid);
+  border-color: var(--btn-toggled-active-bdc);
+  border-image: var(--btn-toggled-active-bdi);
+  border-radius: var(--btn-toggled-active-br);
+  text-shadow: var(--btn-toggled-active-tsh, none);
+  box-shadow: var(--btn-toggled-active-bsh);
+}
+
+:where(
+.button,
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"]
+):where(:disabled),
+:where(input:is([type="checkbox"],[type="radio"]):disabled + label.button) {
+  --fg: var(--btn-disabled-fg);
+  --bg: var(--btn-disabled-bg);
+  border-width: var(--btn-disabled-bdw);
+  border-style: var(--btn-disabled-bds, solid);
+  border-color: var(--btn-disabled-bdc);
+  border-image: var(--btn-disabled-bdi);
+  border-radius: var(--btn-disabled-br);
+  text-shadow: var(--btn-disabled-tsh, none);
+  box-shadow: var(--btn-disabled-bsh);
+
+  opacity: var(--ctrl-disabled-alpha);
+}
+
+:where(
+.button,
+button,
+input[type="button"],
+input[type="reset"],
+input[type="submit"]
+):is([aria-pressed="true"]):disabled,
+:where(input:is([type="checkbox"],[type="radio"]):checked:disabled + label.button) {
+  --fg: var(--btn-toggled-disabled-fg);
+  --bg: var(--btn-toggled-disabled-bg);
+  border-width: var(--btn-toggled-disabled-bdw);
+  border-style: var(--btn-toggled-disabled-bds, solid);
+  border-color: var(--btn-toggled-disabled-bdc);
+  border-image: var(--btn-toggled-disabled-bdi);
+  border-radius: var(--btn-toggled-disabled-br);
+  text-shadow: var(--btn-toggled-disabled-tsh, none);
+  box-shadow: var(--btn-toggled-disabled-bsh);
+}
+
+/* https://twitter.com/overflowhidden/status/1260837671762571265 */
+@media screen and (-ms-high-contrast: active) {
+  :where(
+  .button,
+  button,
+  input[type="button"],
+  input[type="reset"],
+  input[type="submit"]) {
+    border: 2px solid currentColor;
+  }
+}
+
+.btn-clear.has-picto {
+  border: 0;
+  flex: 0 0 var(--picto-size);
+  height: var(--picto-size);
+  --btn-oo: -1px;
+}
+
+:where(.solid),
+.btn-clear,
+.btn-clear:where(:active,:focus) {
+  color: inherit;
+  background: transparent;
+  border-color: transparent;
+  border-image: none;
+  box-shadow: none;
+}
+
+.solid {
+  color: var(--fg, inherit);
+  background: var(--bg, transparent);
+}
+
+.solid.info,
+.solid.warning,
+.solid.error,
+.solid.success {
+  outline-offset: -1px;
+  outline: 1px solid currentColor;
+}
+
+.btn-primary {
+  --bg: var(--btn--primary-bg);
+  --fg: var(--btn--primary-fg);
+}
+
+button[type="submit"]:not(:active,:disabled),
+.btn-default:not(:active,:disabled) {
+  border-image: var(--btn-default-bdi);
+}
+
+/* select
+========= */
+
+select {
+  appearance: none;
+  background-image: var(--picto--down);
+  background-position-x: calc(100% - var(--addon-right) - calc(0.5 * calc(var(--addon-w) - var(--picto-size))));
+  background-position-y: center;
+  background-repeat: no-repeat;
+}
+
+select:is([multiple],[size]) {
+  background-image: none;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 0;
+}
+
+option {
+  display: block;
+}
+
+optgroup { font-family: inherit; }
+
+select:not([multiple],[size]) :where(optgroup,option) {
+  color: #000;
+  background: #fff;
+}
+
+:is(select,select:focus):not(:disabled) option:is(:hover,:focus,:active,:checked) {
+  background: var(--option-toggled-bg);
+  color: var(--option-toggled-fg);
+  text-shadow: var(--option-toggled-tsh, none);
+}
+
+:is(select:disabled) option:checked {
+  background: var(--option-toggled-disabled-bg);
+  color: var(--option-toggled-disabled-fg);
+  text-shadow: var(--option-toggled-disabled-tsh, none);
+}
+
+select:is([multiple],[size]) optgroup { font-size: 0; }
+select:is([multiple],[size]) optgroup option { font-size: var(--fs); }
+
+select:is([multiple],[size]) optgroup option::before {
+  display: none;
+}
+
+select:is([multiple],[size]) optgroup::before {
+  content: attr(label);
+  font-size: var(--fs);
+  font-style: normal;
+  font-weight: bold;
+  display: block;
+  padding: var(--ctrl-pa-y) var(--ctrl-pa-x);
+  padding-bottom: calc(var(--ctrl-pa-y) - 1px);
+}
+
+@-moz-document url-prefix() {
+  select { text-indent: -0.28ch !important; }
+}
+
+/* selectmenu
+============= */
+
+selectmenu {
+  position: relative;
+}
+
+selectmenu::part(button) {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  padding: var(--ctrl-pa-y) var(--ctrl-pa-x);
+  padding-right: 0;
+}
+
+selectmenu::part(button):focus {
+  outline: none;
+}
+
+/* hide arrow icon
+------------------
+future solution
+https://github.com/openui/open-ui/issues/548#issuecomment-1262650219
+*/
+selectmenu::part(marker) {
+  display: none;
+}
+
+selectmenu::part(selected-value) {
+  width: 1000%;
+  text-align: left;
+}
+
+/* check input
+============== */
+
+/* @read https://moderncss.dev/pure-css-custom-checkbox-style/ */
+
+:where(input[type="checkbox"], input[type="radio"]) {
+  /* all: unset; */
+  text-indent: 0;
+
+  appearance: none;
+  padding: 0;
+  align-self: center;
+  vertical-align: middle;
+
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+
+  color: inherit;
+
+  min-width: var(--check-size);
+  min-height: var(--check-size);
+  width: var(--check-size);
+  height: var(--check-size);
+}
+
+:where(
+input[type="checkbox"]:not([role="menuitemcheckbox"]),
+input[type="radio"]:not([role="menuitemradio"])) {
+  color: var(--check-fg);
+  background: var(--check-bg);
+  border-width: var(--check-bdw);
+  border-style: var(--check-bds, solid);
+  border-color: var(--check-bdc, solid);
+  border-image: var(--check-bdi);
+  border-radius: var(--check-br);
+  text-shadow: var(--check-tsh, none);
+  box-shadow: var(--check-bsh);
+  transition: var(--check-ti);
+  position: relative;
+}
+
+:where(input[type="checkbox"],input[type="radio"]):focus {
+  --check-fg: var(--check-focus-fg);
+  --check-bg: var(--check-focus-bg);
+  --check-bdw: var(--check-focus-bdw);
+  --check-bds: var(--check-focus-bds);
+  --check-bdc: var(--check-focus-bdc);
+  --check-bdi: var(--check-focus-bdi);
+  --check-br: var(--check-focus-br);
+  --check-tsh: var(--check-focus-tsh);
+  --check-bsh: var(--check-focus-bsh);
+
+  outline: var(--check-o);
+  outline-offset: var(--check-oo);
+}
+
+:where(input[type="checkbox"],input[type="radio"]):disabled {
+  --check-fg: var(--check-disabled-fg);
+  --check-bg: var(--check-disabled-bg);
+  --check-bdw: var(--check-disabled-bdw);
+  --check-bds: var(--check-disabled-bds);
+  --check-bdc: var(--check-disabled-bdc);
+  --check-bdi: var(--check-disabled-bdi);
+  --check-br: var(--check-disabled-br);
+  --check-tsh: var(--check-disabled-tsh);
+  --check-bsh: var(--check-disabled-bsh);
+}
+
+:where(:is(
+input[type="checkbox"],
+input[type="radio"]
+) + label:not(.button)) {
+  padding-left: 0;
+  border-left: 0;
+  margin-left: var(--unit-sm);
+  vertical-align: middle;
+}
+
+:where(input[type="radio"]:checked)::before,
+:where(input[type="radio"]:checked)::after,
+:where(input[type="checkbox"]:is(:checked,:indeterminate))::before,
+:where(input[type="checkbox"]:is(:checked,:indeterminate))::after {
+  content: var(--ZERO_WIDTH_SPACE);
+  position: absolute;
+  background-color: currentColor;
+  width: var(--picto-size);
+  height: var(--picto-size);
+  --_pos: center no-repeat;
+}
+
+:where(input[type="checkbox"]:checked)::before,
+:where(input[type="checkbox"]:checked)::after {
+  -webkit-mask: var(--checkbox-picto) var(--_pos);
+}
+
+:where(input[type="checkbox"]:indeterminate)::before,
+:where(input[type="checkbox"]:indeterminate)::after {
+  -webkit-mask: var(--checkbox-indeterminate-picto) var(--_pos);
+}
+
+:where(input[type="radio"]:checked)::before,
+:where(input[type="radio"]:checked)::after {
+  -webkit-mask: var(--radio-picto) var(--_pos);
+}
+
+:where(input[type="radio"]:not([role="menuitemradio"])) { border-radius: 100%; }
+
+input:where([type="radio"],[type="checkbox"]) + label {
+  user-select: none;
+}
+
+.check-cont {
+  max-width: 100%;
+  display: flex;
+  align-items: center;
+  --gap: var(--unit-sm);
+  column-gap: var(--gap);
+}
+
+.check-cont > label {
+  margin: 0;
+  /* padding: 0;
+  border: none; */
+}
+
+/* color
+======== */
+
+input[type="color" i] {
+  align-self: center;
+  padding: 0;
+  min-width: 0;
+  box-sizing: content-box;
+  width: var(--addon-w);
+  height: var(--addon-w);
+}
+
+input[type="color" i]::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+input[type="color" i]::-moz-color-swatch { border: none; }
+input[type="color" i]::-webkit-color-swatch { border: none; }
+
+/* groups
+========= */
+
+.ctrl-group {
+  --_negative-gap: calc(-1 * var(--ctrl-group-gap));
+  margin-left: var(--_negative-gap);
+  margin-top: var(--_negative-gap);
+}
+
+.ctrl-group > * {
+  margin-left: var(--ctrl-group-gap);
+  margin-top: var(--ctrl-group-gap);
+}
+
+.ctrl-group > :where(label,.label):not(:first-child) {
+  padding-left: var(--unit);
+}
+
+.toggle-group {
+  display: flex;
+}
+
+.toggle-group input:is([type="checkbox"],[type="radio"]) {
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  pointer-events: none;
+}
+
+/* fieldset
+=========== */
+
+fieldset:is([role="none"],.unstyled):not(.field) {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+}
+
+fieldset:not([role="none"],.unstyled) {
+  padding: var(--fieldset-ma-y) var(--fieldset-ma-x);
+  border-width: var(--fieldset-bdw);
+  border-style: var(--fieldset-bds, solid);
+  border-color: var(--fieldset-bdc);
+  border-image: var(--fieldset-bdi);
+  border-radius: var(--fieldset-br);
+}
+
+fieldset:not([role="none"],.unstyled) > fieldset + fieldset {
+  margin-top: var(--fieldset-ma-y);
+}
+
+fieldset:not([role="none"],.unstyled) > legend + *,
+fieldset:not([role="none"],.unstyled) > :first-child { margin-top: 0; }
+
+fieldset:not([role="none"],.unstyled) > :is(
+p,div:not([class]),fieldset:is([role="none"],.unstyled)) > :first-child:not(:only-child) {
+  justify-self: end;
+  /* align-self: start; */
+  min-width: 0;
+}
+
+:is(fieldset.form-aligned, .form-aligned fieldset:not([role="none"],.unstyled)) > :is(
+p,div:not([class]),fieldset:is([role="none"],.unstyled)) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 3fr;
+}
+
+:is(fieldset.form-aligned, .form-aligned fieldset:not([role="none"],.unstyled)) > :is(
+p,div:not([class]),fieldset:is([role="none"],.unstyled)) > :only-child {
+  grid-column: 2;
+}
+
+/* truncate
+=========== */
+
+:where(
+.truncate,
+.label,
+.button,
+.field,
+label,
+label > span,
+legend:not(.label) > span,
+button > *,
+.button > *,
+select,
+option,
+optgroup,
+input,
+input::-webkit-datetime-edit,
+input::-webkit-datetime-edit-fields-wrapper
+) {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* prevent hidden aliasing using pixel fonts */
+  /* text-indent: 1px; */
+}
+
+.truncate-0,
+.truncate-0 :where(
+  /* ui-icon span, */
+  .truncate,
+  .label,
+  .button,
+  .field,
+  label,
+  legend:not(.label) > span,
+  button > *,
+  .button > *,
+  select,
+  option,
+  optgroup,
+  input,
+  input::-webkit-datetime-edit,
+  input::-webkit-datetime-edit-fields-wrapper
+):not(.truncate-1) {
+  overflow: unset;
+  text-overflow: unset;
+  white-space: unset;
+  text-indent: unset;
+}
+
+/* picto
+======== */
+
+:where(label,.label,button,.button,.field,.solid).has-picto--only-child {
+  padding-inline: 1px;
+}
+
+.has-picto--only-child::after {
+  content: var(--ZERO_WIDTH_SPACE);
+  margin-inline-start: calc(-1 * var(--ctrl-pa-x));
+}
+
+.has-picto > ui-picto {
+  margin-block: calc(-1 * var(--ctrl-pa-y));
+}

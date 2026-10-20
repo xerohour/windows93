@@ -1,0 +1,18 @@
+{
+  name: "MediaPlayer",
+  command: "player",
+  categories: ["music", "utilities", "entertainment"],
+
+  decode: {
+    types: [
+      { description: "Audio", accept: "audio/*" },
+      { description: "Video", accept: "video/*" },
+    ],
+  },
+
+  content: {
+    tag: "ui-player",
+    path: "{{$files/0/url}}",
+    autoplay: true,
+  },
+}

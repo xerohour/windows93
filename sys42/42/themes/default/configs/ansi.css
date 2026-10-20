@@ -1,0 +1,59 @@
+:root {
+  --ansi-black: #232634;
+  --ansi-blackBright: #6e7483;
+
+  --ansi-red: #ff5c57;
+  --ansi-redBright: #f0562c;
+
+  --ansi-green: #5af78e;
+  --ansi-greenBright: #00ff9a;
+
+  --ansi-yellow: #ccc47a;
+  --ansi-yellowBright: #dabd3f;
+
+  --ansi-blue: #57c7ff;
+  --ansi-blueBright: #2a9bff;
+
+  --ansi-magenta: #ff6ac1;
+  --ansi-magentaBright: #b280f6;
+
+  --ansi-cyan: #9aedfe;
+  --ansi-cyanBright: #0ff;
+
+  --ansi-white: #d4d4c4;
+  --ansi-whiteBright: #fff;
+
+  --ansi-fg: #eff0eb;
+  --ansi-bg: var(--ansi-black);
+  --ansi-cursor: var(--ansi-greenBright);
+  --ansi-dim: 0.7;
+}
+
+.ansi-black { color: var(--ansi-black); }
+.ansi-blackBright, .ansi-grey { color: var(--ansi-blackBright); }
+.ansi-red { color: var(--ansi-red); }
+.ansi-redBright { color: var(--ansi-redBright); }
+.ansi-green { color: var(--ansi-green); }
+.ansi-greenBright { color: var(--ansi-greenBright); }
+.ansi-yellow { color: var(--ansi-yellow); }
+.ansi-yellowBright { color: var(--ansi-yellowBright); }
+.ansi-blue { color: var(--ansi-blue); }
+.ansi-blueBright { color: var(--ansi-blueBright); }
+.ansi-magenta { color: var(--ansi-magenta); }
+.ansi-magentaBright { color: var(--ansi-magentaBright); }
+.ansi-cyan { color: var(--ansi-cyan); }
+.ansi-cyanBright { color: var(--ansi-cyanBright); }
+.ansi-white { color: var(--ansi-white); }
+.ansi-whiteBright { color: var(--ansi-whiteBright); }
+.ansi-dim { opacity: var(--ansi-dim); }
+.ansi-reset { color: var(--ansi-fg); }
+
+.ansi--link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.ansi--link:hover > span {
+  text-decoration: underline;
+  text-decoration-skip-ink: auto;
+}

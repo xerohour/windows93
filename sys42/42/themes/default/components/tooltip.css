@@ -1,0 +1,79 @@
+:root {
+  --tooltip-br: 0px;
+  --tooltip-offset-y: 0px;
+  --tooltip-offset-x: 0px;
+
+  --tooltip-bdw: 1px;
+
+  --tooltip-pa: var(--unit-md) var(--unit);
+
+  --tooltip__tail-offset: 0px;
+}
+
+/* tooltip
+========== */
+
+.tooltip,
+ui-tooltip {
+  --bg: var(--tooltip-bg);
+  --fg: var(--tooltip-fg);
+  --bdw: var(--tooltip-bdw);
+  --bdc: var(--tooltip-bdc, var(--fg));
+
+  --tail-offset-x: calc(var(--tooltip-br) + var(--tooltip__tail-offset));
+
+  font: var(--font);
+
+  padding: var(--tooltip-pa);
+
+  background: var(--bg);
+  color: var(--fg);
+  text-shadow: var(--tooltip-tsh, none);
+  border-width: var(--bdw);
+  border-style: var(--tooltip-bds, solid);
+  border-color: var(--bdc);
+  border-radius: var(--tooltip-br);
+
+  transition: opacity 0.2s;
+
+  filter: var(--tooltip-filter);
+  backdrop-filter: var(--tooltip-backdrop-filter);
+
+  width: max-content;
+  min-height: min-content;
+  max-width: min(32ch, 100%);
+
+  aspect-ratio: 0;
+  bottom: auto;
+  right: auto;
+}
+
+ui-tooltip.tail-tc,
+ui-tooltip.tail-tl,
+ui-tooltip.tail-tr {
+  margin-top: var(--tail-h);
+}
+
+ui-tooltip.tail-bc,
+ui-tooltip.tail-bl,
+ui-tooltip.tail-br {
+  margin-top: calc(-1 * var(--tail-h));
+}
+
+ui-tooltip.tail-cl {
+  margin-left: var(--tail-w);
+}
+
+ui-tooltip.tail-cr {
+  margin-left: calc(-1 * var(--tail-w));
+}
+
+ui-tooltip.tail-tr,
+ui-tooltip.tail-br {
+  margin-left: var(--tail-offset-x);
+}
+
+ui-tooltip.tail-tl,
+ui-tooltip.tail-bl {
+  margin-left: calc(-1 * var(--tail-offset-x));
+}

@@ -1,0 +1,49 @@
+/* @read https://medium.com/gusto-design/creating-the-perfect-css-system-fa38f5bcdd9e */
+/* @read https://slides.oddbird.net/csswg/tpac2021/ */
+
+/* Configs
+=========== */
+@import url("./configs/variables.css");
+@import url("./configs/ansi.css");
+@import url("./configs/colors.css");
+@import url("./configs/cursor.css");
+
+/* Reset
+======== */
+@import url("./reset/sanitize.css");
+@import url("./reset/reduce-motion.css");
+@import url("./reset/reset.css");
+@import url("./html/theme.css");
+
+/* Elements
+=========== */
+@import url("./html/form.css");
+@import url("./html/addon.css");
+@import url("./html/meter.css");
+@import url("./html/progress.css");
+@import url("./html/range.css");
+@import url("./html/scrollbar.css");
+
+/* Components
+============= */
+@import url("./ui/ui.css");
+@import url("./components/accordion.css");
+@import url("./components/dialog.css");
+@import url("./components/folder.css");
+@import url("./components/grid.css");
+@import url("./components/icon.css");
+@import url("./components/menu.css");
+@import url("./components/player.css");
+@import url("./components/sandbox.css");
+@import url("./components/tabs.css");
+@import url("./components/tooltip.css");
+@import url("./components/tree.css");
+
+/* Utilities
+============ */
+@import url("./utils/utils.css");
+@import url("./utils/box.css");
+@import url("./utils/spacing.css");
+@import url("./utils/txt.css");
+@import url("./utils/tail.css");
+@import url("./utils/print.css");

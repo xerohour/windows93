@@ -60,6 +60,30 @@ GameBoy-Online (repo gone), Castle GAFA (Wolfenstein game data), SAE (needs
 the copyrighted Kickstart ROM). Windows93's own apps were never open-sourced;
 its **sys42** framework is, at github.com/windows93dotnet/sys42 (MIT).
 
+## Second edition: the real sys42 code
+
+**Live: https://xerohour.github.io/windows93/sys42/desktop/**
+
+The `sys42/` folder is something different: a working boot of
+[windows93dotnet/sys42](https://github.com/windows93dotnet/sys42) — the
+Windows93 creators' own framework, published by them under the **MIT
+license**. Its README says it "started as a cleanup of the Windows93
+codebase", so this edition's shell, window manager, windows9x theme and
+apps (including a genuine Hydra) are the original code, not a recreation.
+
+It was made static-ready with 6 small patches (all marked
+`STATIC PROTO PATCH`): the "backend" turned out to be just a
+service-worker handshake, the filesystem defaults to IndexedDB, and the
+patches make the boot tolerate service-worker failure and use relative
+paths. The generated `files.cbor` index was rebuilt for the trimmed tree
+with the project's own codec. Full write-up: `sys42/PROTO.md`.
+sys42's MIT license is at `sys42/LICENSE`.
+
+Known limitation: the service worker's virtual-file serving matches raw
+URL paths, so under a project subpath like this one some *virtual* files
+may miss (hosted files load normally). If an app misbehaves here, that's
+the first suspect.
+
 ## Run locally
 
 It's one static file — no build step:

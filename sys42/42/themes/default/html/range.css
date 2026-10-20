@@ -1,0 +1,335 @@
+:root {
+  --range__track-h: 1px;
+  --range__track-active-c: currentColor;
+  --range__track-inactive-c: var(--range__track-active-c);
+
+  --range__track-bdw: 0;
+  --range__track-bds: solid;
+  --range__track-bdi: none;
+  --range__track-bsh: var(--fld-bsh);
+  --range__track-o: none;
+  --range__track-oo: 2px;
+
+  --range-focus__track-h: var(--range__track-h);
+  --range-focus__track-bdw: var(--range__track-bdw);
+  --range-focus__track-bds: var(--range__track-bds);
+  --range-focus__track-bdc: var(--range__track-bdc);
+  --range-focus__track-bdi: var(--range__track-bdi);
+  --range-focus__track-bsh: var(--range__track-bsh);
+
+  --range-disabled__track-h: var(--range__track-h);
+  --range-disabled__track-bdw: var(--range__track-bdw);
+  --range-disabled__track-bds: var(--range__track-bds);
+  --range-disabled__track-bdc: var(--range__track-bdc);
+  --range-disabled__track-bdi: var(--range__track-bdi);
+  --range-disabled__track-bsh: var(--range__track-bsh);
+
+  --range__thumb-h: var(--check-size);
+  --range__thumb-w: var(--check-size);
+  --range__thumb-br: 100%;
+  --range__thumb-bg: currentColor;
+  --range__thumb-bdw: 0;
+  --range__thumb-bds: solid;
+  --range__thumb-bdi: none;
+  --range__thumb-bsh: none;
+
+  --range__thumb-o: var(--fld-o);
+  --range__thumb-oo: var(--unit-xs);
+
+  --range-focus__thumb-w: var(--range__thumb-w);
+  --range-focus__thumb-h: var(--range__thumb-h);
+  --range-focus__thumb-bg: var(--range__thumb-bg);
+  --range-focus__thumb-bdw: var(--range__thumb-bdw);
+  --range-focus__thumb-bds: var(--range__thumb-bds);
+  --range-focus__thumb-bdc: var(--range__thumb-bdc);
+  --range-focus__thumb-bdi: var(--range__thumb-bdi);
+  --range-focus__thumb-br: var(--range__thumb-br);
+  --range-focus__thumb-bsh: var(--range__thumb-bsh);
+
+  --range-disabled__thumb-w: var(--range__thumb-w);
+  --range-disabled__thumb-h: var(--range__thumb-h);
+  --range-disabled__thumb-bg: var(--range__thumb-bg);
+  --range-disabled__thumb-bdw: var(--range__thumb-bdw);
+  --range-disabled__thumb-bds: var(--range__thumb-bds);
+  --range-disabled__thumb-bdc: var(--range__thumb-bdc);
+  --range-disabled__thumb-bdi: var(--range__thumb-bdi);
+  --range-disabled__thumb-br: var(--range__thumb-br);
+  --range-disabled__thumb-bsh: var(--range__thumb-bsh);
+}
+
+:where(input[type="range" i]) {
+  height: var(--range-h, var(--ctrl-h));
+  width: var(--range-w, var(--ctrl-w));
+  --percent: 100;
+  --range_gradient:
+    linear-gradient(
+      to right,
+      var(--range__track-active-c) calc(1% * var(--percent)),
+      var(--range__track-inactive-c) 0%
+    );
+  --_range__track-bg: var(--range__track-bg, var(--range_gradient));
+  appearance: none;
+  padding-left: 0;
+  padding-right: 0;
+  background: transparent;
+  color: inherit;
+  overflow: visible;
+}
+
+:where(input[type="range" i])::-ms-tooltip {
+  display: none;
+}
+
+/* track
+======== */
+
+:where(input[type="range" i])::-webkit-slider-runnable-track {
+  box-sizing: border-box;
+  height: var(--range__track-h);
+  background: var(--_range__track-bg);
+  border-width: var(--range__track-bdw);
+  border-style: var(--range__track-bds);
+  border-color: var(--range__track-bdc);
+  border-image: var(--range__track-bdi);
+  box-shadow: var(--range__track-bsh);
+}
+
+:where(input[type="range" i])::-moz-range-track {
+  box-sizing: border-box;
+  height: var(--range__track-h);
+  background: var(--_range__track-bg);
+  border-width: var(--range__track-bdw);
+  border-style: var(--range__track-bds);
+  border-color: var(--range__track-bdc);
+  border-image: var(--range__track-bdi);
+  box-shadow: var(--range__track-bsh);
+}
+
+:where(input[type="range" i])::-ms-track {
+  box-sizing: border-box;
+  height: var(--range__track-h);
+  background: var(--_range__track-bg);
+  border-width: var(--range__track-bdw);
+  border-style: var(--range__track-bds);
+  border-color: var(--range__track-bdc);
+  border-image: var(--range__track-bdi);
+  box-shadow: var(--range__track-bsh);
+}
+
+/* focus on track
+----------------- */
+
+:where(input[type="range" i]).focus,
+:where(input[type="range" i]):focus {
+  outline: none;
+}
+
+:where(input[type="range" i]).focus::-webkit-slider-runnable-track,
+:where(input[type="range" i]):focus::-webkit-slider-runnable-track {
+  --range__track-h: var(--range-focus__track-h);
+  --range__track-bdw: var(--range-focus__track-bdw);
+  --range__track-bds: var(--range-focus__track-bds);
+  --range__track-bdc: var(--range-focus__track-bdc);
+  --range__track-bdi: var(--range-focus__track-bdi);
+  --range__track-bsh: var(--range-focus__track-bsh);
+
+  outline: var(--range__track-o);
+  outline-offset: var(--range__track-oo);
+}
+
+:where(input[type="range" i]).focus::-moz-range-track,
+:where(input[type="range" i]):focus::-moz-range-track {
+  --range__track-h: var(--range-focus__track-h);
+  --range__track-bdw: var(--range-focus__track-bdw);
+  --range__track-bds: var(--range-focus__track-bds);
+  --range__track-bdc: var(--range-focus__track-bdc);
+  --range__track-bdi: var(--range-focus__track-bdi);
+  --range__track-bsh: var(--range-focus__track-bsh);
+
+  outline: var(--range__track-o);
+  outline-offset: var(--range__track-oo);
+}
+
+:where(input[type="range" i]).focus::-ms-track,
+:where(input[type="range" i]):focus::-ms-track {
+  --range__track-h: var(--range-focus__track-h);
+  --range__track-bdw: var(--range-focus__track-bdw);
+  --range__track-bds: var(--range-focus__track-bds);
+  --range__track-bdc: var(--range-focus__track-bdc);
+  --range__track-bdi: var(--range-focus__track-bdi);
+  --range__track-bsh: var(--range-focus__track-bsh);
+
+  outline: var(--range__track-o);
+  outline-offset: var(--range__track-oo);
+}
+
+/* disabled track
+----------------- */
+
+:where(input[type="range" i]):disabled::-webkit-slider-runnable-track {
+  --range__track-h: var(--range-disabled__track-h);
+  --range__track-bdw: var(--range-disabled__track-bdw);
+  --range__track-bds: var(--range-disabled__track-bds);
+  --range__track-bdc: var(--range-disabled__track-bdc);
+  --range__track-bdi: var(--range-disabled__track-bdi);
+  --range__track-bsh: var(--range-disabled__track-bsh);
+}
+
+:where(input[type="range" i]):disabled::-moz-range-track {
+  --range__track-h: var(--range-disabled__track-h);
+  --range__track-bdw: var(--range-disabled__track-bdw);
+  --range__track-bds: var(--range-disabled__track-bds);
+  --range__track-bdc: var(--range-disabled__track-bdc);
+  --range__track-bdi: var(--range-disabled__track-bdi);
+  --range__track-bsh: var(--range-disabled__track-bsh);
+}
+
+:where(input[type="range" i]):disabled::-ms-track {
+  --range__track-h: var(--range-disabled__track-h);
+  --range__track-bdw: var(--range-disabled__track-bdw);
+  --range__track-bds: var(--range-disabled__track-bds);
+  --range__track-bdc: var(--range-disabled__track-bdc);
+  --range__track-bdi: var(--range-disabled__track-bdi);
+  --range__track-bsh: var(--range-disabled__track-bsh);
+}
+
+/* thumb
+======== */
+
+:where(input[type="range" i])::-webkit-slider-thumb {
+  box-sizing: border-box;
+  margin-top: 0;
+  position: relative;
+  appearance: none;
+  transform: translateY(-50%);
+  top: 50%;
+  width: var(--range__thumb-w);
+  height: var(--range__thumb-h);
+  background: var(--range__thumb-bg);
+  border-width: var(--range__thumb-bdw);
+  border-style: var(--range__thumb-bds);
+  border-color: var(--range__thumb-bdc);
+  border-image: var(--range__thumb-bdi);
+  border-radius: var(--range__thumb-br);
+  box-shadow: var(--range__thumb-bsh);
+}
+
+:where(input[type="range" i])::-moz-range-thumb {
+  box-sizing: border-box;
+  margin-top: 0;
+  position: relative;
+  width: var(--range__thumb-w);
+  height: var(--range__thumb-h);
+  background: var(--range__thumb-bg);
+  border-width: var(--range__thumb-bdw);
+  border-style: var(--range__thumb-bds);
+  border-color: var(--range__thumb-bdc);
+  border-image: var(--range__thumb-bdi);
+  border-radius: var(--range__thumb-br);
+  box-shadow: var(--range__thumb-bsh);
+}
+
+:where(input[type="range" i])::-ms-thumb {
+  box-sizing: border-box;
+  margin-top: 0;
+  position: relative;
+  width: var(--range__thumb-w);
+  height: var(--range__thumb-h);
+  background: var(--range__thumb-bg);
+  border-width: var(--range__thumb-bdw);
+  border-style: var(--range__thumb-bds);
+  border-color: var(--range__thumb-bdc);
+  border-image: var(--range__thumb-bdi);
+  border-radius: var(--range__thumb-br);
+  box-shadow: var(--range__thumb-bsh);
+}
+
+/* focus on thumb
+----------------- */
+
+:where(input[type="range" i]):focus::-webkit-slider-thumb,
+:where(input[type="range" i]).focus::-webkit-slider-thumb {
+  --range__thumb-w: var(--range-focus__thumb-w);
+  --range__thumb-h: var(--range-focus__thumb-h);
+  --range__thumb-bg: var(--range-focus__thumb-bg);
+  --range__thumb-bdw: var(--range-focus__thumb-bdw);
+  --range__thumb-bds: var(--range-focus__thumb-bds);
+  --range__thumb-bdc: var(--range-focus__thumb-bdc);
+  --range__thumb-bdi: var(--range-focus__thumb-bdi);
+  --range__thumb-br: var(--range-focus__thumb-br);
+  --range__thumb-bsh: var(--range-focus__thumb-bsh);
+
+  outline: var(--range__thumb-o);
+  outline-offset: var(--range__thumb-oo);
+}
+
+:where(input[type="range" i]):focus::-moz-range-thumb,
+:where(input[type="range" i]).focus::-moz-range-thumb {
+  --range__thumb-w: var(--range-focus__thumb-w);
+  --range__thumb-h: var(--range-focus__thumb-h);
+  --range__thumb-bg: var(--range-focus__thumb-bg);
+  --range__thumb-bdw: var(--range-focus__thumb-bdw);
+  --range__thumb-bds: var(--range-focus__thumb-bds);
+  --range__thumb-bdc: var(--range-focus__thumb-bdc);
+  --range__thumb-bdi: var(--range-focus__thumb-bdi);
+  --range__thumb-br: var(--range-focus__thumb-br);
+  --range__thumb-bsh: var(--range-focus__thumb-bsh);
+
+  outline: var(--range__thumb-o);
+  outline-offset: var(--range__thumb-oo);
+}
+
+:where(input[type="range" i]):focus::-ms-thumb,
+:where(input[type="range" i]).focus::-ms-thumb {
+  --range__thumb-w: var(--range-focus__thumb-w);
+  --range__thumb-h: var(--range-focus__thumb-h);
+  --range__thumb-bg: var(--range-focus__thumb-bg);
+  --range__thumb-bdw: var(--range-focus__thumb-bdw);
+  --range__thumb-bds: var(--range-focus__thumb-bds);
+  --range__thumb-bdc: var(--range-focus__thumb-bdc);
+  --range__thumb-bdi: var(--range-focus__thumb-bdi);
+  --range__thumb-br: var(--range-focus__thumb-br);
+  --range__thumb-bsh: var(--range-focus__thumb-bsh);
+
+  outline: var(--range__thumb-o);
+  outline-offset: var(--range__thumb-oo);
+}
+
+/* disabled thumb
+----------------- */
+
+:where(input[type="range" i]):disabled::-webkit-slider-thumb {
+  --range__thumb-w: var(--range-disabled__thumb-w);
+  --range__thumb-h: var(--range-disabled__thumb-h);
+  --range__thumb-bg: var(--range-disabled__thumb-bg);
+  --range__thumb-bdw: var(--range-disabled__thumb-bdw);
+  --range__thumb-bds: var(--range-disabled__thumb-bds);
+  --range__thumb-bdc: var(--range-disabled__thumb-bdc);
+  --range__thumb-bdi: var(--range-disabled__thumb-bdi);
+  --range__thumb-br: var(--range-disabled__thumb-br);
+  --range__thumb-bsh: var(--range-disabled__thumb-bsh);
+}
+
+:where(input[type="range" i]):disabled::-moz-range-thumb {
+  --range__thumb-w: var(--range-disabled__thumb-w);
+  --range__thumb-h: var(--range-disabled__thumb-h);
+  --range__thumb-bg: var(--range-disabled__thumb-bg);
+  --range__thumb-bdw: var(--range-disabled__thumb-bdw);
+  --range__thumb-bds: var(--range-disabled__thumb-bds);
+  --range__thumb-bdc: var(--range-disabled__thumb-bdc);
+  --range__thumb-bdi: var(--range-disabled__thumb-bdi);
+  --range__thumb-br: var(--range-disabled__thumb-br);
+  --range__thumb-bsh: var(--range-disabled__thumb-bsh);
+}
+
+:where(input[type="range" i]):disabled::-ms-thumb {
+  --range__thumb-w: var(--range-disabled__thumb-w);
+  --range__thumb-h: var(--range-disabled__thumb-h);
+  --range__thumb-bg: var(--range-disabled__thumb-bg);
+  --range__thumb-bdw: var(--range-disabled__thumb-bdw);
+  --range__thumb-bds: var(--range-disabled__thumb-bds);
+  --range__thumb-bdc: var(--range-disabled__thumb-bdc);
+  --range__thumb-bdi: var(--range-disabled__thumb-bdi);
+  --range__thumb-br: var(--range-disabled__thumb-br);
+  --range__thumb-bsh: var(--range-disabled__thumb-bsh);
+}

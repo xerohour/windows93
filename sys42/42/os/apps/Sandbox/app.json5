@@ -1,0 +1,16 @@
+{
+  name: "Sandbox",
+  command: "sandbox",
+  categories: ["utilities", "productivity", "development"],
+
+  decode: {
+    types: [
+      { description: "HTML Pages", accept: "text/html" },
+      // { description: "Any", accept: "application/*" },
+    ],
+  },
+
+  installable: false,
+  inset: true,
+  document: "{{$files/0/path}}",
+}

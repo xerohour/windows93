@@ -1,0 +1,333 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>theme</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="/style.css" id="theme" />
+<script type="module" src="../../42/ui/head.js"></script>
+
+<script type="module">
+  import trap from "../../42/fabric/type/error/trap.js"
+  trap()
+</script>
+
+<script type="module">
+  // document.documentElement.dir = "rtl"
+
+  import "../../42/ui/components/menu.js"
+  import "../../42/ui/components/tabs.js"
+  import "../../42/ui/components/picto.js"
+
+  import ui from "../../42/ui.js"
+  import cssVar from "../../42/fabric/cssom/cssVar.js"
+  import themesManager from "../../42/os/managers/themesManager.js"
+
+  cssVar.set("--ActiveTitle", "darkslategray")
+  cssVar.set("--GradientActiveTitle", "cyan")
+
+  cssVar.set("--InactiveTitle", "darkcyan")
+  cssVar.set("--GradientInactiveTitle", "lightseagreen")
+  cssVar.set("--InactiveTitleText", "mediumturquoise")
+
+  cssVar.set("--Scrollbar", "mediumturquoise")
+  cssVar.set("--ButtonFace", "mediumturquoise")
+  cssVar.set("--ButtonLight", "turquoise")
+  cssVar.set("--ButtonHilight", "aquamarine")
+  cssVar.set("--ButtonText", "mediumblue") // midnightblue
+  cssVar.set("--GrayText", "darkcyan")
+  cssVar.set("--ButtonShadow", "darkcyan")
+  cssVar.set("--ButtonDkShadow", "darkslategray")
+  cssVar.set("--Window", "paleturquoise")
+  cssVar.set("--WindowText", "darkslategray")
+
+  await Promise.all([document.fonts.ready, themesManager.ready])
+
+  // import dialog from "../../42/ui/components/dialog.js"
+  // dialog("hello")
+
+  const lorem =
+    "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quas, quo quidem voluptate, consectetur, sint repellendus expedita consequatur pariatur delectus cum inventore iure aperiam? Ad facere nemo tenetur nesciunt quam autem voluptatibus vel temporibus dolorem atque. Dolores beatae magnam iure, architecto eius explicabo aut molestias voluptas itaque dolorum sunt quisquam."
+
+  function makeDialogHeader() {
+    return [
+      {
+        tag: "h2.ui-dialog__title",
+        content: [
+          { tag: "ui-picto", value: "places/folder" },
+          {
+            tag: "span.ui-dialog__title__text",
+            content: "Dialog Title - " + lorem,
+          },
+        ],
+      },
+      {
+        tag: "button",
+        content: "Button",
+      },
+      {
+        tag: "button.ui-dialog__help",
+        picto: "help",
+      },
+      {
+        tag: "button.ui-dialog__minimize",
+        picto: "minimize",
+      },
+      {
+        tag: "button.ui-dialog__maximize",
+        picto: "maximize",
+      },
+      {
+        tag: "button.ui-dialog__close",
+        picto: "close",
+      },
+    ]
+  }
+
+  function makeDemo(name = "") {
+    return [
+      {
+        tag: ".active > .ui-dialog__header",
+        content: makeDialogHeader(),
+      },
+      {
+        tag: ".ui-dialog__header",
+        content: makeDialogHeader(),
+      },
+      "---",
+      {
+        tag: ".flex-h.gap",
+        content: [
+          {
+            tag: ".flex-v.gap",
+            content: [
+              {
+                tag: "ui-menu",
+                items: [
+                  {
+                    label: "Menuitem",
+                    picto: "plus",
+                    shortcut: "Ctrl+Alt+Del",
+                  },
+                  "---",
+                  {
+                    label: "Menuitem",
+                    picto: "places/folder",
+                  },
+                  {
+                    label: "Menuitem",
+                    picto: "check",
+                  },
+                  "---",
+                  {
+                    label: "Checked",
+                    tag: "checkbox",
+                    value: true,
+                  },
+                  {
+                    label: "Indeterminate",
+                    tag: "checkbox",
+                    value: undefined,
+                  },
+                  {
+                    label: "Radio 1",
+                    tag: "radio",
+                    name: "choice" + name,
+                    value: "foo",
+                  },
+                  {
+                    label: "Radio 2",
+                    tag: "radio",
+                    name: "choice" + name,
+                    value: "bar",
+                    checked: true,
+                  },
+                ],
+              },
+              {
+                tag: "ui-tabs.w-ctrl",
+                current: name === "disabled" ? 1 : 0,
+                items: [
+                  { label: "Tab 1", content: "Tab Content 1" },
+                  { label: "Tab 2", content: "Tab Content 2" },
+                ],
+              },
+            ],
+          },
+          {
+            tag: ".flex-v.gap",
+            content: [
+              {
+                tag: "textarea",
+                value: name === "disabled" ? "" : lorem,
+                rows: 4,
+              },
+              { tag: "date" },
+              { tag: "file" },
+              { tag: "number", value: 42 },
+              // {
+              //   tag: "selectmenu",
+              //   content: ["Option 1", "Option 2", "Option 3"],
+              // },
+              { tag: "select", content: ["Option 1", "Option 2", "Option 3"] },
+              { tag: "text", list: "list" },
+              { tag: "datalist", id: "list", content: ["a", "b", "c"] },
+              { tag: "range" },
+            ],
+          },
+          {
+            tag: "div",
+            content: [
+              {
+                tag: "button",
+                picto: "plus",
+              },
+              " ",
+              {
+                tag: "button",
+                picto: { start: "plus" },
+                content: "Button",
+              },
+              " ",
+              {
+                tag: "button",
+                picto: { end: "plus" },
+                content: "Button",
+              },
+              " ",
+              {
+                tag: "button",
+                content: "Button",
+              },
+              "---",
+              {
+                tag: "button",
+                picto: "places/folder",
+              },
+              " ",
+              {
+                tag: "button",
+                picto: "places/user-trash",
+                content: "Button",
+              },
+              " ",
+              {
+                tag: "button",
+                picto: { end: "type/audio" },
+                content: "Button",
+              },
+              " ",
+              {
+                tag: "button",
+                content: "Button",
+              },
+              "---",
+              {
+                tag: "checkbox",
+                label: "Checked",
+                value: true,
+              },
+              {
+                tag: "checkbox",
+                label: "Indeterminate",
+                value: undefined,
+              },
+              {
+                tag: "checkbox",
+                label: "Unchecked",
+                value: false,
+              },
+              "---",
+              {
+                tag: "div > .d-flex.gap",
+                content: [
+                  {
+                    tag: "div > radio",
+                    bind: "radioChoice",
+                    value: "foo",
+                  },
+                  {
+                    tag: "div > radio",
+                    bind: "radioChoice",
+                    value: "bar",
+                  },
+                ],
+                state: {
+                  radioChoice: "bar",
+                },
+              },
+            ],
+          },
+        ],
+      },
+    ]
+  }
+
+  ui([
+    {
+      content: {
+        tag: ".box-h.pa.gap",
+        content: [
+          {
+            tag: "div > fieldset",
+            label: ["Enabled", { tag: "button", picto: "plus" }],
+            content: makeDemo(),
+          },
+          {
+            tag: "div > fieldset",
+            label: [
+              "Disabled",
+              { tag: "button", picto: "plus", disabled: true },
+            ],
+            disabled: true,
+            content: makeDemo("disabled"),
+          },
+        ],
+      },
+    },
+    {
+      tag: ".box-h.ma.pa.gap.inset",
+      content: [
+        {
+          tag: ".flex-v.gap",
+          content: [
+            ".inset-shallow",
+            ".outset-shallow",
+            ".inset",
+            ".outset",
+            ".pill",
+          ].map((x) => ({
+            tag: `${x}.pa`,
+            content: x,
+          })),
+        },
+        {
+          tag: ".flex-v.gap",
+          content: [
+            ".message.error",
+            ".message.warning",
+            ".message.success",
+            ".message.info",
+            ".checkboard",
+            ".checkboard-dark",
+          ].map((x) => ({
+            tag: `${x}.pa`,
+            content: x,
+          })),
+        },
+        {
+          tag: ".flex-v.gap",
+          content: [
+            ".desktop", //
+            ".ground",
+            ".code",
+            ".paper",
+            ".document",
+            ".panel",
+          ].map((x) => ({
+            tag: `${x}.pa`,
+            content: x,
+          })),
+        },
+      ],
+    },
+  ])
+</script>

@@ -1,0 +1,16 @@
+ui-grid {
+  flex-grow: 1;
+  overflow-y: auto;
+  display: block;
+  /* isolation: isolate; */
+  /* scrollbar-gutter: stable both-edges; */
+}
+
+/* ui-grid > div[role="row"] {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(64px, 1fr));
+} */
+
+ui-grid:focus {
+  outline: none;
+}

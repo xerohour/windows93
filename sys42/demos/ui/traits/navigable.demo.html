@@ -1,0 +1,50 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>navigable</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="/style.css" id="theme" />
+
+<script type="module">
+  import trap from "../../../42/fabric/type/error/trap.js"
+  trap()
+</script>
+
+<style>
+  .demo span {
+    display: inline-block;
+    padding: 1.5rem;
+    border: 1px solid;
+  }
+</style>
+
+<body class="box-center desktop">
+  <input type="text" class="ma-y" />
+
+  <div
+    class="demo demo-auto d-flex items-wrap items-center pa-xxl gap inset paper">
+    <span tabindex="0">a</span>
+    <span tabindex="0">b</span>
+    <span tabindex="0">c</span>
+    <span tabindex="0">d</span>
+  </div>
+
+  <input type="text" class="ma-y" />
+
+  <div
+    class="demo demo-selector d-flex items-wrap items-center pa-xxl gap inset paper">
+    <span>a</span>
+    <span>b</span>
+    <span>c</span>
+    <span>d</span>
+  </div>
+
+  <input type="text" class="ma-y" />
+</body>
+
+<script type="module">
+  import navigable from "../../../42/ui/traits/navigable.js"
+
+  navigable(".demo-auto")
+
+  navigable(".demo-selector", { selector: "span" })
+</script>

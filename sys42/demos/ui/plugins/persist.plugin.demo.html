@@ -1,0 +1,114 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>persist</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="/style.css" id="theme" />
+
+<script type="module">
+  import trap from "../../../42/fabric/type/error/trap.js"
+  trap()
+</script>
+
+<script type="module">
+  import ui from "../../../42/ui.js"
+  import listen from "../../../42/fabric/event/listen.js"
+  import log from "../../../42/core/log.js"
+
+  // import system from "../../../42/system.js"
+  // import fs from "../../../42/core/fs.js"
+  // await fs.deleteDir(system.HOME + "/.ui").catch(() => {})
+
+  const app = await ui(
+    {
+      tag: "body.box-fit.desktop._motionless",
+      content: [
+        {
+          tag: "button#incr",
+          content: "{{cnt}}",
+          on: { click: "{{cnt++}}" },
+        },
+        {
+          tag: "button#dialog-left",
+          content: "dialog <--",
+          dialog: {
+            x: 100,
+            animate: { translate: "0 -100%", opacity: 0 },
+            label: "<-- ({{x}},{{y}})",
+            content: {
+              tag: "button#incr",
+              content: "{{cnt}}",
+              on: { click: "{{cnt++}}" },
+            },
+          },
+        },
+        {
+          tag: "button#dialog-right",
+          content: "dialog -->",
+          dialog: {
+            animate: { translate: "0 -100%", opacity: 0 },
+            label: "--> ({{x}},{{y}})",
+            content: {
+              tag: "button#incr",
+              autofocus: true,
+              content: "{{cnt}}",
+              on: { click: "{{cnt++}}" },
+            },
+          },
+        },
+        // {
+        //   tag: "button#nested",
+        //   content: "nested",
+        //   dialog: {
+        //     y: 100,
+        //     animate: { translate: "0 100%", opacity: 0 },
+        //     label: "nested ({{x}},{{y}})",
+        //     content: {
+        //       tag: "button#nested2",
+        //       autofocus: true,
+        //       content: "{{cnt}}",
+        //       dialog: {
+        //         x: 100,
+        //         y: 100,
+        //         animate: { translate: "0 100%", opacity: 0 },
+        //         label: "nested 2 ({{x}},{{y}})",
+        //         content: {
+        //           tag: "button#incr",
+        //           autofocus: true,
+        //           content: "{{cnt}}",
+        //           on: { click: "{{cnt++}}" },
+        //         },
+        //       },
+        //     },
+        //   },
+        // },
+      ],
+
+      plugins: ["persist"],
+
+      state: {
+        cnt: 42,
+      },
+    },
+    { id: "persist-test" },
+  )
+
+  if (app.stage.plugins.persist.initial) {
+    document.querySelector("#incr")?.click()
+    document.querySelector("#dialog-left")?.click()
+    document.querySelector("#dialog-right")?.click()
+    // document.querySelector("#nested")?.click()
+    // await app
+    // document.querySelector("#nested2")?.click()
+    log(app.data)
+  }
+
+  listen({
+    click() {
+      log(app.data)
+    },
+  })
+
+  // app.on("click", () => {
+  //   log(app.data)
+  // })
+</script>

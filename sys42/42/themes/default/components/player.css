@@ -1,0 +1,76 @@
+:root {
+  --player-bg: #000;
+  --player-fullscreen-controls-pa: var(--unit);
+}
+
+ui-player {
+  display: flex;
+  flex-direction: column;
+  min-width: var(--ctrl-w);
+  min-height: calc(var(--ctrl-w) / 2);
+  max-width: 100%;
+}
+
+ui-player[audio]:not([waveform]) {
+  min-height: auto;
+}
+
+ui-player[audio] .ui-player__media,
+ui-player[audio]:not([waveform]) .ui-player__stage {
+  display: none;
+}
+
+.ui-player__shell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  max-height: 100%;
+}
+
+.ui-player__controls {
+  display: flex;
+  gap: var(--unit-sm);
+}
+
+.ui-player__elapsed,
+.ui-player__duration {
+  font: var(--font-mono);
+  padding-inline: 0;
+}
+
+.ui-player__stage,
+.ui-player__seek {
+  flex: 1;
+}
+
+.ui-player__volume {
+  width: calc(var(--ctrl-w) / 2);
+}
+
+.ui-player__stage {
+  background-color: var(--player-bg);
+  overflow: hidden;
+  margin-bottom: var(--unit-xs);
+}
+
+.ui-player__media {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+
+.ui-player__media::-webkit-media-controls-fullscreen-button {
+  display: none;
+}
+
+.ui-player__shell:fullscreen .ui-player__stage {
+  border: 0;
+}
+
+.ui-player__shell:fullscreen .ui-player__controls {
+  position: absolute;
+  bottom: var(--player-fullscreen-controls-pa);
+  right: var(--player-fullscreen-controls-pa);
+  left: var(--player-fullscreen-controls-pa);
+}

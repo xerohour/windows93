@@ -1,0 +1,37 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>vhost</title>
+
+<style>
+  iframe {
+    border: 0;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<iframe></iframe>
+
+<script type="module">
+  navigator.serviceWorker.register("/42.sw.js?proxy", { type: "module" })
+  await navigator.serviceWorker.ready
+
+  const { ipc } = await import("../../../core/ipc.js")
+
+  const bus = ipc.to(window.parent)
+
+  ipc.on("42_FILE_INDEX_INIT", () => bus.send("42_FILE_INDEX_INIT"))
+  ipc.on("42_VHOST_PROXY_REQ", (url) => bus.send("42_VHOST_REQ", url))
+
+  const { controller } = navigator.serviceWorker
+  if (controller) await ipc.to(controller).sendOnce("42_SW_DISK_INIT")
+
+  const params = new URLSearchParams(location.search)
+  const iframe = document.querySelector("iframe")
+  iframe.src = params.get("path") + "?targetOrigin=" + params.get("origin")
+  iframe.onload = () => {
+    console.log(iframe.contentDocument.title)
+  }
+</script>

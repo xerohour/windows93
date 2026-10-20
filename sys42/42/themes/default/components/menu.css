@@ -1,0 +1,176 @@
+:root {
+  --menu-bg: var(--panel-bg);
+  --menu-fg: var(--panel-fg);
+  --menu-bdw: var(--outset-bdw);
+  --menu-bds: var(--outset-bds);
+  --menu-bdc: var(--outset-bdc);
+  --menu-bdi: var(--outset-bdi);
+  --menu-br: var(--outset-br);
+  --menu-tsh: var(--outset-tsh, none);
+  --menu-bsh: var(--outset-bsh);
+  --menu-w: var(--ctrl-w);
+  --menu-picto-size: var(--picto-size);
+  --menu-empty-warning: "<empty menu>";
+}
+
+ui-menu,
+ui-menubar {
+  list-style: none;
+  user-select: none;
+  max-width: 100vw;
+
+  --bg: var(--menu-bg);
+  --fg: var(--menu-fg);
+  background: var(--bg);
+  color: var(--fg);
+  text-shadow: var(--menu-tsh, none);
+}
+
+ui-menubar {
+  display: flex;
+  flex-shrink: 0;
+}
+
+ui-menu {
+  display: block;
+  flex: 0 1 auto;
+  width: max-content;
+  height: max-content;
+  min-width: min(var(--menu-w), 100%);
+  z-index: var(--z-popups);
+
+  border-width: var(--menu-bdw);
+  border-style: var(--menu-bds);
+  border-color: var(--menu-bdc);
+  border-image: var(--menu-bdi);
+  border-radius: var(--menu-br);
+  box-shadow: var(--menu-bsh);
+}
+
+ui-menu ui-menu {
+  min-width: var(--menu-w);
+}
+
+ui-menu > li {
+  width: 100%;
+}
+
+:is(ui-menu, ui-menubar) > li {
+  display: flex;
+}
+
+:is(ui-menu, ui-menubar) > li > label:has(:disabled),
+:is(ui-menu, ui-menubar) > li > button:is(:disabled) {
+  color: var(--btn-disabled-fg);
+  opacity: var(--ctrl-disabled-alpha);
+  text-shadow: var(--btn-disabled-tsh);
+}
+
+ui-menubar hr {
+  height: auto;
+  width: 0;
+  border-width: var(--separator-v-bdw);
+  border-style: var(--separator-v-bds);
+  border-color: var(--separator-v-bdc);
+  box-shadow: var(--separator-v-bsh);
+}
+
+ui-menubar hr,
+ui-menu hr {
+  margin: 0;
+}
+
+ui-menubar:empty::before,
+:is(ui-menu, ui-menubar) > li > :is(button, label) {
+  all: unset;
+  box-sizing: border-box;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  flex: 1;
+  max-width: 100%;
+  padding: var(--unit-xs);
+  --gap: var(--unit-sm);
+  gap: var(--gap);
+}
+
+ui-menubar:empty::before,
+ui-menubar > li > :is(button, label) {
+  --gap: var(--unit-xs);
+  padding-inline: var(--unit-md);
+}
+
+ui-menubar:empty::before {
+  content: var(--ZERO_WIDTH_SPACE);
+}
+
+:is(ui-menu, ui-menubar) > li > label > input[type="checkbox" i],
+:is(ui-menu, ui-menubar) > li > label > input[type="radio" i],
+:is(ui-menu, ui-menubar) > li > button > ui-picto {
+  all: unset;
+  box-sizing: border-box;
+  flex: 0 1 var(--menu-picto-size);
+
+  vertical-align: middle;
+
+  width: var(--menu-picto-size);
+  min-width: var(--menu-picto-size);
+  height: var(--menu-picto-size);
+  position: relative;
+}
+
+:is(ui-menu, ui-menubar) > li > button > span {
+  min-height: var(--menu-picto-size);
+  line-height: var(--menu-picto-size);
+}
+
+.ui-menu__menuitem--submenu > ui-picto:last-child {
+  margin-right: calc(-1 * var(--unit-sm));
+}
+
+ui-menu button > kbd {
+  opacity: 0.5;
+  flex: 0 1 auto;
+  background: transparent;
+  color: currentColor;
+  border: none;
+  font: inherit;
+  width: auto;
+}
+
+ui-menubar > li > button > kbd {
+  display: none;
+}
+
+ui-menu > li > button > :first-child:not(ui-picto) {
+  margin-left: calc(calc(var(--gap) + var(--menu-picto-size)));
+}
+
+:is(ui-menu, ui-menubar) > li > button[aria-haspopup][aria-expanded="true"],
+:is(ui-menu, ui-menubar) > li > label:is(:active, :focus-within):not(:has(:disabled)),
+:is(ui-menu, ui-menubar) > li:focus-within > button:not(:disabled) {
+  --bg: var(--highlight-bg);
+  --fg: var(--highlight-fg);
+  background: var(--bg);
+  color: var(--fg);
+  text-shadow: var(--highlight-tsh, none);
+}
+
+:is(ui-menu, ui-menubar) > li > button:focus {
+  outline: none;
+}
+
+:is(ui-menu, ui-menubar):defined:empty::after {
+  content: var(--menu-empty-warning);
+  opacity: 0.5;
+}
+
+/* debug */
+
+:root.debug #menu-aim-triangle {
+  fill: rgb(255 255 0 / 0.3) !important;
+}
+
+:root.debug :focus {
+  box-shadow: 0 0 0 5px rgb(0 255 0 / 0.3) !important;
+}

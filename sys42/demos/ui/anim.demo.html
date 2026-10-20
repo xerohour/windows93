@@ -1,0 +1,183 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>anim</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="/style.css" id="theme" />
+
+<script type="module">
+  import trap from "../../42/fabric/type/error/trap.js"
+  trap()
+</script>
+
+<script type="module">
+  import ui from "../../42/ui.js"
+
+  // document.documentElement.className = "motionless"
+
+  const app = await ui({
+    tag: "body.box-fit.box-v._txt-center.pa-xxl.desktop",
+
+    content: [
+      {
+        tag: ".item-shrink.box-h",
+        content: {
+          tag: "button#toggle.item-spread",
+          content: "toggle",
+          on: { click: "{{show = !show}}" },
+        },
+      },
+      {
+        tag: ".box-h",
+        content: [
+          {
+            tag: ".box-center.box-stack",
+            content: {
+              if: "{{show}}",
+              tag: ".ratio.bd.pa-xl",
+              animate: {
+                from: { rotate: "360deg", scale: 0, ms: 1000 },
+                to: { rotate: "-360deg", scale: 0, ms: 1000 },
+              },
+              content: { tag: "ui-icon", path: "a.js" },
+            },
+          },
+          {
+            tag: ".box-center.box-stack",
+            content: {
+              if: "{{show}}",
+              tag: ".ratio.bd.pa-xl",
+              animate: { translate: "-150px", scale: 0 },
+              content: { tag: "ui-icon", path: "a.js" },
+              else: {
+                tag: ".ratio.bd.pa-xl",
+                content: { tag: "ui-icon", path: "b.css" },
+                animate: { translate: "150px", scale: 0 },
+              },
+            },
+          },
+          {
+            tag: ".box-center.box-stack",
+            content: {
+              if: "{{show}}",
+              tag: ".ratio.bd.pa-xl",
+              animate: { translate: "0 -150px", scale: 0, ms: 500 },
+              content: { tag: "ui-icon", path: "a.js" },
+              else: {
+                tag: ".ratio.bd.pa-xl",
+                content: { tag: "ui-icon", path: "b.css" },
+              },
+            },
+          },
+          {
+            tag: ".box-center.box-stack",
+            content: {
+              if: "{{show}}",
+              tag: ".ratio.bd.pa-xl",
+              animate: { translate: "0 -150px", scale: 0 },
+              content: { tag: "ui-icon", path: "a.js" },
+              else: {
+                tag: ".ratio.bd.pa-xl",
+                content: { tag: "ui-icon", path: "b.css" },
+                animate: false,
+              },
+            },
+          },
+        ],
+      },
+      {
+        tag: ".item-shrink.box-h",
+        content: [
+          {
+            tag: "button.item-spread",
+            content: "add",
+            on: { click: "{{push(arr, arr.length + 1)}}" },
+          },
+          {
+            tag: "button.item-spread",
+            content: "remove",
+            on: { click: "{{pop(arr)}}" },
+          },
+          {
+            tag: "button.item-spread",
+            content: "fill",
+            on: {
+              click() {
+                this.state.arr = new Array(60).fill().map((_, i) => i + 1)
+              },
+            },
+          },
+          {
+            tag: "button.item-spread",
+            content: "half",
+            on: {
+              click() {
+                this.state.arr.length = Math.floor(this.state.arr.length / 2)
+              },
+            },
+          },
+        ],
+      },
+      {
+        tag: ".txt-left",
+        scope: "arr",
+        each: {
+          tag: ".ratio.bd.pa-xxl",
+          content: "{{.}}",
+          style: {
+            // transformOrigin: "left",
+            // background: "tan",
+            clipPath: "inset(0 0 0 0)",
+          },
+          id: "item-{{@index + 1}}",
+          // animate: { rotate: "360deg", scale: 0, ms: 400 },
+          // animate: {
+          //   clipPath: "inset(0 0 100% 0)",
+          //   translate: "0 100%",
+          //   // clipPath: "inset(0 0 0 100%)",
+          //   // translate: "-100% 0",
+          //   ms: 400,
+          // },
+
+          animate: {
+            from: {
+              clipPath: "inset(0 0 100% 0)",
+              translate: "0 100%",
+              ms: 400,
+            },
+            to: {
+              clipPath: "inset(100% 0 0 0)",
+              translate: "0 -100%",
+              ms: 400,
+            },
+          },
+          click: "{{splice(/arr, @index, 1)}}",
+        },
+      },
+    ],
+
+    state: {
+      show: true,
+      arr: ["1", "2", "3", "4", "5", "6"],
+    },
+  })
+
+  setTimeout(() => {
+    app.state.arr.splice(3, 2, "^^1", "^^2")
+  }, 600)
+
+  // setTimeout(() => {
+  //   app.state.arr.splice(3, 0, "^^^")
+  // }, 600)
+
+  // setTimeout(() => {
+  //   app.state.arr.push("<<<")
+  // }, 1200)
+
+  // // setTimeout(() => {
+  // //   document.querySelector("#item-3")?.click()
+  // // }, 600)
+
+  setTimeout(() => {
+    document.querySelector("#toggle")?.click()
+  }, 1000)
+</script>

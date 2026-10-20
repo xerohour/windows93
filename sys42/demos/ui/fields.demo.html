@@ -1,0 +1,212 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>fields</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" href="/style.css" id="theme" />
+
+<script type="module">
+  import trap from "../../42/fabric/type/error/trap.js"
+  trap()
+</script>
+
+<script type="module">
+  import ui from "../../42/ui.js"
+
+  const app = await ui({
+    tag: "body.box-fit.box-center > div",
+    style: "max-width: 400px",
+    content: [
+      {
+        tag: "fieldset.form-aligned",
+        content: [
+          {
+            tag: "legend",
+            content: "Legend",
+          },
+          {
+            tag: "div > range",
+            bind: "rangeOne",
+            value: 20,
+          },
+          {
+            tag: "div > range",
+            bind: "rangeTwo",
+            max: 42,
+          },
+          {
+            tag: "div > number",
+            bind: "rangeTwo",
+            max: 42,
+          },
+          "---",
+          {
+            tag: "div > checkbox",
+            bind: "checkboxOne",
+          },
+          {
+            tag: "div > checkbox",
+            bind: "checkboxTwo",
+            value: true,
+          },
+          "---",
+          {
+            tag: "div > .d-flex.gap",
+            content: [
+              {
+                tag: "radio",
+                bind: "radioChoice",
+                value: "foo",
+              },
+              {
+                tag: "radio",
+                bind: "radioChoice",
+                value: "bar",
+              },
+            ],
+          },
+          "---",
+          {
+            tag: "div > .d-flex.gap",
+            content: [
+              {
+                tag: "radio",
+                bind: "selectOne",
+                value: "a",
+              },
+              {
+                tag: "radio",
+                bind: "selectOne",
+                value: "b",
+              },
+            ],
+          },
+          {
+            tag: "div > .d-flex.gap",
+            content: [
+              {
+                tag: "radio",
+                bind: "selectOne",
+                value: "a",
+              },
+              {
+                tag: "radio",
+                bind: "selectOne",
+                value: "b",
+              },
+            ],
+          },
+          {
+            tag: "div > .d-flex.gap",
+            content: [
+              {
+                tag: "radio",
+                bind: "selectOne",
+                value: "a",
+              },
+              {
+                tag: "radio",
+                bind: "selectOne",
+                value: "b",
+              },
+            ],
+          },
+          "---",
+          {
+            tag: "div > select",
+            bind: "selectOne",
+            content: [
+              { tag: "option", content: "a" },
+              { tag: "option", content: "b" },
+              { tag: "option", content: "c" },
+            ],
+          },
+          {
+            tag: "div > select",
+            bind: "selectTwo",
+            content: ["x", "y", "z"],
+            value: "y",
+          },
+          {
+            tag: "div > select",
+            bind: "selectTwo",
+            content: [
+              ["x", "Label X"],
+              ["y", "Label Y"],
+              ["z", "Label Z"],
+            ],
+          },
+          {
+            tag: "div > select",
+            bind: "selectDino",
+            content: [
+              {
+                tag: "optgroup",
+                label: "Theropods",
+                content: [
+                  { tag: "option", content: "Tyrannosaurus" },
+                  { tag: "option", content: "Velociraptor" },
+                  { tag: "option", content: "Deinonychus" },
+                ],
+              },
+              {
+                tag: "optgroup",
+                label: "Sauropods",
+                content: [
+                  { tag: "option", content: "Diplodocus" },
+                  { tag: "option", content: "Saltasaurus" },
+                  { tag: "option", content: "Apatosaurus" },
+                ],
+              },
+            ],
+            value: "Velociraptor",
+          },
+          {
+            tag: "div > select",
+            bind: "selectDino",
+            content: [
+              {
+                label: "Theropods",
+                content: ["Tyrannosaurus", "Velociraptor", "Deinonychus"],
+              },
+              {
+                label: "Sauropods",
+                content: ["Diplodocus", "Saltasaurus", "Apatosaurus"],
+              },
+            ],
+            value: "Velociraptor",
+          },
+          {
+            tag: "div > text",
+            bind: "freeText",
+            // compact: true,
+          },
+        ],
+      },
+      { tag: "pre.code", content: "{{stringify(/)}}" },
+      {
+        tag: "button",
+        content: "fill",
+        click() {
+          app.state.radioChoice = "bar"
+          app.state.checkboxOne = true
+          app.state.freeText = "hello"
+          app.state.selectOne = "c"
+        },
+      },
+    ],
+
+    state: {
+      radioChoice: "foo",
+      checkboxOne: undefined,
+      selectOne: "b",
+    },
+  })
+
+  // setTimeout(() => {
+  //   app.state.radioChoice = "bar"
+  //   app.state.checkboxOne = true
+  //   app.state.freeText = "hello"
+  // }, 1000)
+
+  // document.head.querySelector("title").textContent = "Yo"
+</script>

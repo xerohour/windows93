@@ -1,0 +1,55 @@
+.txt-xxs { font-size: var(--txt-xxs, xx-small); } /* 9px */
+.txt-xs { font-size: var(--txt-xs, x-small); } /* 10px */
+.txt-sm { font-size: var(--txt-sm, smaller); } /* 13px */
+.txt-md { font-size: var(--txt-md, medium); } /* 16px */
+.txt-lg { font-size: var(--txt-lg, large); } /* 18px */
+.txt-xl { font-size: var(--txt-xl, x-large); } /* 24px */
+.txt-xxl { font-size: var(--txt-xxl, xx-large); } /* 32px */
+
+.txt-normal {
+  font-weight: normal;
+  font-style: normal;
+  text-transform: none;
+  text-decoration: none;
+}
+
+.txt-inherit {
+  color: inherit;
+  font-family: inherit;
+  font-weight: inherit;
+  font-size: inherit;
+  text-decoration: inherit;
+  text-transform: inherit;
+}
+
+.txt-center { text-align: center; }
+.txt-left { text-align: left; justify-content: start; }
+.txt-right { text-align: right; justify-content: end; }
+.txt-justify { text-align: justify; }
+.txt-pre { white-space: pre; }
+.txt-wrap { white-space: pre-wrap; }
+.txt-nowrap { white-space: nowrap; }
+
+.txt-break-word { word-break: break-word; }
+.txt-break-all { word-break: break-all; }
+
+.txt-b { font-weight: bold; }
+.txt-i { font-style: italic; }
+.txt-s { text-decoration: line-through; }
+.txt-u { text-decoration: underline; }
+.txt-u-dot { text-decoration: underline dotted; }
+
+.txt-upper { text-transform: uppercase; }
+.txt-lower { text-transform: lowercase; }
+.txt-sentence::first-letter { text-transform: capitalize; }
+
+.txt-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* prevent hidden aliasing using pixel fonts */
+  text-indent: 1px;
+}
+
+.font-sans { font: var(--font-sans); }
+.font-mono { font: var(--font-mono); }
