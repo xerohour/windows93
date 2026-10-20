@@ -23,6 +23,38 @@ licenses, with their license files kept in place.
   in `programs/nes/roms/`. No commercial ROMs are shipped; the player has a
   file picker for loading your own `.nes` files.
 
+## More open-source JavaScript games (not from Windows93)
+
+Added at the owner's request — these weren't part of Windows93; they're
+famous open-source browser games that fit the desktop:
+
+| Game | Upstream | License | In this repo |
+|---|---|---|---|
+| 2048 | [gabrielecirulli/2048](https://github.com/gabrielecirulli/2048) | MIT (`programs/2048/LICENSE.txt`) | `programs/2048/` — full game |
+| Hextris | [Hextris/hextris](https://github.com/Hextris/hextris) (gh-pages build) | GPL-3.0 (`programs/hextris/LICENSE.md`) | `programs/hextris/` — full game |
+| A Dark Room | [doublespeakgames/adarkroom](https://github.com/doublespeakgames/adarkroom) | MPL-2.0 (`programs/adarkroom/LICENSE.md`) | `programs/adarkroom/` — full game (dev files excluded); source: upstream repo |
+| DOOM | engine: Chocolate Doom / cloudflare/doom-wasm (GPL-2.0); data: Freedoom IWAD (BSD) | GPL-2.0 + BSD | **Planned, not yet built** — every "jsdoom" repo found was unlicensed, a DOSBox wrapper, or WAD tooling, and no license-clean prebuilt WASM engine exists; shipping Doom means compiling the GPL engine with Emscripten and pairing it with the Freedoom IWAD (never id Software's data). |
+
+## Original reimplementations (concept only — no upstream to clone)
+
+A full audit of the v2 registry found no credited upstream for the apps
+below: they are the Windows93 team's own programs, with no public source.
+Like the main shell's own Minesweeper/Calculator, these are **original
+implementations written for this repo** recreating generic concepts —
+no Windows93 code, text or assets were copied:
+
+| Windows93 program | Our version | In this repo |
+|---|---|---|
+| mines | Minesweeper (3 difficulties, flood-fill, flags, timer) | `programs/minesweeper/` |
+| solitude | Klondike solitaire (draw 1, click-to-move) | `programs/solitude/` |
+| gameoflife | Conway's Game of Life (draw cells, run/step, glider) | `programs/gameoflife/` |
+| HexEd | Hex viewer/editor (open file, edit bytes, save copy) | `programs/hexed/` |
+| defrag | The defragmentation gag as an animation | `programs/defrag/` |
+| speech | Text-to-speech toy on the browser's speech synthesis | `programs/speech/` |
+| recorder | Microphone recorder (MediaRecorder, local only) | `programs/recorder/` |
+| bananamp | Chiptune player — all tracks synthesized live with WebAudio | `programs/bananamp/` |
+| whatif | Full-window Matrix rain with speed/density controls | `programs/matrix/` |
+
 ## Included as a launcher (not vendored)
 
 | Windows93 program | Upstream | License | Why |
