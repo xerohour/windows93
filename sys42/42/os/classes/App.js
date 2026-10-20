@@ -23,6 +23,8 @@ import editor from "./App/editor.js"
 import preinstall from "./App/preinstall.js"
 import FileAgent from "./App/FileAgent.js"
 import normalizeManifest from "./App/normalizeManifest.js"
+// STATIC SUBPATH PATCH (P8): strip deploy prefix when converting to FS paths.
+import { urlToFsPath } from "../../core/fs/fsPathToURL.js"
 
 // TODO: check if rpc functions can be injecteds
 import "../../fabric/browser/openInNewTab.js"
@@ -51,7 +53,7 @@ async function prepareManifest(manifest, options) {
   manifest ??= new URL("./app.json5", document.URL).pathname
 
   if (typeof manifest === "string") {
-    const manifestPath = new URL(manifest, document.baseURI).pathname
+    const manifestPath = urlToFsPath(new URL(manifest, document.baseURI).href) // STATIC SUBPATH PATCH (P8)
     manifest = await fs.read.json5(manifestPath)
     manifest.manifestPath = manifestPath
   }

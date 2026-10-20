@@ -2,6 +2,8 @@
 import toKebabCase from "../../../fabric/type/string/case/toKebabCase.js"
 import getDirname from "../../../core/path/core/getDirname.js"
 import mimetypesManager from "../../managers/mimetypesManager.js"
+// STATIC SUBPATH PATCH (P8): deploy-root aware URL<->FS-path conversion.
+import { fsPathToURL, urlToFsPath } from "../../../core/fs/fsPathToURL.js"
 
 export async function getIcons(manifest) {
   const fileIndex = await import("../../../core/fileIndex.js") //
@@ -20,17 +22,17 @@ export async function getIcons(manifest) {
   ])) {
     if (path.includes("/16x16/icon.") || path.includes("-16.")) {
       icon16 = {
-        src: new URL(path, manifest.dirURL).pathname,
+        src: urlToFsPath(new URL(path, manifest.dirURL).href), // STATIC SUBPATH PATCH (P8)
         sizes: "16x16",
       }
     } else if (path.includes("/32x32/icon.") || path.includes("-32.")) {
       icon32 = {
-        src: new URL(path, manifest.dirURL).pathname,
+        src: urlToFsPath(new URL(path, manifest.dirURL).href), // STATIC SUBPATH PATCH (P8)
         sizes: "32x32",
       }
     } else if (path.includes("/160x160/icon.") || path.includes("-160.")) {
       icon160 = {
-        src: new URL(path, manifest.dirURL).pathname,
+        src: urlToFsPath(new URL(path, manifest.dirURL).href), // STATIC SUBPATH PATCH (P8)
         sizes: "160x160",
       }
     }
@@ -65,7 +67,9 @@ export async function normalizeManifest(manifest, options) {
   manifest.slug ??= toKebabCase(manifest.name)
 
   manifest.manifestPath ??= document.baseURI
-  manifest.manifestURL ??= new URL(manifest.manifestPath, document.baseURI).href
+  manifest.manifestURL ??= String(manifest.manifestPath).startsWith("http")
+    ? new URL(manifest.manifestPath, document.baseURI).href
+    : fsPathToURL(manifest.manifestPath) // STATIC SUBPATH PATCH (P8)
   manifest.dir ??= getDirname(manifest.manifestPath) + "/"
   manifest.dirURL ??= getDirname(manifest.manifestURL) + "/"
 

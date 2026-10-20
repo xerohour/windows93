@@ -249,3 +249,25 @@ patch is safe for the creators' own deployment too. The service worker's
 virtual-file serving still matches raw pathnames (see §5 limitation); under
 a subpath those requests simply fall through to the network, where P7's
 URLs are correct.
+
+## Addendum 2 (2026-10-20) — Patch P8
+
+Live retest after P7: manifest 404s were gone, but the desktop still threw
+`TypeError: The "path" argument must be a string: undefined` once per icon
+and icons had no artwork/labels. Cause: several framework spots convert
+real URLs to FS paths via `new URL(..., import.meta.url).pathname`, which
+under a subpath keeps the deploy prefix (`/windows93/sys42/42/...`) while
+the file index is keyed without it (`/42/...`). Theme icon lookups
+therefore missed and returned `undefined` into `fs.getURL()`, and app
+manifests got an origin-root `dirURL`, which would have 404'd every app's
+`$ref`/modules on launch.
+
+P8 adds one shared, import-free helper — `42/core/fs/fsPathToURL.js` —
+exporting `fsPathToURL` (FS path → deploy-correct URL) and `urlToFsPath`
+(URL → FS path, stripping the deploy prefix), both derived from the
+helper's own location so they are identity mappings at a domain root.
+Applied in: BrowserDriver (now re-exports the helper), FileAgent,
+normalizeManifest (manifestURL + icon srcs), themesManager (icon theme
+dirs), appsManager (decode-type icon linking), and App.prepareManifest
+(string manifest paths). P7's three call sites now route through the same
+helper.

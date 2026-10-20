@@ -1,12 +1,14 @@
 import ConfigFile from "../classes/ConfigFile.js"
 import findIconPath from "./themesManager/findIconPath.js"
+// STATIC SUBPATH PATCH (P8): theme icon dirs are FS paths, not URL paths.
+import { urlToFsPath } from "../../core/fs/fsPathToURL.js"
 
 // import loadCSS from "../core/load/loadCSS.js"
 
 const DEFAULTS = {
   style: new URL("../../themes/windows9x/index.css", import.meta.url).pathname,
   module: new URL("../../themes/windows9x/index.js", import.meta.url).pathname,
-  icons: [new URL("../../themes/default/icons", import.meta.url).pathname],
+  icons: [urlToFsPath(new URL("../../themes/default/icons", import.meta.url).href)], // STATIC SUBPATH PATCH (P8)
 }
 
 class ThemesManager extends ConfigFile {

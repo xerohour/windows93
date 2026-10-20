@@ -9,6 +9,8 @@ import parseURLQuery from "../../fabric/url/parseURLQuery.js"
 import mimetypesManager from "./mimetypesManager.js"
 import normalizeManifest from "../classes/App/normalizeManifest.js"
 import App from "../classes/App.js"
+// STATIC SUBPATH PATCH (P8): deploy-root aware URL<->FS-path conversion.
+import { fsPathToURL, urlToFsPath } from "../../core/fs/fsPathToURL.js"
 
 const REGISTRY_KEYS = [
   "name",
@@ -49,16 +51,15 @@ class AppsManager extends ConfigFile {
       const undones = []
       for (const { accept, icons } of manifest.decode.types) {
         if (icons) {
-          const manifestURL = new URL(manifestPath, location).href
+          const manifestURL = fsPathToURL(manifestPath) // STATIC SUBPATH PATCH (P8)
           for (const icon of icons) {
-            const src = new URL(icon.src, manifestURL).pathname
+            const src = urlToFsPath(new URL(icon.src, manifestURL).href) // STATIC SUBPATH PATCH (P8)
 
             const sizes = icon.sizes.split(" ")[0]
 
-            const { pathname } = new URL(
-              "../../themes/default/icons",
-              import.meta.url,
-            )
+            const pathname = urlToFsPath(
+              new URL("../../themes/default/icons", import.meta.url).href,
+            ) // STATIC SUBPATH PATCH (P8)
 
             const dest = `${pathname}/${sizes}${src.slice(
               src.indexOf(sizes) + sizes.length,
