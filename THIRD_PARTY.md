@@ -13,6 +13,8 @@ licenses, with their license files kept in place.
 | SkiFree | [basicallydan/skifree.js](https://github.com/basicallydan/skifree.js) — Daniel Hough's JS remake of SkiFree | MIT (`programs/skifree/license.md`) | `programs/skifree/` — full runtime + source |
 | Byte Beat | [greggman/html5bytebeat](https://github.com/greggman/html5bytebeat) — Gregg Tavares' bytebeat music editor/player | MIT (`programs/bytebeat/LICENSE.md`) | `programs/bytebeat/` — editor + player runtime |
 | NES Emulator | [bfirsh/jsnes](https://github.com/bfirsh/jsnes) — JSNES, NES emulator in JavaScript | Apache-2.0 (`programs/nes/LICENSE.txt`) | `programs/nes/` — `jsnes.min.js` built here from upstream source, plus a small original player page |
+| Font Viewer ("font") | [opentypejs/opentype.js](https://github.com/opentypejs/opentype.js) — font parsing/rendering library (the Windows93 registry's own credit links its MIT license) | MIT (`programs/fontviewer/LICENSE.txt`) | `programs/fontviewer/` — official `opentype.min.js` dist plus an original viewer page (preview + glyph grid). Sample font VT323 is SIL OFL (`programs/fontviewer/FONT-LICENSE.txt`) |
+| zkype | [auduno/clmtrackr](https://github.com/auduno/clmtrackr) — face tracking in JavaScript | MIT (`programs/zkype/LICENSE.txt`) | `programs/zkype/` — `clmtrackr.min.js` + the PCA/SVM model from upstream, plus an original parody call page; tracking runs locally, camera never leaves the device |
 
 ### Bundled NES games (homebrew only)
 
@@ -38,6 +40,11 @@ licenses, with their license files kept in place.
 | Virtual PC | — | Not a separate program: it's Windows93 loading itself in a window. The joke is preserved in spirit. |
 | Star Wars ASCII | asciimation.co.nz (Simon Jansen) | A copyrighted ASCII film, not licensed open-source software. |
 | Hydra, Trollbox, Cat Explorer, Robby, 93 Realms, etc. | The Windows93 team | Their own creations; no public source release exists. Recreated in spirit (Hydra) or re-imagined (our fake browser) in the main app instead. |
+| Tic-tac-toe ("wat") | aglemann/tic-tac-toe | **No license file** in the repo — same rule as the calculator: credit isn't a license. |
+| Pure Data player ("pd") | sebpiq/WebPd | LGPL-3.0, and the patch the app plays is the team's own content; embedding would need a from-scratch patch and LGPL compliance work. Skipped for this pass. |
+| Emulatorz set (dmg/sms/sae…) | grantgalitz & others | Mixed/unclear licensing across the set, and ROM/BIOS exposure on top. JSNES (already included) covers the NES slot cleanly. |
+| acidBox93 | CODEF framework (codef.santo.fr) | acidBox93 is a demo *production* built on the framework — crediting the framework doesn't license the demo. |
+| Progress Quest | Eric Fredricksen (grumdrig) | Free to play, but no open-source license for redistribution. |
 
 ## The framework
 
@@ -48,9 +55,10 @@ you want to build real Windows93-style apps, sys42 is the genuine article.
 
 ## sys42-native app wrappers (2026-10-20)
 
-The three vendored programs above are also wired into the sys42 desktop
-(`sys42/`) as native apps, so they launch from its Start menu:
-`sys42/42/os/apps/{SkiFree,Bytebeat,NES}/` each contain an original
+The five vendored programs above are also wired into the sys42 desktop
+(`sys42/`) as native apps, so they launch from its Start menu and from
+desktop shortcuts:
+`sys42/42/os/apps/{SkiFree,Bytebeat,NES,FontViewer,Zkype}/` each contain an original
 wrapper (`app.json5` manifest + `index.html`, written for this repo) that
 hosts the corresponding `programs/` entry point in an isolated iframe
 inside a sys42 window, plus small original icons. No program code was
