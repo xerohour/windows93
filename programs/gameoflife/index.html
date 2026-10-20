@@ -1,0 +1,77 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Game of Life</title>
+<style>
+  body { font-family: Tahoma, Verdana, sans-serif; background: #c0c0c0; margin: 0; padding: 10px; text-align: center; }
+  canvas { background: #101418; border: 2px inset #eee; cursor: crosshair; }
+  .bar { margin: 8px 0; display: flex; gap: 6px; justify-content: center; align-items: center; flex-wrap: wrap; }
+  #gen { font-family: "Courier New", monospace; font-weight: bold; }
+  .dim { color: #555; font-size: 11px; }
+</style>
+<div class="bar">
+  <button id="play">▶ Run</button>
+  <button id="step">Step</button>
+  <button id="random">Random soup</button>
+  <button id="glider">Glider</button>
+  <button id="clear">Clear</button>
+  <span>Generation <span id="gen">0</span></span>
+</div>
+<canvas id="cv" width="560" height="400"></canvas>
+<p class="dim">Click or drag to draw live cells. Conway's Game of Life (1970) — an original
+implementation written for xerohour/windows93; Windows93 had a “gameoflife” app, recreated here from scratch.</p>
+<script>
+  const CELL = 10, W = 56, H = 40
+  const cv = document.getElementById("cv"), ctx = cv.getContext("2d")
+  const genEl = document.getElementById("gen")
+  let grid = new Uint8Array(W * H), gen = 0, running = false, timer = null, drawing = false
+
+  function draw() {
+    ctx.fillStyle = "#101418"; ctx.fillRect(0, 0, cv.width, cv.height)
+    ctx.fillStyle = "#7ee787"
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++)
+      if (grid[y * W + x]) ctx.fillRect(x * CELL + 1, y * CELL + 1, CELL - 2, CELL - 2)
+    genEl.textContent = gen
+  }
+  function step() {
+    const next = new Uint8Array(W * H)
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+      let n = 0
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        if (!dx && !dy) continue
+        const xx = (x + dx + W) % W, yy = (y + dy + H) % H
+        n += grid[yy * W + xx]
+      }
+      const alive = grid[y * W + x]
+      next[y * W + x] = alive ? (n === 2 || n === 3 ? 1 : 0) : (n === 3 ? 1 : 0)
+    }
+    grid = next; gen++; draw()
+  }
+  function setRunning(v) {
+    running = v
+    document.getElementById("play").textContent = running ? "⏸ Pause" : "▶ Run"
+    if (running) timer = setInterval(step, 90); else clearInterval(timer)
+  }
+  document.getElementById("play").onclick = () => setRunning(!running)
+  document.getElementById("step").onclick = () => { setRunning(false); step() }
+  document.getElementById("clear").onclick = () => { grid.fill(0); gen = 0; draw() }
+  document.getElementById("random").onclick = () => {
+    for (let i = 0; i < grid.length; i++) grid[i] = Math.random() < 0.22 ? 1 : 0
+    gen = 0; draw()
+  }
+  document.getElementById("glider").onclick = () => {
+    grid.fill(0)
+    const g = [[1,0],[2,1],[0,2],[1,2],[2,2]], ox = 5, oy = 5
+    for (const [x, y] of g) grid[(y + oy) * W + (x + ox)] = 1
+    gen = 0; draw()
+  }
+  function paint(e) {
+    const r = cv.getBoundingClientRect()
+    const x = Math.floor((e.clientX - r.left) / CELL), y = Math.floor((e.clientY - r.top) / CELL)
+    if (x >= 0 && x < W && y >= 0 && y < H) { grid[y * W + x] = 1; draw() }
+  }
+  cv.onmousedown = (e) => { drawing = true; paint(e) }
+  cv.onmousemove = (e) => { if (drawing) paint(e) }
+  addEventListener("mouseup", () => (drawing = false))
+  document.getElementById("random").click()
+  setRunning(true)
+</script>

@@ -1,0 +1,78 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Defrag — optimizing your drive</title>
+<style>
+  body { font-family: Tahoma, Verdana, sans-serif; background: #c0c0c0; margin: 0; padding: 10px; text-align: center; }
+  canvas { background: #000; border: 2px inset #eee; }
+  .bar { margin: 8px 0; display: flex; gap: 10px; justify-content: center; align-items: center; }
+  #status { font-size: 12px; min-height: 16px; }
+  progress { width: 320px; height: 18px; }
+  .dim { color: #555; font-size: 11px; }
+</style>
+<h3 style="margin:2px">💾 Drive Optimizer</h3>
+<canvas id="cv" width="520" height="300"></canvas>
+<div class="bar"><progress id="bar" value="0" max="100"></progress><span id="pct">0%</span></div>
+<div id="status">Drive C: is feeling extremely fragmented.</div>
+<div class="bar"><button id="go">Start defragmentation</button><button id="scramble">Re-fragment</button></div>
+<p class="dim">Original gag written for xerohour/windows93 — Windows93 had a “defrag” app; this is a from-scratch
+recreation. No actual files are optimized in the making of this animation.</p>
+<script>
+  const cv = document.getElementById("cv"), ctx = cv.getContext("2d")
+  const bar = document.getElementById("bar"), pct = document.getElementById("pct"), status = document.getElementById("status")
+  const COLS = 52, ROWS = 30, N = COLS * ROWS
+  // each cell: 0 free, 1..5 = file id (fragmented clusters of files), 6 system, 7 bad
+  let cells = new Uint8Array(N), target = new Uint8Array(N), timer = null
+  const COLORS = ["#111", "#e81123", "#16c60c", "#3b78ff", "#f9c74f", "#b4009e", "#888", "#fff"]
+  function build(fragmented) {
+    cells = new Uint8Array(N); target = new Uint8Array(N)
+    let idx = 0
+    for (let f = 1; f <= 5; f++) for (let k = 0; k < 220; k++) { target[idx++] = f }
+    for (let k = 0; k < 30; k++) target[idx++] = 6
+    // bad sectors stay put
+    const bads = [400, 401, 977, 1230]
+    for (const b of bads) target[b] = 7
+    if (!fragmented) { cells.set(target); return }
+    // scatter the used clusters, keep bads fixed
+    const used = [...target].filter((v) => v && v !== 7)
+    const spots = [...Array(N).keys()].filter((i) => !bads.includes(i))
+    for (let i = spots.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [spots[i], spots[j]] = [spots[j], spots[i]] }
+    spots.forEach((pos, i) => { cells[pos] = used[i] ?? 0 })
+    for (const b of bads) cells[b] = 7
+  }
+  function draw() {
+    const w = cv.width / COLS, h = cv.height / ROWS
+    for (let i = 0; i < N; i++) {
+      ctx.fillStyle = COLORS[cells[i]]
+      ctx.fillRect((i % COLS) * w, Math.floor(i / COLS) * h, w - 1, h - 1)
+    }
+  }
+  const LINES = ["Reading drive information…", "Moving clusters around importantly…", "Optimizing file WOW.EXE…",
+    "Contemplating free space…", "Consolidating vibes…", "Polishing clusters…", "Almost believing it's done…"]
+  document.getElementById("scramble").onclick = () => { clearInterval(timer); build(true); bar.value = 0; pct.textContent = "0%"; status.textContent = "Drive C: is feeling extremely fragmented."; draw() }
+  document.getElementById("go").onclick = () => {
+    if (timer) return
+    let p = 0
+    status.textContent = LINES[0]
+    timer = setInterval(() => {
+      // fix a few mismatched cells per tick
+      let budget = 26
+      for (let i = 0; i < N && budget > 0; i++) {
+        if (cells[i] !== target[i]) {
+          // find a cell holding what target wants here, swap
+          const want = target[i]
+          if (want === 0) { cells[i] = 0; budget--; continue }
+          const j = cells.indexOf(want, Math.floor(Math.random() * N * 0.5))
+          const k = j >= 0 ? j : cells.indexOf(want)
+          if (k >= 0) { cells[k] = cells[i]; cells[i] = want; budget-- }
+        }
+      }
+      let same = 0; for (let i = 0; i < N; i++) if (cells[i] === target[i]) same++
+      p = Math.floor((same / N) * 100)
+      bar.value = p; pct.textContent = p + "%"
+      status.textContent = LINES[Math.min(LINES.length - 1, Math.floor(p / (100 / LINES.length)))] || status.textContent
+      draw()
+      if (p >= 100) { clearInterval(timer); timer = null; status.textContent = "✨ Drive C: is now 0% fragmented and 100% vibes." }
+    }, 60)
+  }
+  build(true); draw()
+</script>

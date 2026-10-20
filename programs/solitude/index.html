@@ -1,0 +1,152 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Solitude — Klondike Solitaire</title>
+<style>
+  body { font-family: Tahoma, Verdana, sans-serif; background: #0a6c2f; margin: 0; padding: 10px; color: #fff; }
+  .bar { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+  button { padding: 4px 12px; cursor: pointer; }
+  #board { display: grid; grid-template-columns: repeat(7, 76px); gap: 10px; }
+  .slot { width: 76px; height: 106px; border: 2px dashed #ffffff44; border-radius: 7px; position: relative; }
+  .pile { position: relative; min-height: 106px; }
+  .card { width: 72px; height: 102px; background: #fff; color: #111; border: 1.5px solid #333; border-radius: 7px;
+          position: absolute; left: 0; padding: 3px 5px; box-sizing: border-box; font-weight: bold; font-size: 16px;
+          cursor: pointer; user-select: none; box-shadow: 0 1px 2px #0006; }
+  .card.red { color: #d00; }
+  .card.back { background: repeating-linear-gradient(45deg, #0b3d91 0 6px, #1450b4 6px 12px); border-color: #eee; cursor: pointer; }
+  .card.sel { outline: 3px solid #ffd800; z-index: 50; }
+  .card .big { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 34px; }
+  #msg { font-size: 13px; }
+  .dim { font-size: 11px; opacity: .8; margin-top: 10px; max-width: 620px; }
+</style>
+<div class="bar">
+  <button id="new">New game</button>
+  <span id="msg">Click the stock to draw. Click a card to select it, then click where it should go. Double-click sends to foundation.</span>
+</div>
+<div id="board">
+  <div class="slot" id="stock"></div>
+  <div class="slot" id="waste"></div>
+  <div></div>
+  <div class="slot" id="f0"></div><div class="slot" id="f1"></div><div class="slot" id="f2"></div><div class="slot" id="f3"></div>
+</div>
+<div id="tab" style="display:grid; grid-template-columns: repeat(7, 76px); gap: 10px; margin-top: 14px;"></div>
+<p class="dim">Original implementation written for xerohour/windows93 — Windows93 had a “solitude” (solitaire) app; this is a from-scratch recreation of Klondike. Draw 1, click-to-move.</p>
+<script>
+  const SUITS = ["♠", "♥", "♦", "♣"]
+  const RANKS = ["", "A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+  const isRed = (c) => c.s === 1 || c.s === 2
+  let stock, waste, foundations, tableau, sel = null, moves = 0
+
+  function newGame() {
+    const deck = []
+    for (let s = 0; s < 4; s++) for (let r = 1; r <= 13; r++) deck.push({ s, r, up: false })
+    for (let i = deck.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [deck[i], deck[j]] = [deck[j], deck[i]] }
+    tableau = Array.from({ length: 7 }, () => [])
+    for (let p = 0; p < 7; p++) for (let k = 0; k <= p; k++) { const c = deck.pop(); c.up = k === p; tableau[p].push(c) }
+    stock = deck; waste = []; foundations = [[], [], [], []]; sel = null; moves = 0
+    say("New game dealt. Good luck!")
+    render()
+  }
+  function say(t) { document.getElementById("msg").textContent = t }
+  function cardEl(c, selOn) {
+    const d = document.createElement("div")
+    if (!c.up) { d.className = "card back"; return d }
+    d.className = "card" + (isRed(c) ? " red" : "") + (selOn ? " sel" : "")
+    d.innerHTML = `${RANKS[c.r]}${SUITS[c.s]}<span class="big">${SUITS[c.s]}</span>`
+    return d
+  }
+  function topOf(pile) { return pile[pile.length - 1] }
+  function render() {
+    const stockEl = document.getElementById("stock"); stockEl.innerHTML = ""
+    if (stock.length) { const d = cardEl({ up: false }); d.onclick = draw; stockEl.appendChild(d) }
+    else { stockEl.innerHTML = '<div class="card" style="background:#ffffff22;color:#fff;text-align:center;line-height:96px;cursor:pointer">↺</div>'; stockEl.firstChild.onclick = recycle }
+    const wasteEl = document.getElementById("waste"); wasteEl.innerHTML = ""
+    if (waste.length) { const d = cardEl(topOf(waste), sel?.zone === "waste"); d.onclick = () => clickWaste(); d.ondblclick = () => autoFoundation("waste"); wasteEl.appendChild(d) }
+    for (let f = 0; f < 4; f++) {
+      const el = document.getElementById("f" + f); el.innerHTML = ""
+      const pile = foundations[f]
+      if (pile.length) { const d = cardEl(topOf(pile), sel?.zone === "f" && sel.f === f); d.onclick = () => clickFoundation(f); el.appendChild(d) }
+      else el.onclick = () => clickFoundation(f)
+    }
+    const tab = document.getElementById("tab"); tab.innerHTML = ""
+    for (let p = 0; p < 7; p++) {
+      const pileEl = document.createElement("div"); pileEl.className = "pile"
+      pileEl.onclick = (e) => { if (e.target === pileEl) clickTableau(p, -1) }
+      tableau[p].forEach((c, i) => {
+        const d = cardEl(c, sel?.zone === "t" && sel.p === p && i >= sel.i)
+        d.style.top = i * 26 + "px"
+        d.onclick = (e) => { e.stopPropagation(); clickTableau(p, i) }
+        d.ondblclick = () => autoFoundation("t", p)
+        pileEl.appendChild(d)
+      })
+      pileEl.style.height = Math.max(106, tableau[p].length * 26 + 80) + "px"
+      tab.appendChild(pileEl)
+    }
+  }
+  function draw() {
+    if (!stock.length) return
+    const c = stock.pop(); c.up = true; waste.push(c); sel = null; render()
+  }
+  function recycle() {
+    stock = waste.reverse().map((c) => ({ ...c, up: false })); waste = []; sel = null; render()
+  }
+  function selectedStack() {
+    if (!sel) return null
+    if (sel.zone === "waste") return [topOf(waste)]
+    if (sel.zone === "f") return [topOf(foundations[sel.f])]
+    return tableau[sel.p].slice(sel.i)
+  }
+  function removeSelected() {
+    if (sel.zone === "waste") waste.pop()
+    else if (sel.zone === "f") foundations[sel.f].pop()
+    else {
+      tableau[sel.p].splice(sel.i)
+      const t = topOf(tableau[sel.p]); if (t && !t.up) t.up = true
+    }
+    sel = null; moves++
+  }
+  function canFoundation(c, f) {
+    const pile = foundations[f]
+    return pile.length === 0 ? c.r === 1 && c.s === f : topOf(pile).s === c.s && c.r === topOf(pile).r + 1
+  }
+  function canTableau(c, p) {
+    const pile = tableau[p]
+    if (!pile.length) return c.r === 13
+    const t = topOf(pile)
+    return t.up && isRed(t) !== isRed(c) && c.r === t.r - 1
+  }
+  function clickWaste() {
+    if (tryMoveTo("waste")) return
+    sel = { zone: "waste" }; render()
+  }
+  function clickFoundation(f) {
+    if (sel && sel.zone !== "f") {
+      const stack = selectedStack()
+      if (stack.length === 1 && canFoundation(stack[0], f)) { foundations[f].push(stack[0]); removeSelected(); say(""); render(); checkWin(); return }
+      say("That card can't go on that foundation.")
+    }
+    if (foundations[f].length) { sel = { zone: "f", f }; render() }
+  }
+  function clickTableau(p, i) {
+    if (sel && !(sel.zone === "t" && sel.p === p)) {
+      const stack = selectedStack()
+      if (stack && canTableau(stack[0], p)) {
+        tableau[p].push(...stack); removeSelected(); say(""); render(); return
+      }
+      say("Cards on the tableau must alternate colors and descend.")
+    }
+    if (i >= 0 && tableau[p][i].up) { sel = { zone: "t", p, i }; render() }
+  }
+  function tryMoveTo(zone) { return false } // selection is explicit; kept for clarity
+  function autoFoundation(zone, p) {
+    let c, from
+    if (zone === "waste") { c = topOf(waste); from = () => waste.pop() }
+    else { c = topOf(tableau[p]); from = () => { tableau[p].pop(); const t = topOf(tableau[p]); if (t && !t.up) t.up = true } }
+    if (!c || !c.up) return
+    if (canFoundation(c, c.s)) { foundations[c.s].push(c); from(); sel = null; render(); checkWin() }
+  }
+  function checkWin() {
+    if (foundations.every((f) => f.length === 13)) say(`🎉 You win! Solitude conquered in ${moves} moves.`)
+  }
+  document.getElementById("new").onclick = newGame
+  newGame()
+</script>

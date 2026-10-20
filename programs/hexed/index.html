@@ -1,0 +1,77 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>HexEd — hexadecimal editor</title>
+<style>
+  body { font-family: Tahoma, Verdana, sans-serif; background: #c0c0c0; margin: 0; padding: 10px; }
+  .bar { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+  #out { background: #fff; border: 2px inset #eee; padding: 8px; overflow: auto; height: 390px;
+         font-family: "Courier New", monospace; font-size: 13px; white-space: pre; }
+  .off { color: #888; }
+  .byte { cursor: pointer; padding: 0 1px; }
+  .byte:hover { background: #ffe58a; }
+  .byte.sel { background: #0b5fa5; color: #fff; }
+  .ascii { color: #333; }
+  .dim { color: #555; font-size: 11px; }
+  #edit { width: 44px; font-family: "Courier New", monospace; }
+</style>
+<div class="bar">
+  <button id="open">Open file…</button>
+  <input id="file" type="file" hidden />
+  <button id="sample">Load sample</button>
+  <span id="info" class="dim">No file loaded.</span>
+  <span style="flex:1"></span>
+  <label class="dim">Byte <input id="edit" maxlength="2" placeholder="--" /> <button id="apply">Set</button></label>
+  <button id="save">Save copy</button>
+</div>
+<div id="out">Open a file or load the sample to inspect its bytes.</div>
+<p class="dim">Original implementation written for xerohour/windows93 — Windows93 had a “HexEd” app; this is a from-scratch recreation. Everything happens locally; edits only affect the copy you save.</p>
+<script>
+  const out = document.getElementById("out")
+  const info = document.getElementById("info")
+  let data = new Uint8Array(0), sel = -1, name = "edited.bin"
+
+  function render() {
+    if (!data.length) return
+    let html = ""
+    for (let off = 0; off < data.length; off += 16) {
+      let hex = "", asc = ""
+      for (let i = 0; i < 16; i++) {
+        const idx = off + i
+        if (idx < data.length) {
+          const b = data[idx]
+          hex += `<span class="byte${idx === sel ? " sel" : ""}" data-i="${idx}">${b.toString(16).padStart(2, "0")}</span> `
+          asc += b >= 32 && b < 127 ? String.fromCharCode(b) : "·"
+        } else { hex += "   "; asc += " " }
+        if (i === 7) hex += " "
+      }
+      html += `<span class="off">${off.toString(16).padStart(8, "0")}</span>  ${hex} <span class="ascii">|${asc}|</span>\n`
+    }
+    out.innerHTML = html
+    for (const el of out.querySelectorAll(".byte")) el.onclick = () => select(Number(el.dataset.i))
+    info.textContent = `${name} — ${data.length} bytes` + (sel >= 0 ? ` · selected offset 0x${sel.toString(16)} = 0x${data[sel].toString(16).padStart(2, "0")}` : "")
+    document.getElementById("edit").value = sel >= 0 ? data[sel].toString(16).padStart(2, "0") : ""
+  }
+  function select(i) { sel = i; render() }
+  document.getElementById("apply").onclick = () => {
+    if (sel < 0) return
+    const v = parseInt(document.getElementById("edit").value, 16)
+    if (Number.isFinite(v) && v >= 0 && v <= 255) { data[sel] = v; render() }
+  }
+  document.getElementById("open").onclick = () => document.getElementById("file").click()
+  document.getElementById("file").onchange = (e) => {
+    const f = e.target.files[0]; if (!f) return
+    name = f.name; sel = -1
+    f.arrayBuffer().then((b) => { data = new Uint8Array(b).slice(0, 65536); render() })
+  }
+  document.getElementById("sample").onclick = () => {
+    name = "sample.txt"; sel = -1
+    data = new TextEncoder().encode("Hello from HexEd! Windows93 forever. 0123456789 !@#$%^&*()")
+    render()
+  }
+  document.getElementById("save").onclick = () => {
+    const a = document.createElement("a")
+    a.href = URL.createObjectURL(new Blob([data], { type: "application/octet-stream" }))
+    a.download = name; a.click(); URL.revokeObjectURL(a.href)
+  }
+  document.getElementById("sample").click()
+</script>
