@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Speech
+Comment=Original reimplementation for this tribute
+Exec=app Speech
+Icon=speech
+Terminal=false

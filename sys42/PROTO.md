@@ -383,3 +383,13 @@ wrappers, or WAD tools. The lawful Doom path is documented in
 THIRD_PARTY.md (GPL engine compiled with Emscripten + Freedoom IWAD)
 and remains a planned build. files.cbor regenerated; kit rebuilt;
 version bumped to 0.0.4.
+
+## Addendum 8 — last four registry reimplementations (2026-10-20)
+
+Speech (text-to-speech toy), Recorder (MediaRecorder voice memos),
+BananaMP (WebAudio chiptune player) and Matrix (the "whatif" rain) —
+the remaining generic-concept apps from the v2 registry — reimplemented
+from scratch in `programs/` and wired like the others. With these, all
+79 registry apps are accounted for: cloned from a licensed upstream,
+reimplemented, framework-native, or documented as excluded in
+THIRD_PARTY.md. files.cbor regenerated; kit rebuilt; version 0.0.5.

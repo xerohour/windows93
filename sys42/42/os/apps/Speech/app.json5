@@ -1,0 +1,10 @@
+{
+  "name": "Speech",
+  "categories": ["Utility", "AudioVideo"],
+  "inset": true,
+  "document": "./index.html",
+  "command": "speech",
+  "manifest": {"name": "Speech", "icons": [{"src": "./icon-16.png", "sizes": "16x16"}, {"src": "./icon-32.png", "sizes": "32x32"}]},
+  "width": 560,
+  "height": 520
+}

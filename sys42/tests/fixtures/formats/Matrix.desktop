@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Matrix (whatif)
+Comment=Original reimplementation for this tribute
+Exec=app Matrix
+Icon=matrix
+Terminal=false

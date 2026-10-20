@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=BananaMP
+Comment=Original reimplementation for this tribute
+Exec=app BananaMP
+Icon=bananamp
+Terminal=false

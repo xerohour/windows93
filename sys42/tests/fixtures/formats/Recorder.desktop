@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Recorder
+Comment=Original reimplementation for this tribute
+Exec=app Recorder
+Icon=recorder
+Terminal=false
