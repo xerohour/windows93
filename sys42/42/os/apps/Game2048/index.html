@@ -1,0 +1,9 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>2048</title>
+<style>html, body, iframe { margin: 0; height: 100%; border: 0; width: 100%; display: block; background: #fff; }</style>
+<iframe id="app" title="2048"></iframe>
+<script>
+  document.getElementById("app").src = new URL("../../../../../programs/2048/index.html", location.href).href
+  document.getElementById("app").addEventListener("load", (e) => e.target.focus())
+</script>

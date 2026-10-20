@@ -1,0 +1,9 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Defrag</title>
+<style>html, body, iframe { margin: 0; height: 100%; border: 0; width: 100%; display: block; background: #fff; }</style>
+<iframe id="app" title="Defrag"></iframe>
+<script>
+  document.getElementById("app").src = new URL("../../../../../programs/defrag/index.html", location.href).href
+  document.getElementById("app").addEventListener("load", (e) => e.target.focus())
+</script>

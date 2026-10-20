@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Solitude
+Comment=Original reimplementation for this tribute
+Exec=app Solitude
+Icon=solitude
+Terminal=false

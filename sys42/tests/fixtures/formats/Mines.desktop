@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Minesweeper
+Comment=Original reimplementation for this tribute
+Exec=app Mines
+Icon=mines
+Terminal=false

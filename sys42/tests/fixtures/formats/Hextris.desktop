@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Hextris
+Comment=Open-source game (see THIRD_PARTY.md)
+Exec=app Hextris
+Icon=hextris
+Terminal=false

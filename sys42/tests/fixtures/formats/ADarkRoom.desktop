@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=A Dark Room
+Comment=Open-source game (see THIRD_PARTY.md)
+Exec=app ADarkRoom
+Icon=adarkroom
+Terminal=false

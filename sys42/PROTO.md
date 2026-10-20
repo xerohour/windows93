@@ -358,3 +358,28 @@ Changes:
   iframe pattern; the programs live at repo-root `programs/fontviewer/`
   and `programs/zkype/`, and were also added to the clean-room shell.
 - files.cbor regenerated; kit rebuilt; version bumped to 0.0.2 (P9 rule).
+
+## Addendum 6 — original reimplementations of the generic apps (2026-10-20)
+
+A final audit pass over the v2 registry confirmed no further credited
+open-source upstreams exist: every app not already cloned or rejected is
+uncredited (the team's own work). Five of those are generic concepts, so
+— exactly as the clean-room shell already did with its Minesweeper —
+they were reimplemented from scratch (original code in `programs/`,
+concepts only, no Windows93 code or assets): Mines (Minesweeper),
+Solitude (Klondike), GameOfLife, HexEd (hex editor) and Defrag (the gag
+optimizer animation). Wired like Addendum 3 (iframe wrappers in
+`42/os/apps/`, theme icons, `.desktop` shortcuts, shell entries).
+files.cbor regenerated; kit rebuilt; version bumped to 0.0.3.
+
+## Addendum 7 — three more OSS games beyond the Windows93 catalog (2026-10-20)
+
+At the user's request ("other Javascript games like jsdoom"): 2048
+(MIT), Hextris (GPL-3.0, gh-pages build) and A Dark Room (MPL-2.0) were
+vendored into `programs/` and wired like the other apps (wrappers,
+theme icons, .desktop shortcuts, shell entries). jsdoom itself has no
+license-clean build: the repos by that name are unlicensed, DOSBox
+wrappers, or WAD tools. The lawful Doom path is documented in
+THIRD_PARTY.md (GPL engine compiled with Emscripten + Freedoom IWAD)
+and remains a planned build. files.cbor regenerated; kit rebuilt;
+version bumped to 0.0.4.

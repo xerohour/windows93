@@ -1,0 +1,9 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Hextris</title>
+<style>html, body, iframe { margin: 0; height: 100%; border: 0; width: 100%; display: block; background: #fff; }</style>
+<iframe id="app" title="Hextris"></iframe>
+<script>
+  document.getElementById("app").src = new URL("../../../../../programs/hextris/index.html", location.href).href
+  document.getElementById("app").addEventListener("load", (e) => e.target.focus())
+</script>

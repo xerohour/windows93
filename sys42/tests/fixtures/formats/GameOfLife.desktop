@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Game of Life
+Comment=Original reimplementation for this tribute
+Exec=app GameOfLife
+Icon=gameoflife
+Terminal=false

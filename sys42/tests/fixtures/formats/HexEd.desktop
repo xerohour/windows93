@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=HexEd
+Comment=Original reimplementation for this tribute
+Exec=app HexEd
+Icon=hexed
+Terminal=false

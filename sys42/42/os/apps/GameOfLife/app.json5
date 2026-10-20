@@ -1,0 +1,10 @@
+{
+  "name": "GameOfLife",
+  "categories": ["Game", "Utility"],
+  "inset": true,
+  "document": "./index.html",
+  "command": "gameoflife",
+  "manifest": {"name": "Game of Life", "icons": [{"src": "./icon-16.png", "sizes": "16x16"}, {"src": "./icon-32.png", "sizes": "32x32"}]},
+  "width": 640,
+  "height": 580
+}

@@ -1,0 +1,10 @@
+{
+  "name": "ADarkRoom",
+  "categories": ["Game"],
+  "inset": true,
+  "document": "./index.html",
+  "command": "adarkroom",
+  "manifest": {"name": "A Dark Room", "icons": [{"src": "./icon-16.png", "sizes": "16x16"}, {"src": "./icon-32.png", "sizes": "32x32"}]},
+  "width": 920,
+  "height": 660
+}

@@ -1,0 +1,10 @@
+{
+  "name": "Mines",
+  "categories": ["Game"],
+  "inset": true,
+  "document": "./index.html",
+  "command": "mines",
+  "manifest": {"name": "Minesweeper", "icons": [{"src": "./icon-16.png", "sizes": "16x16"}, {"src": "./icon-32.png", "sizes": "32x32"}]},
+  "width": 540,
+  "height": 660
+}

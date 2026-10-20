@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=2048
+Comment=Open-source game (see THIRD_PARTY.md)
+Exec=app Game2048
+Icon=game2048
+Terminal=false
