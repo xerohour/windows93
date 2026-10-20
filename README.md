@@ -41,6 +41,25 @@ Go visit the real thing at windows93.net — then come back and break this one.
 Right-click (or long-press menu equivalent) the desktop for wallpaper cycling
 and shortcuts. Works with touch: double-tap icons, drag title bars with a finger.
 
+## The programs
+
+Many Windows93 "programs" were actually third-party open-source projects —
+its own app registry credits them. The verifiably open-source ones are cloned
+here **from their upstreams**, under their own licenses (license files kept
+in place, details in [THIRD_PARTY.md](THIRD_PARTY.md)):
+
+- **SkiFree** — basicallydan/skifree.js (MIT) → `programs/skifree/`
+- **Bytebeat** — greggman/html5bytebeat (MIT) → `programs/bytebeat/`
+- **NES Emulator** — bfirsh/jsnes (Apache-2.0, built from source) with the
+  free homebrew games LJ65 + Concentration Room → `programs/nes/`
+- **Piskel** — piskelapp/piskel (Apache-2.0) — launcher window: the official
+  editor blocks framing and its source doesn't build on modern Node
+
+Checked and skipped, with reasons in THIRD_PARTY.md: calculate (no license),
+GameBoy-Online (repo gone), Castle GAFA (Wolfenstein game data), SAE (needs
+the copyrighted Kickstart ROM). Windows93's own apps were never open-sourced;
+its **sys42** framework is, at github.com/windows93dotnet/sys42 (MIT).
+
 ## Run locally
 
 It's one static file — no build step:

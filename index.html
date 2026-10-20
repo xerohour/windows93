@@ -201,9 +201,17 @@ const APPS={
    <p><b>Nothing here is copied</b> — no code, images, sounds or text from the original site. All icons are emoji/CSS, all tunes are synthesised live, all jokes are new (quality may vary, as tradition demands).</p>
    <p>Go visit the real thing: <b>windows93.net</b></p>
    <p><button class="btn" onclick="openApp('bsod')">Experience authenticity (BSOD)</button></p>`}},
- bsod:{icon:'💙',title:'Definitely Not A Virus',w:380,h:260,render:b=>{b.innerHTML=`<p>This button does exactly one thing.</p><p><button class="btn" onclick="showBSOD()">💙 Blue Screen of Death</button></p><p style="color:#555">Reboot restores the desktop. Your Notepad text is auto-saved.</p>`}}
+ bsod:{icon:'💙',title:'Definitely Not A Virus',w:380,h:260,render:b=>{b.innerHTML=`<p>This button does exactly one thing.</p><p><button class="btn" onclick="showBSOD()">💙 Blue Screen of Death</button></p><p style="color:#555">Reboot restores the desktop. Your Notepad text is auto-saved.</p>`}},
+ /* ---- Programs cloned from the open-source projects Windows93 bundled (see THIRD_PARTY.md) ---- */
+ skifree:{icon:'🎿',title:'SkiFree',w:560,h:570,frame:'programs/skifree/index.html'},
+ bytebeat:{icon:'🎛️',title:'Bytebeat',w:780,h:540,frame:'programs/bytebeat/html5bytebeat.html'},
+ nes:{icon:'👾',title:'NES Emulator',w:600,h:660,frame:'programs/nes/index.html'},
+ piskel:{icon:'🖌️',title:'Piskel',w:450,h:320,render:b=>{b.innerHTML=`<h3 style="margin-top:0">🖌️ Piskel — pixel art editor</h3>
+   <p>The real Piskel editor (by Julian Descottes &amp; contributors, Apache-2.0) — the same open-source program Windows93 bundled — runs on its own site and refuses to be framed (<code>frame-ancestors 'none'</code>), and its current source doesn't build on a modern Node, so this window is a launcher instead of a vendored copy:</p>
+   <p><a href="https://www.piskelapp.com/p/create/sprite" target="_blank" rel="noopener"><button class="btn">▶ Launch Piskel editor</button></a></p>
+   <p style="color:#555">Source: github.com/piskelapp/piskel — clone it from there if you want it self-hosted. Full credits in THIRD_PARTY.md in the repo.</p>`}}
 };
-const DESKTOP_ICONS=['computer','recycle','notepad','paint','calc','terminal','mines','music','internet','hydra','about'];
+const DESKTOP_ICONS=['computer','recycle','notepad','paint','calc','terminal','mines','music','internet','hydra','skifree','bytebeat','nes','piskel','about'];
 function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function setStatus(id,txt){const w=wins.get(id);if(w)w.querySelector('.status').textContent=txt}
 
@@ -219,7 +227,9 @@ function openApp(key){
    <button data-a="min" aria-label="Minimise">_</button><button data-a="max" aria-label="Maximise">▢</button><button data-a="close" aria-label="Close">×</button></div>
    <div class="menubar"><span>File</span><span>Edit</span><span>Help</span></div><div class="body"></div><div class="status">Ready</div>`;
  desktop.appendChild(el);wins.set(id,el);
- const body=el.querySelector('.body');app.render(body,id);el._app=app;
+ const body=el.querySelector('.body');el._app=app;
+ if(app.frame){body.style.padding='0';body.innerHTML=`<iframe src="${app.frame}" title="${app.title}" style="border:0;width:100%;height:100%;display:block"></iframe>`;setStatus(id,app.title+' — open-source program, see THIRD_PARTY.md')}
+ else app.render(body,id);
  const task=document.createElement('button');task.className='task btn active';task.textContent=`${app.icon} ${app.title}`;task.dataset.id=id;tasksEl.appendChild(task);
  task.onclick=()=>{if(el.style.display==='none'){el.style.display='flex';focusWin(id)}else if(el.classList.contains('active')){el.style.display='none'}else focusWin(id)};
  el.querySelector('[data-a="close"]').onclick=()=>closeWin(id);

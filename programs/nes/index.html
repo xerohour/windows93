@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>NES Emulator — JSNES</title>
+<style>
+  body{font-family:Tahoma,Verdana,sans-serif;background:#202028;color:#eee;margin:12px;text-align:center}
+  #nes{margin:10px auto;width:512px;height:480px;max-width:92vw}
+  #nes canvas{max-width:100%}
+  button,select{font-family:inherit;padding:5px 12px;margin:2px}
+  a{color:#9adcff}
+  .hint{color:#aaa;font-size:12px;line-height:1.6}
+</style>
+<script src="./jsnes.min.js"></script>
+<script>
+  var browser;
+  function loadPath(path){
+    jsnes.Browser.loadROMFromURL(path, function(err, data){
+      if(err){ document.getElementById('msg').textContent = 'Could not load ROM: ' + err; return; }
+      browser.loadROM(data);
+      document.getElementById('msg').textContent = 'Playing: ' + path.split('/').pop();
+    });
+  }
+  window.onload = function(){
+    try{
+      browser = new jsnes.Browser({
+        container: document.getElementById('nes'),
+        onError: function(e){ console.error(e); }
+      });
+    }catch(e){
+      document.getElementById('msg').textContent = 'JSNES could not start in this browser: ' + e.message;
+      return;
+    }
+    loadPath('roms/lj65.nes');
+    document.getElementById('rom').addEventListener('change', function(){ loadPath(this.value); });
+    document.getElementById('own').addEventListener('change', function(){
+      var f = this.files[0]; if(!f) return;
+      var r = new FileReader();
+      r.onload = function(){
+        var bytes = new Uint8Array(r.result), bin = '';
+        for(var i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+        browser.loadROM(bin);
+        document.getElementById('msg').textContent = 'Playing your ROM: ' + f.name;
+      };
+      r.readAsArrayBuffer(f);
+    });
+  };
+</script>
+</head>
+<body>
+  <h3 style="margin:4px">👾 NES Emulator</h3>
+  <div>
+    <label>Game:
+      <select id="rom">
+        <option value="roms/lj65.nes">LJ65 (homebrew, by Damian Yerrick)</option>
+        <option value="roms/croom.nes">Concentration Room (homebrew)</option>
+      </select>
+    </label>
+    <label style="margin-left:10px">Or load your own .nes: <input type="file" id="own" accept=".nes"></label>
+  </div>
+  <p id="msg">Loading… click the screen, then use the keyboard.</p>
+  <div id="nes"></div>
+  <p class="hint">DPad: Arrow keys &nbsp;•&nbsp; Start: Enter &nbsp;•&nbsp; Select: Right Ctrl &nbsp;•&nbsp; A: X &nbsp;•&nbsp; B: Z<br>
+  Powered by <a href="https://github.com/bfirsh/jsnes" target="_blank" rel="noopener">JSNES</a> (Apache-2.0, built from upstream source).
+  LJ65 and Concentration Room are free homebrew games by Damian Yerrick, distributed with their notices in <code>roms/</code>.
+  No commercial ROMs are included — load your own with the file picker.</p>
+</body>
+</html>
