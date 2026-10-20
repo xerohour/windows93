@@ -1,0 +1,25 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>Bytebeat</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #111; }
+  iframe { border: 0; width: 100%; height: 100%; display: block; }
+</style>
+<!-- sys42 app wrapper (original code for xerohour/windows93): hosts the
+     program in an isolated iframe inside a sys42 window. The iframe keeps
+     the program's globals, timers and audio loops out of the desktop, and
+     closing the window tears the iframe (and everything in it) down.
+     Keyboard input goes to the program whenever the frame has focus:
+     it is focused on load, and a click inside the window focuses it
+     natively. The relative path climbs from
+     sys42/42/os/apps/Bytebeat/ to the repo-root programs/ folder. -->
+<iframe
+  id="app"
+  src="../../../../../programs/bytebeat/html5bytebeat.html"
+  allow="autoplay; gamepad; fullscreen"
+  allowfullscreen
+></iframe>
+<script>
+  const frame = document.getElementById("app")
+  frame.addEventListener("load", () => frame.focus())
+</script>

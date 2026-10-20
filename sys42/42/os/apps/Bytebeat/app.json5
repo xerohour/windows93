@@ -1,0 +1,12 @@
+{
+  name: "Bytebeat",
+  command: "bytebeat",
+  categories: ["entertainment"],
+  description: "Bytebeat music editor/player (greggman/html5bytebeat, MIT) in a sys42 window",
+
+  width: 840,
+  height: 580,
+
+  inset: true,
+  document: "./index.html",
+}

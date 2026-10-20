@@ -1,0 +1,12 @@
+{
+  name: "NES",
+  command: "nes",
+  categories: ["entertainment"],
+  description: "JSNES emulator (bfirsh/jsnes, Apache-2.0) with homebrew ROMs, in a sys42 window",
+
+  width: 560,
+  height: 560,
+
+  inset: true,
+  document: "./index.html",
+}

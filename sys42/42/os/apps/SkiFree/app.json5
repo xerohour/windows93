@@ -1,0 +1,12 @@
+{
+  name: "SkiFree",
+  command: "skifree",
+  categories: ["entertainment"],
+  description: "SkiFree (basicallydan/skifree.js, MIT) in a sys42 window",
+
+  width: 680,
+  height: 540,
+
+  inset: true,
+  document: "./index.html",
+}

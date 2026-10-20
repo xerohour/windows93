@@ -77,6 +77,9 @@ service-worker handshake, the filesystem defaults to IndexedDB, and the
 patches make the boot tolerate service-worker failure and use relative
 paths. The generated `files.cbor` index was rebuilt for the trimmed tree
 with the project's own codec. Full write-up: `sys42/PROTO.md`.
+The Start menu also includes the three cloned open-source programs
+(SkiFree, Bytebeat, JSNES) as native sys42 apps — original iframe
+wrappers under `sys42/42/os/apps/`; see `THIRD_PARTY.md`.
 sys42's MIT license is at `sys42/LICENSE`.
 
 Known limitation: the service worker's virtual-file serving matches raw

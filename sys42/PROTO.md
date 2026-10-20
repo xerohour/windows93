@@ -271,3 +271,23 @@ normalizeManifest (manifestURL + icon srcs), themesManager (icon theme
 dirs), appsManager (decode-type icon linking), and App.prepareManifest
 (string manifest paths). P7's three call sites now route through the same
 helper.
+
+## Addendum 3 (2026-10-20) — cloned programs as native sys42 apps
+
+SkiFree, Bytebeat and JSNES (already vendored at repo-root `programs/`,
+licenses in repo `THIRD_PARTY.md`) are registered as sys42 apps:
+`42/os/apps/{SkiFree,Bytebeat,NES}/` with an `app.json5` manifest
+(`inset: true`, `document: "./index.html"`), an original wrapper page
+that embeds the program in an isolated iframe (path
+`../../../../../programs/...` from the app folder), and drawn
+`icon-16.png`/`icon-32.png`. `files.cbor` was regenerated with the §4
+recipe (888 entries; diff = the 12 new app files + P8's helper).
+
+Verified locally (headless Chromium, site served under a subpath):
+all three appear in the Start menu with icons; each launches into a
+sys42 window (SkiFree canvas running, JSNES UI + canvas with LJ65
+listed, Bytebeat at its play splash); closing each window removes it
+completely (iframe teardown stops its timers/audio); zero console
+errors across the whole run. Keyboard input follows iframe focus
+(focused on load; clicking the window focuses it natively), so keys
+stop reaching a game when its window/frame loses focus.
