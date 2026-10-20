@@ -12,9 +12,14 @@ const { href: ipcUrl } = new URL("../../core/ipc.js", import.meta.url)
 const { href: uiUrl } = new URL("../../ui.js", import.meta.url)
 const { href: headUrl } = new URL("../head.js", import.meta.url)
 
+// STATIC SUBPATH PATCH (P9): the theme stylesheet was hardcoded to
+// "/style.css" (origin root) — a 404 inside every app window under a
+// subpath. Resolve it from this module's URL like headUrl above.
+const { href: styleUrl } = new URL("../../../style.css", import.meta.url)
+
 const DEFAULTS = {
   head: /* html */ `
-    <link rel="stylesheet" href="/style.css" id="theme" />
+    <link rel="stylesheet" href="${styleUrl}" id="theme" />
     <script type="module" src="${headUrl}"></script>
   `,
   body: /* html */ `<body class="in-iframe">`,

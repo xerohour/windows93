@@ -107,7 +107,13 @@ service.install = (options) => {
   self.addEventListener("install", (e) => {
     e.waitUntil(
       (async () => {
-        if (!config.proxy && config.version) await kit.install(config.version)
+        // STATIC SUBPATH PATCH (P9): the kit is only a cache warm-up; the
+        // desktop and FS work without it. Never let a failed kit download
+        // (flaky network, subpath quirk) fail the whole SW installation —
+        // Chrome surfaces that as an "error during installation" dialog.
+        if (!config.proxy && config.version) {
+          await kit.install(config.version).catch((err) => console.warn("[42] kit install skipped:", err))
+        }
         await self.skipWaiting() // TODO: test this on sw update
       })(),
     )

@@ -21,8 +21,13 @@ class Client {
   }
 
   async connect(options) {
+    // STATIC SUBPATH PATCH (P9): default was "/42.sw.js" (origin root) —
+    // wrong under a subpath deployment. This module lives at
+    // <root>/42/os/network/, so the worker is ../../../42.sw.js from here.
     const url =
-      typeof options === "string" ? options : options?.url ?? "/42.sw.js"
+      typeof options === "string"
+        ? options
+        : options?.url ?? new URL("../../../42.sw.js", import.meta.url).href
 
     this.registration = await navigator.serviceWorker //
       .register(url, { type: "module" })

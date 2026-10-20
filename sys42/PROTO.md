@@ -291,3 +291,42 @@ completely (iframe teardown stops its timers/audio); zero console
 errors across the whole run. Keyboard input follows iframe focus
 (focused on load; clicking the window focuses it natively), so keys
 stop reaching a game when its window/frame loses focus.
+
+## Addendum 4 (2026-10-20) — Patch P9
+
+A phone report showed Chrome's "ServiceWorker script at
+https://xerohour.github.io/42.sw.js for scope https://xerohour.github.io/
+encountered an error during installation" dialog. The desktop page has
+always registered the worker relatively (verified in every deployed
+commit), but three other root-absolute worker references existed in the
+tree, and two fragilities could surface as install errors:
+
+- `42/os/network/client.js` — the connect() **default** was "/42.sw.js";
+  now resolved relative to the module (any no-arg caller gets the right
+  worker under any deployment root).
+- `42/os/network/client/vhost.html` — registered "/42.sw.js?proxy"; now
+  "../../../42.sw.js?proxy".
+- `demos/ui/vhost.demo.html` — called client.connect() with no URL (the
+  one call site that produced exactly the reported root script+scope);
+  now passes "../../42.sw.js". Its stylesheet link was likewise
+  root-absolute and is now relative.
+- `42/os/network/service.js` — the install handler awaited kit.install()
+  unguarded: a failed kit download (749 KB tar over a flaky connection)
+  failed the entire SW installation, which Chrome reports as an
+  installation error. Kit install is now caught — it is only a cache
+  warm-up.
+- `42/ui/components/sandbox.js` — every app window's head hardcoded
+  href="/style.css" (origin root → 404 under a subpath); now resolved
+  from import.meta.url like the head.js URL next to it.
+
+**Kit rebuild (same addendum):** the root cause of the recurring
+mixed-version behaviour all day: `42-kits/0.0.0.tar.gz` was a snapshot
+of the framework from prototype time, and the service worker serves
+kit-cached files whenever the cache key matches — so browsers kept
+running pre-P7 framework code (old BrowserDriver, old sandbox.js) no
+matter what was deployed. The kit was rebuilt from the current tree
+(861 entries: every indexed file except `42-kits/`, `42.sw.js`,
+`LICENSE`, `tests/`) and the version in `42.sw.js` bumped to `0.0.1`,
+so `activate()` purges the old cache on every existing browser.
+**Any future framework patch must rebuild the kit and bump the version,
+or browsers will keep serving the snapshot.**

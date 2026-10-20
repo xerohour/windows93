@@ -2,7 +2,7 @@
 <meta charset="utf-8" />
 <title>vhost</title>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="stylesheet" href="/style.css" id="theme" />
+<link rel="stylesheet" href="../../style.css" id="theme" /> <!-- STATIC SUBPATH PATCH (P9): was "/style.css" -->
 
 <script type="module">
   import trap from "../../42/fabric/type/error/trap.js"
@@ -57,7 +57,7 @@
     fs.write("/test.css", css),
   ])
 
-  await client.connect()
+  await client.connect({ url: "../../42.sw.js" }) // STATIC SUBPATH PATCH (P9): was connect() -> default "/42.sw.js" (origin root)
 
   await ui({
     tag: "body.box-center",
