@@ -393,3 +393,30 @@ from scratch in `programs/` and wired like the others. With these, all
 79 registry apps are accounted for: cloned from a licensed upstream,
 reimplemented, framework-native, or documented as excluded in
 THIRD_PARTY.md. files.cbor regenerated; kit rebuilt; version 0.0.5.
+
+## Addendum 9 — Doom (Chocolate Doom + Freedoom), kit 0.0.6 (2026-10-20)
+
+The "jsdoom" item from the JavaScript-games round is complete. The GPL-2.0
+Chocolate Doom engine (cloudflare/doom-wasm) was compiled to WebAssembly and
+paired with the Freedoom 0.13.0 Phase 1 IWAD (BSD) — id Software game data is
+never shipped. Build notes (reproducibility): Emscripten **2.0.34** (the
+era-matched toolchain; the same source built with Emscripten 3.1.64 boots and
+identifies the IWAD but dies with a WASM memory-access-out-of-bounds seconds
+after game start under several flag variations), upstream build flags kept
+pristine except TOTAL_MEMORY 64MB → 256MB for the 28 MB Freedoom IWAD.
+Verified end-to-end in Chromium: attract demo plays, menus navigate, a new
+game starts in Freedoom E1M1 with working keyboard input, zero page errors.
+
+- `programs/doom/` — engine build (websockets-doom.js/.wasm), the upstream
+  loader page lightly branded as index.html, default.cfg, doom1.wad
+  (= freedoom1.wad content; the loader preloads that filename), and the
+  engine GPL + Freedoom license/credits files.
+- `42/os/apps/Doom/` — app.json5 (inset document, 860×700), wrapper
+  index.html embedding `programs/doom/index.html`, PIL icons (dark red tile,
+  orange "D").
+- Theme icon copies `apps/doom.png` (16/32); `Doom.desktop` shortcut
+  (37 shortcuts total).
+- Clean-room shell gained a DOOM frame entry.
+
+files.cbor regenerated and the kit rebuilt at 0.0.6 with the 42.sw.js version
+bumped to "0.0.6", per the P9 rule.

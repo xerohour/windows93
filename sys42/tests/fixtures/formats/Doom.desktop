@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Doom
+Comment=Chocolate Doom + Freedoom (open-source)
+Icon=doom
+Exec=app Doom
+Type=Application
+Categories=Game;

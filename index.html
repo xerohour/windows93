@@ -219,6 +219,7 @@ const APPS={
  recorder:{icon:'🎙️',title:'Recorder',w:490,h:460,frame:'programs/recorder/index.html'},
  bananamp:{icon:'🍌',title:'BananaMP',w:570,h:500,frame:'programs/bananamp/index.html'},
  matrix:{icon:'💊',title:'whatif — Matrix',w:710,h:540,frame:'programs/matrix/index.html'},
+ doom:{icon:'🔥',title:'DOOM — Chocolate Doom + Freedoom',w:880,h:730,frame:'programs/doom/index.html'},
  piskel:{icon:'🖌️',title:'Piskel',w:450,h:320,render:b=>{b.innerHTML=`<h3 style="margin-top:0">🖌️ Piskel — pixel art editor</h3>
    <p>The real Piskel editor (by Julian Descottes &amp; contributors, Apache-2.0) — the same open-source program Windows93 bundled — runs on its own site and refuses to be framed (<code>frame-ancestors 'none'</code>), and its current source doesn't build on a modern Node, so this window is a launcher instead of a vendored copy:</p>
    <p><a href="https://www.piskelapp.com/p/create/sprite" target="_blank" rel="noopener"><button class="btn">▶ Launch Piskel editor</button></a></p>
@@ -228,7 +229,7 @@ const APPS={
    <p><a href="sys42/desktop/" target="_blank" rel="noopener"><button class="btn">▶ Boot WINDOWS93 on sys42</button></a></p>
    <p style="color:#555">Opens full-screen in a new tab (it installs a service worker and reloads itself once on first boot — that's upstream behaviour). Details: sys42/PROTO.md in the repo.</p>`}}
 };
-const DESKTOP_ICONS=['computer','recycle','notepad','paint','calc','terminal','mines','music','internet','hydra','skifree','bytebeat','nes','piskel','fontviewer','zkype','solitude','gameoflife','hexed','defrag','game2048','hextris','adarkroom','speech','recorder','bananamp','matrix','sys42','about'];
+const DESKTOP_ICONS=['computer','recycle','notepad','paint','calc','terminal','mines','music','internet','hydra','skifree','bytebeat','nes','piskel','fontviewer','zkype','solitude','gameoflife','hexed','defrag','game2048','hextris','adarkroom','speech','recorder','bananamp','matrix','doom','sys42','about'];
 function escapeHtml(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function setStatus(id,txt){const w=wins.get(id);if(w)w.querySelector('.status').textContent=txt}
 
