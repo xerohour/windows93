@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=SkiFree
+Comment=SkiFree.js (MIT)
+Exec=app SkiFree
+Icon=skifree
+Terminal=false

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Bytebeat
+Comment=Bytebeat (MIT)
+Exec=app Bytebeat
+Icon=bytebeat
+Terminal=false

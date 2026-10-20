@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Hydra
+Comment=It keeps coming back
+Exec=app Hydra
+Icon=hydra
+Terminal=false

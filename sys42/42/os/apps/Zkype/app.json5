@@ -1,0 +1,10 @@
+{
+  "name": "Zkype",
+  "categories": ["AudioVideo", "Network"],
+  "inset": true,
+  "document": "./index.html",
+  "command": "zkype",
+  "manifest": {"name": "zkype", "icons": [{"src": "./icon-16.png", "sizes": "16x16"}, {"src": "./icon-32.png", "sizes": "32x32"}]},
+  "width": 580,
+  "height": 600
+}

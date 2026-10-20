@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Sandbox
+Comment=App sandbox demo
+Exec=app Sandbox
+Icon=sandbox
+Terminal=false

@@ -330,3 +330,31 @@ matter what was deployed. The kit was rebuilt from the current tree
 so `activate()` purges the old cache on every existing browser.
 **Any future framework patch must rebuild the kit and bump the version,
 or browsers will keep serving the snapshot.**
+
+## Addendum 5 — desktop shortcuts + two more cloned programs (2026-10-20)
+
+Trigger: the user asked for icons on the desktop and more cloned apps.
+Audit of the v2 registry's credit links found two more license-clean
+upstreams (the rest were checked and rejected — see THIRD_PARTY.md):
+Font Viewer (opentype.js, MIT — the registry's own credit links its MIT
+license; viewer page is original, sample font VT323 is OFL) and zkype
+(clmtrackr, MIT; page is an original parody, tracking runs locally).
+Rejected this round: tic-tac-toe (no license file), WebPd/pd (LGPL-3.0
+plus the bundled patch is the team's), Emulatorz set (unclear licensing,
+ROM/BIOS exposure), acidBox93 (a demo production — the CODEF framework
+credit does not license the demo), Progress Quest (no OSS license).
+
+Changes:
+- New command `42/os/commands/app.cmd.js` (STATIC PATCH P10): upstream
+  has no command to launch a registered app by name, which .desktop
+  entries need (folder.js runs `os.exec(infos.exec)` on double-click).
+  `Exec=app <Name>` now launches the app from the registry.
+- Ten `.desktop` shortcuts in `tests/fixtures/formats/` (the desktop
+  folder): TextEdit, ImageViewer, MediaPlayer, Sandbox, Hydra, SkiFree,
+  Bytebeat, NES, FontViewer, Zkype. Their `Icon=` names resolve through
+  the default theme via new copies under
+  `42/themes/default/icons/{16x16,32x32}/apps/<slug>.png`.
+- FontViewer/Zkype wrappers in `42/os/apps/` follow the Addendum-3
+  iframe pattern; the programs live at repo-root `programs/fontviewer/`
+  and `programs/zkype/`, and were also added to the clean-room shell.
+- files.cbor regenerated; kit rebuilt; version bumped to 0.0.2 (P9 rule).

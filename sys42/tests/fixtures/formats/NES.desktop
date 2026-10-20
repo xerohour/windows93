@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=NES
+Comment=JSNES (Apache-2.0)
+Exec=app NES
+Icon=nes
+Terminal=false

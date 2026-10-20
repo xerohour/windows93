@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=ImageViewer
+Comment=Image viewer
+Exec=app ImageViewer
+Icon=imageviewer
+Terminal=false

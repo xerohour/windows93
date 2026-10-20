@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Font Viewer
+Comment=opentype.js viewer (MIT)
+Exec=app FontViewer
+Icon=fontviewer
+Terminal=false

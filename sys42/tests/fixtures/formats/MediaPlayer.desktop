@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=MediaPlayer
+Comment=Media player
+Exec=app MediaPlayer
+Icon=mediaplayer
+Terminal=false

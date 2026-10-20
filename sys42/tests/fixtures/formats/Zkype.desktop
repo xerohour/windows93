@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=zkype
+Comment=clmtrackr face tracking (MIT)
+Exec=app Zkype
+Icon=zkype
+Terminal=false
