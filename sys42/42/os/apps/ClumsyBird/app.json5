@@ -1,0 +1,25 @@
+{
+  "name": "ClumsyBird",
+  "categories": [
+    "Game"
+  ],
+  "inset": true,
+  "document": "./index.html",
+  "command": "clumsybird",
+  "manifest": {
+    "name": "ClumsyBird",
+    "icons": [
+      {
+        "src": "./icon-16.png",
+        "sizes": "16x16"
+      },
+      {
+        "src": "./icon-32.png",
+        "sizes": "32x32"
+      }
+    ]
+  },
+  "width": 920,
+  "height": 640,
+  "description": "Clumsy Bird (ellisonleao/clumsy-bird, GPL-3.0) in a sys42 window"
+}

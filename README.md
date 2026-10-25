@@ -54,6 +54,11 @@ in place, details in [THIRD_PARTY.md](THIRD_PARTY.md)):
   free homebrew games LJ65 + Concentration Room → `programs/nes/`
 - **Piskel** — piskelapp/piskel (Apache-2.0) — launcher window: the official
   editor blocks framing and its source doesn't build on modern Node
+- **Chrome Dino** — wayou/t-rex-runner (BSD-3-Clause) → `programs/dino/`
+- **0h h1** — florisluiten/0hh1, fork of Q42's logic game (MIT) → `programs/ohh1/`
+- **Pac-Man** — mumuy/pacman (MIT, canvas-drawn, no Namco assets) → `programs/pacman/`
+- **Clumsy Bird** — ellisonleao/clumsy-bird (GPL-3.0) → `programs/clumsybird/`
+- **Webamp** — captbaritone/webamp (MIT code, empty playlist, no sample audio) → `programs/webamp/`
 
 Checked and skipped, with reasons in THIRD_PARTY.md: calculate (no license),
 GameBoy-Online (repo gone), Castle GAFA (Wolfenstein game data), SAE (needs
@@ -77,8 +82,9 @@ service-worker handshake, the filesystem defaults to IndexedDB, and the
 patches make the boot tolerate service-worker failure and use relative
 paths. The generated `files.cbor` index was rebuilt for the trimmed tree
 with the project's own codec. Full write-up: `sys42/PROTO.md`.
-The Start menu also includes the three cloned open-source programs
-(SkiFree, Bytebeat, JSNES) as native sys42 apps — original iframe
+The Start menu also includes the cloned open-source programs
+(SkiFree, Bytebeat, JSNES, 2048, Hextris, A Dark Room, DOOM, Dino, 0hh1,
+Pac-Man, Clumsy Bird, Webamp) as native sys42 apps — original iframe
 wrappers under `sys42/42/os/apps/`; see `THIRD_PARTY.md`.
 sys42's MIT license is at `sys42/LICENSE`.
 

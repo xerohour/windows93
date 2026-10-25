@@ -527,3 +527,60 @@ Verification: see the fix report — legacy-profile upgrade (transitional
 load unchanged, next load 37/37 icons + 23 apps, TextEdit and BananaMP
 launch, stable across reboots with no duplicates), fresh-profile
 two-load test, local and live.
+
+## Addendum 12 — five more games wired in (Dino, 0hh1, Pac-Man, Clumsy Bird, Webamp), kit 0.0.9 (2026-10-25)
+
+Trigger: the owner tapped "Wire in all five" on the offer that followed
+the DOOM shipment. All five were license-verified live before vendoring
+(see THIRD_PARTY.md for the full table); nothing was taken on trust from
+the earlier prep claims, and two of those claims did not survive
+verification:
+
+- Chrome Dino: wayou/t-rex-runner, BSD-3-Clause — as claimed.
+  `programs/dino/` holds upstream's page/game/sprite PNGs; the Google
+  Fonts link was removed (self-contained copy) and a dead onclick hook
+  dropped.
+- 0h h1: the Q42 organisation no longer lists a 0hh1 repo, so the
+  verified source is the florisluiten/0hh1 fork, whose LICENSE is the
+  MIT text copyright 2014 Q42. `programs/ohh1/` is the full game.
+- Pac-Man: NOT daleharvey/pacman (WTFPL, plus arcade audio that must
+  not ship) — mumuy/pacman, MIT (c) 2016 Haole Zheng. Only its engine
+  (`game.js`), logic (`index.js`) and Press Start 2P font were vendored
+  into `programs/pacman/`; upstream's own index.html was rejected
+  because it loads external passer-by.com/buttons.github.io assets,
+  redirects away from non-passer-by.com hosts after a few seconds, and
+  breaks out of frames. The page in this repo is original, and the one
+  remaining passer-by.com artifact inside the vendored script — the
+  start screen's "© passer-by.com" footer that opened passer-by.com on
+  click — was replaced with a neutral "Pac-Man — mumuy/pacman (MIT)"
+  footer with no link (header URLs repointed to the GitHub repo).
+  No Namco sprites or audio ship; maze/pellets/ghosts are canvas-drawn.
+- Clumsy Bird: ellisonleao/clumsy-bird, GPL-3.0 — prebuilt
+  `build/clumsy-min.js` + MelonJS + the repo's own assets into
+  `programs/clumsybird/`. No original Flappy Bird art or audio.
+- Webamp: captbaritone/webamp, MIT code — the published npm bundle
+  `webamp@2.3.1` (`built/webamp.bundle.min.js`) plus an original page
+  creating Webamp with an empty playlist. No Nullsoft sample audio
+  ships; the Winamp name/look remain Nullsoft's and this copy is
+  unaffiliated (upstream's own README caveat, recorded in
+  THIRD_PARTY.md).
+
+Wiring follows Addendum 3/5 exactly: root-shell APPS entries + desktop
+icons (root desktop 30 → 35), sys42 wrappers in
+`42/os/apps/{Dino,0hh1,PacMan,ClumsyBird,Webamp}/` (app.json5 + iframe
+wrapper + PIL tile icons), theme icon copies under
+`42/themes/default/icons/{16x16,32x32}/apps/<slug>.png`, and
+`.desktop` shortcuts in `tests/fixtures/formats/` (sys42 desktop
+shortcuts 23 → 28, app wrappers 22 → 27). App name "0hh1" (leading
+digit) needed no special handling: the registry keys on the manifest
+name string, and `Exec=app 0hh1` launches it like any other app.
+
+Kit rule (P9) followed: files.cbor regenerated with the §4 recipe
+(1,018 → 1,054 leaves: 20 wrapper files + 10 theme icons + 5
+`.desktop` files + PROTO.md, which was in the tree but missing from
+the 0.0.8 index and kit; the kit swap itself is count-neutral),
+kit rebuilt as 42-kits/0.0.9.tar.gz (999 files: 968 + 30 new + PROTO.md),
+42.sw.js version bumped "0.0.8" → "0.0.9", 0.0.8 tar deleted.
+P11 (themesManager icon-path normalization) and P12 (FileIndex +
+appsManager merge-on-load) are untouched by this batch, so existing
+profiles pick the five new apps up on next load without a Format Disk.

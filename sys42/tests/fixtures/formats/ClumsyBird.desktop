@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=ClumsyBird
+Comment=Clumsy Bird (open-source, see THIRD_PARTY.md)
+Icon=clumsybird
+Exec=app ClumsyBird
+Type=Application
+Categories=Game;

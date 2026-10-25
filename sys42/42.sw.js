@@ -8,7 +8,7 @@
 import service from "./42/os/network/service.js"
 
 service.install({
-  version: "0.0.8", // STATIC SUBPATH PATCH (P9): bumped on kit rebuild (0.0.1 = P9 kit; activate() deletes other-version caches)
+  version: "0.0.9", // STATIC SUBPATH PATCH (P9): bumped on kit rebuild (0.0.1 = P9 kit; activate() deletes other-version caches)
   vhost: new URL("./42/os/network/client/vhost.html", self.location.href).href,
   dev: false,
 })

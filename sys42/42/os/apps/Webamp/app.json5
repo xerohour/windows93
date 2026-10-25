@@ -1,0 +1,25 @@
+{
+  "name": "Webamp",
+  "categories": [
+    "Game"
+  ],
+  "inset": true,
+  "document": "./index.html",
+  "command": "webamp",
+  "manifest": {
+    "name": "Webamp",
+    "icons": [
+      {
+        "src": "./icon-16.png",
+        "sizes": "16x16"
+      },
+      {
+        "src": "./icon-32.png",
+        "sizes": "32x32"
+      }
+    ]
+  },
+  "width": 780,
+  "height": 580,
+  "description": "Webamp (captbaritone/webamp, MIT; empty playlist, no sample audio) in a sys42 window"
+}

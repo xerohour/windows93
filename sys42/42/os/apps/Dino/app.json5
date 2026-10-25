@@ -1,0 +1,25 @@
+{
+  "name": "Dino",
+  "categories": [
+    "Game"
+  ],
+  "inset": true,
+  "document": "./index.html",
+  "command": "dino",
+  "manifest": {
+    "name": "Dino",
+    "icons": [
+      {
+        "src": "./icon-16.png",
+        "sizes": "16x16"
+      },
+      {
+        "src": "./icon-32.png",
+        "sizes": "32x32"
+      }
+    ]
+  },
+  "width": 640,
+  "height": 360,
+  "description": "Chrome Dino (wayou/t-rex-runner, BSD-3-Clause) in a sys42 window"
+}

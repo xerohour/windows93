@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=PacMan
+Comment=Pac-Man (open-source, see THIRD_PARTY.md)
+Icon=pacman
+Exec=app PacMan
+Type=Application
+Categories=Game;

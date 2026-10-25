@@ -34,6 +34,11 @@ famous open-source browser games that fit the desktop:
 | Hextris | [Hextris/hextris](https://github.com/Hextris/hextris) (gh-pages build) | GPL-3.0 (`programs/hextris/LICENSE.md`) | `programs/hextris/` — full game |
 | A Dark Room | [doublespeakgames/adarkroom](https://github.com/doublespeakgames/adarkroom) | MPL-2.0 (`programs/adarkroom/LICENSE.md`) | `programs/adarkroom/` — full game (dev files excluded); source: upstream repo |
 | DOOM | engine: [Chocolate Doom](https://github.com/chocolate-doom/chocolate-doom) via [cloudflare/doom-wasm](https://github.com/cloudflare/doom-wasm), compiled to WebAssembly locally with Emscripten 2.0.34 (upstream build flags, except TOTAL_MEMORY raised to 256 MB for the larger IWAD); data: Freedoom 0.13.0 Phase 1 IWAD (freedoom1.wad, shipped as doom1.wad because the loader expects that name) | GPL-2.0 (engine) + BSD-style (Freedoom) | **Built and shipped** in `programs/doom/` (loader page adapted from the engine repo's own index.html; engine GPL text in ENGINE-COPYING.md, Freedoom license + credits in FREEDOOM-COPYING.txt / FREEDOOM-CREDITS.txt). Verified playable end-to-end: attract demo, menus, and a new game all run. id Software's WAD is never used. The newer Emscripten 3.1.64 build of this 2021-era port crashes at game start (memory access out of bounds) — the era-matched 2.0.34 toolchain is the fix. |
+| Chrome Dino | [wayou/t-rex-runner](https://github.com/wayou/t-rex-runner) — the T-Rex runner extracted from Chromium | BSD-3-Clause (`programs/dino/LICENSE`) | `programs/dino/` — upstream page/game/sprite PNGs; the Google Fonts link was removed so the copy is self-contained, and a dead `onclick` hook was dropped. No build step. |
+| 0h h1 | [florisluiten/0hh1](https://github.com/florisluiten/0hh1) — a fork preserving Q42's little logic game (the Q42 organisation no longer lists a 0hh1 repo, so this fork is the verified source) | MIT (`programs/ohh1/LICENSE`, copyright 2014 Q42) | `programs/ohh1/` — full game, no build step. No external runtime dependency beyond q42.com/twitter references in comments. |
+| Pac-Man | [mumuy/pacman](https://github.com/mumuy/pacman) — canvas-drawn Pac-Man in HTML5 (NOT daleharvey/pacman, whose license is WTFPL and whose arcade audio is not shipped here) | MIT (`programs/pacman/LICENSE.txt`, copyright 2016 Haole Zheng) | `programs/pacman/` — engine (`game.js`) + game logic (`index.js`) + Press Start 2P font, with an **original** minimal page written for this repo. The font is kept at upstream's `static/font/` path because game start waits on its `FontFace` load — at any other path the load rejects and `game.init()` never runs. Upstream's own index.html was NOT vendored: it loads external passer-by.com/buttons.github.io assets, redirects away from non-passer-by.com hosts after a few seconds, and breaks out of frames. Two edits to the vendored scripts, both documented in the code: the start screen's "© passer-by.com" footer + click-through to passer-by.com was replaced with a neutral "Pac-Man — mumuy/pacman (MIT)" footer with no link, and the passer-by.com URL in the file headers was replaced with the GitHub repo URL. No Namco sprites or audio are shipped — maze, pellets and ghosts are canvas-drawn. |
+| Clumsy Bird | [ellisonleao/clumsy-bird](https://github.com/ellisonleao/clumsy-bird) — a Flappy Bird clone on MelonJS | GPL-3.0 (`programs/clumsybird/LICENSE.md`) | `programs/clumsybird/` — prebuilt `build/clumsy-min.js` + MelonJS + the repo's own image/audio assets under GPL-3.0. No original Flappy Bird art or audio is shipped. No build step. |
+| Webamp | [captbaritone/webamp](https://github.com/captbaritone/webamp) — a Winamp 2 reimplementation in the browser | MIT code (`programs/webamp/LICENSE.txt`) | `programs/webamp/` — the published npm bundle `webamp@2.3.1` (`built/webamp.bundle.min.js`) plus an original page that creates Webamp with an **empty playlist**. No Nullsoft sample audio ships with this copy; the user drops in their own audio files. **Branding caveat (upstream's own README): the Winamp name, interface and sample audio are Nullsoft's property — the code is MIT, this copy is unaffiliated, and no Winamp branding assets beyond what the MIT code itself ships are included.** No build step. |
 
 ## Original reimplementations (concept only — no upstream to clone)
 
@@ -100,3 +105,19 @@ in `programs/nes/roms/`). The wrappers contain no Windows93-team code and
 no material from the AGPL-3.0 v3 community documentation — that was used
 as reference only. sys42 itself remains MIT (`sys42/LICENSE`), kept
 separate from the programs' licenses.
+
+## Five more games wired in (2026-10-25)
+
+Chrome Dino, 0h h1, Pac-Man, Clumsy Bird and Webamp were added at the
+owner's request ("Wire in all five") and wired the same way: root-shell
+entries + desktop icons in `index.html`, and sys42 wrappers
+`sys42/42/os/apps/{Dino,0hh1,PacMan,ClumsyBird,Webamp}/` (manifest +
+iframe wrapper + original PIL icons + `.desktop` shortcuts), with
+`sys42/files.cbor` regenerated and the kit bumped to 0.0.9. Licenses
+verified live before vendoring — see the table above. The two audit
+points worth knowing: Pac-Man is mumuy/pacman (MIT), not the WTFPL
+daleharvey clone, and its upstream page's passer-by.com redirect/frame
+trap and click-through footer were removed (original page + neutral
+credit footer instead); Webamp ships the MIT bundle only, with an empty
+playlist and no Nullsoft sample audio, and the Winamp name/look remain
+Nullsoft's (unaffiliated code).

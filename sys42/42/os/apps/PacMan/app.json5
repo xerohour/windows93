@@ -1,0 +1,25 @@
+{
+  "name": "PacMan",
+  "categories": [
+    "Game"
+  ],
+  "inset": true,
+  "document": "./index.html",
+  "command": "pacman",
+  "manifest": {
+    "name": "PacMan",
+    "icons": [
+      {
+        "src": "./icon-16.png",
+        "sizes": "16x16"
+      },
+      {
+        "src": "./icon-32.png",
+        "sizes": "32x32"
+      }
+    ]
+  },
+  "width": 980,
+  "height": 700,
+  "description": "Pac-Man (mumuy/pacman, MIT; canvas-drawn, no Namco assets) in a sys42 window"
+}

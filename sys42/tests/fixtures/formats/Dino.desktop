@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Dino
+Comment=Chrome Dino (open-source, see THIRD_PARTY.md)
+Icon=dino
+Exec=app Dino
+Type=Application
+Categories=Game;

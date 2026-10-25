@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=Webamp
+Comment=Webamp (open-source, see THIRD_PARTY.md)
+Icon=webamp
+Exec=app Webamp
+Type=Application
+Categories=Game;

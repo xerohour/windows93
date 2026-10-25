@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Webamp</title>
+<style>html,body{margin:0;height:100%;background:#111;color:#ccc;font-family:system-ui,sans-serif}
+#app{height:100%;position:relative}
+#note{position:absolute;right:10px;bottom:10px;font-size:12px;color:#888;max-width:300px}
+#note a{color:#aaa}</style></head><body>
+<div id="app"></div>
+<div id="note">Webamp (captbaritone/webamp, MIT) — an unaffiliated reimplementation of
+the Winamp 2 look; the Winamp name and interface are Nullsoft's. No sample
+audio ships with this copy: drop your own audio files onto the player, or
+use its file menu, to build a playlist.</div>
+<script src="webamp.bundle.min.js"></script>
+<script>
+var webamp = new Webamp({});
+webamp.renderWhenReady(document.getElementById("app"));
+</script>
+</body></html>
